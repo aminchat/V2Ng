@@ -238,6 +238,111 @@ function compatibilityMessage(symptomId, result) {
   return parts.length ? `با تغییر «${label}»، ${parts.join(' و ')}.` : '';
 }
 
+/* Set right before a category-selection render so the rebuilt bar can return focus to
+   the newly active tab (the old tab element no longer exists after innerHTML is reset). */
+let categoryNavRestoreFocus = false;
+
+function revealActiveCategoryTab(scroll, tab, force = false) {
+  if (!scroll || !tab) return;
+  const stripRect = scroll.getBoundingClientRect();
+  if (stripRect.bottom <= 0 || stripRect.top >= window.innerHeight) return; // strip off-screen: never jump the page
+  const tabRect = tab.getBoundingClientRect();
+  const fullyVisible = tabRect.left >= stripRect.left - 1 && tabRect.right <= stripRect.right + 1;
+  if (!force && fullyVisible) return;
+  // Horizontal alignment only; block 'nearest' avoids vertical page jumps.
+  tab.scrollIntoView({ block: 'nearest', inline: 'center' });
+}
+
+function setupCategoryNavigation() {
+  const scroll = document.getElementById('category-scroll');
+  const prev = document.getElementById('category-prev');
+  const next = document.getElementById('category-next');
+  if (!scroll || !prev || !next) return;
+
+  const getTabs = () => Array.from(scroll.querySelectorAll('.cat-btn'));
+  const isRtl = () => getComputedStyle(scroll).direction === 'rtl';
+
+  const selectCategory = (categoryId) => {
+    const normalized = categoryId || null;
+    if (normalized === state.diffCategory) return;
+    state.diffCategory = normalized;
+    state.diffCompatibilityMessage = '';
+    categoryNavRestoreFocus = true;
+    render({ focus: false });
+  };
+
+  const moveBy = (offset) => {
+    const tabs = getTabs();
+    if (!tabs.length) return;
+    const current = tabs.findIndex((tab) => (tab.dataset.cat || null) === state.diffCategory);
+    const activeIndex = current === -1 ? 0 : current;
+    const target = Math.min(Math.max(activeIndex + offset, 0), tabs.length - 1);
+    if (target !== activeIndex) selectCategory(tabs[target].dataset.cat);
+  };
+
+  prev.addEventListener('click', () => moveBy(-1));
+  next.addEventListener('click', () => moveBy(1));
+
+  scroll.addEventListener('click', (event) => {
+    const tab = event.target?.closest?.('.cat-btn');
+    if (!tab) return;
+    selectCategory(tab.dataset.cat);
+  });
+
+  /* Roving-tabindex tablist keys: arrows step through the tab order (physical arrows are
+     mirrored in RTL), Home/End jump, Enter/Space select the focused tab. */
+  scroll.addEventListener('keydown', (event) => {
+    if (event.defaultPrevented) return;
+    const tab = event.target?.closest?.('.cat-btn');
+    if (!tab) return;
+    const tabs = getTabs();
+    const currentIndex = tabs.indexOf(tab);
+    if (currentIndex === -1) return;
+    let targetIndex = null;
+    if (event.key === 'ArrowRight') targetIndex = currentIndex + (isRtl() ? -1 : 1);
+    else if (event.key === 'ArrowLeft') targetIndex = currentIndex + (isRtl() ? 1 : -1);
+    else if (event.key === 'Home') targetIndex = 0;
+    else if (event.key === 'End') targetIndex = tabs.length - 1;
+    else if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      selectCategory(tab.dataset.cat);
+      return;
+    }
+    if (targetIndex < 0 || targetIndex >= tabs.length) return;
+    event.preventDefault();
+    selectCategory(tabs[targetIndex].dataset.cat);
+  });
+
+  /* A vertical wheel over the strip scrolls it horizontally — but only while real overflow
+     remains in that direction; otherwise (or with no overflow) default page scrolling is
+     untouched and preventDefault is never called. */
+  scroll.addEventListener('wheel', (event) => {
+    const overflow = scroll.scrollWidth - scroll.clientWidth;
+    if (overflow <= 1 || !event.deltaY) return;
+    if (Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return; // horizontal gestures scroll natively
+    let delta = event.deltaY;
+    if (event.deltaMode === 1) delta *= 16; // line mode
+    else if (event.deltaMode === 2) delta *= scroll.clientWidth; // page mode
+    const rtl = isRtl();
+    // Modern engines (Chrome/Edge 85+, Firefox, Safari 14+) report RTL scrollLeft as 0 at
+    // the start (right edge) and negative towards the end; LTR is 0..overflow.
+    const progress = rtl ? -scroll.scrollLeft : scroll.scrollLeft;
+    if ((delta > 0 && progress >= overflow - 0.5) || (delta < 0 && progress <= 0.5)) return;
+    event.preventDefault();
+    scroll.scrollLeft += (rtl ? -1 : 1) * delta;
+  }, { passive: false });
+
+  const tabs = getTabs();
+  const activeIndex = tabs.findIndex((tab) => (tab.dataset.cat || null) === state.diffCategory);
+  const activeTab = activeIndex === -1 ? null : tabs[activeIndex];
+  prev.disabled = activeIndex <= 0;
+  next.disabled = activeIndex === -1 || activeIndex >= tabs.length - 1;
+  const restoreFocus = categoryNavRestoreFocus;
+  categoryNavRestoreFocus = false;
+  if (restoreFocus) activeTab?.focus({ preventScroll: true });
+  revealActiveCategoryTab(scroll, activeTab, restoreFocus);
+}
+
 function renderSymptoms() {
   const categoryIds = Object.keys(kb.categories);
   if (state.diffStage === 'result') return renderDifferentialResults();
@@ -253,6 +358,14 @@ function renderSymptoms() {
     ? state.diffSelected.filter((id) => !categorySymptoms.includes(id))
     : [];
 
+  const categoryTabs = [null, ...categoryIds].map((categoryId) => {
+    const active = (categoryId || null) === state.diffCategory;
+    const label = categoryId
+      ? `${kb.categories[categoryId].icon} ${kb.categories[categoryId].title}`
+      : 'همه';
+    return `<button type="button" class="cat-btn${active ? ' active' : ''}" role="tab" data-cat="${e(categoryId || '')}" aria-selected="${active ? 'true' : 'false'}" tabindex="${active ? '0' : '-1'}">${e(label)}</button>`;
+  }).join('');
+
   app.innerHTML = `
     <header class="topbar">
       <button class="icon-btn" id="back-home" type="button" aria-label="بازگشت به خانه">‹</button>
@@ -265,9 +378,10 @@ function renderSymptoms() {
       ${state.diffCompatibilityMessage ? `<p class="compatibility-notice" role="status">${e(state.diffCompatibilityMessage)}</p>` : ''}
       <fieldset class="category-fieldset">
         <legend>دستهٔ نشانه‌ها</legend>
-        <div class="category-scroll">
-          <button class="cat-btn${state.diffCategory === null ? ' active' : ''}" data-cat="" type="button" aria-pressed="${state.diffCategory === null}">همه</button>
-          ${categoryIds.map((id) => `<button class="cat-btn${state.diffCategory === id ? ' active' : ''}" data-cat="${e(id)}" type="button" aria-pressed="${state.diffCategory === id}">${e(kb.categories[id].icon)} ${e(kb.categories[id].title)}</button>`).join('')}
+        <div class="category-nav">
+          <button type="button" id="category-prev" class="cat-nav-btn" aria-label="دستهٔ قبلی"><span aria-hidden="true">›</span></button>
+          <div class="category-scroll" id="category-scroll" role="tablist" aria-label="دسته‌های نشانه‌ها">${categoryTabs}</div>
+          <button type="button" id="category-next" class="cat-nav-btn" aria-label="دستهٔ بعدی"><span aria-hidden="true">‹</span></button>
         </div>
       </fieldset>
       <section aria-labelledby="symptom-heading">
@@ -290,11 +404,7 @@ function renderSymptoms() {
     </main>`;
 
   document.getElementById('back-home').addEventListener('click', () => navigate('#/'));
-  document.querySelectorAll('[data-cat]').forEach((button) => button.addEventListener('click', () => {
-    state.diffCategory = button.dataset.cat || null;
-    state.diffCompatibilityMessage = '';
-    render({ focus: false });
-  }));
+  setupCategoryNavigation();
   document.querySelectorAll('#current-symptoms [data-sym], #other-selected-symptoms [data-sym]').forEach((button) => button.addEventListener('click', () => {
     const id = button.dataset.sym;
     const result = toggleCurrentSymptom(state.diffSelected, state.diffHistorical, id, kb.symptoms);
