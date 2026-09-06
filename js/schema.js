@@ -58,7 +58,14 @@ export function validateKnowledgeBase(symptoms, categories, cases) {
         }
       }
     }
-    for (const field of ['requiresResponsive', 'requiresBreathing', 'canBeHistorical']) {
+    if (symptom.aliases !== undefined) {
+      if (!nonEmptyStrings(symptom.aliases) || symptom.aliases.length > 12 || symptom.aliases.some((alias) => alias.length > 80)) {
+        errors.push(`symptom "${id}": aliases must contain 1 to 12 non-empty strings of at most 80 characters`);
+      } else if (new Set(symptom.aliases.map((alias) => alias.trim())).size !== symptom.aliases.length) {
+        errors.push(`symptom "${id}": aliases must not contain duplicates`);
+      }
+    }
+    for (const field of ['requiresResponsive', 'requiresBreathing', 'canBeHistorical', 'quickAccess']) {
       if (symptom[field] !== undefined && typeof symptom[field] !== 'boolean') {
         errors.push(`symptom "${id}": ${field} must be boolean`);
       }
@@ -66,9 +73,14 @@ export function validateKnowledgeBase(symptoms, categories, cases) {
     if (symptom.canBeHistorical && !symptom.requiresResponsive && !symptom.requiresBreathing) {
       errors.push(`symptom "${id}": canBeHistorical requires an assessability constraint`);
     }
-    if (symptom.selectionPriority !== undefined && (!Number.isInteger(symptom.selectionPriority) || symptom.selectionPriority < 0 || symptom.selectionPriority > 100)) {
-      errors.push(`symptom "${id}": selectionPriority must be an integer from 0 to 100`);
+    for (const field of ['selectionPriority', 'displayPriority']) {
+      if (symptom[field] !== undefined && (!Number.isInteger(symptom[field]) || symptom[field] < 0 || symptom[field] > 100)) {
+        errors.push(`symptom "${id}": ${field} must be an integer from 0 to 100`);
+      }
     }
+  }
+  if (Object.values(symptoms).filter((symptom) => symptom.quickAccess).length > 10) {
+    errors.push('symptoms: quickAccess must be limited to at most 10 items');
   }
 
   if (!plainObject(categories) || Object.keys(categories).length === 0) {
