@@ -1,10 +1,10 @@
 const CACHE_PREFIX = 'emdadgar-';
-const SHELL_CACHE = `${CACHE_PREFIX}shell-v6`;
+const SHELL_CACHE = `${CACHE_PREFIX}shell-v7`;
 const SHELL_FILES = [
   './',
   './index.html',
-  './css/app.css?v=6',
-  './js/app.js?v=6',
+  './css/app.css?v=7',
+  './js/app.js?v=7',
   './js/engine.js',
   './js/kb.js',
   './js/schema.js',
@@ -69,6 +69,6 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Online loads receive fresh shell assets; offline loads fall back to shell-v6.
+  // Online loads receive fresh shell assets; offline loads fall back to shell-v7.
   event.respondWith(networkFirst(event.request));
 });
