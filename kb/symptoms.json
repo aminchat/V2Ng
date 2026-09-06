@@ -1,0 +1,254 @@
+{
+  "conscious": {
+    "label": "به صدا/تکان واکنش نشان می‌دهد"
+  },
+  "unresponsive": {
+    "label": "بی‌هوش / بی‌واکنش"
+  },
+  "breathing_normal": {
+    "label": "تنفس عادی"
+  },
+  "gasping": {
+    "label": "تنفس طبیعی ندارد؛ فقط نفس‌های بریده و گاه‌به‌گاه دارد"
+  },
+  "not_breathing": {
+    "label": "هیچ تنفسی ندارد"
+  },
+  "bleeding_heavy": {
+    "label": "خونریزی شدید/جهنده یا خیس‌شدن سریع پانسمان"
+  },
+  "fainting": {
+    "label": "غش/از دست دادن موقت هوشیاری"
+  },
+  "dizziness": {
+    "label": "سرگیجه"
+  },
+  "nausea_vomiting": {
+    "label": "تهوع یا استفراغ"
+  },
+  "vomiting_repeated": {
+    "label": "استفراغ مکرر"
+  },
+  "difficulty_breathing": {
+    "label": "تنگی تنفس / سخت نفس کشیدن"
+  },
+  "chest_pain": {
+    "label": "درد یا سنگینی سینه"
+  },
+  "confusion": {
+    "label": "گیجی/ناهماهنگی"
+  },
+  "drowsiness": {
+    "label": "خواب‌آلودگی غیرعادی"
+  },
+  "sweating_cold": {
+    "label": "عرق سرد و پوست سرد/مرطوب"
+  },
+  "speech_difficulty": {
+    "label": "گفتار نامفهوم یا ناتوانی در گفتن جملهٔ کامل"
+  },
+  "facial_droop": {
+    "label": "افتادگی یک طرف صورت"
+  },
+  "arm_weakness": {
+    "label": "بی‌حالی یک دست یا پا"
+  },
+  "seizure_activity": {
+    "label": "تشنج/لرزش عمومی"
+  },
+  "ptosis": {
+    "label": "افتادگی پلک/سختی بازکردن چشم (مسمومیت عصبی)"
+  },
+  "muscle_tremor": {
+    "label": "لرزش یا اسپاسم عضلانی"
+  },
+  "local_pain": {
+    "label": "درد در محل ضربه/نیش"
+  },
+  "local_swelling": {
+    "label": "تورم در محل ضربه/نیش"
+  },
+  "local_redness": {
+    "label": "قرمزی در محل"
+  },
+  "swelling_spreading": {
+    "label": "تورم در حال گسترش سریع (فراتر از مفصل/کل اندام)"
+  },
+  "bruising": {
+    "label": "کبودی/لکه‌های بنفش روی پوست"
+  },
+  "bleeding_gums": {
+    "label": "خونریزی لثه یا محل سوراخ‌های تزریق"
+  },
+  "hives_widespread": {
+    "label": "کهیر گسترده دور از محل نیش"
+  },
+  "lip_tongue_swelling": {
+    "label": "تورم لب، زبان یا صورت"
+  },
+  "throat_tightness": {
+    "label": "احساس تنگی گلوی/سختی قورت دادن یا صحبت"
+  },
+  "wheezing": {
+    "label": "خس‌خس یا صدای سوت هنگام تنفس"
+  },
+  "cyanosis": {
+    "label": "کبودی لب یا ناخن"
+  },
+  "saw_snake": {
+    "label": "مار دیده شده یا گزش مار قویاً محتمل است"
+  },
+  "two_punctures": {
+    "label": "دو جای سوزن‌خوردگی کنار هم در محل گزش"
+  },
+  "scorpion_seen": {
+    "label": "عقرب دیده شد یا نزد مصدوم است"
+  },
+  "stinger_visible": {
+    "label": "نیش/جسم خارجی در پوست دیده می‌شود"
+  },
+  "multiple_stings": {
+    "label": "نیش‌های متعدد"
+  },
+  "tick_attached": {
+    "label": "کنه به پوست چسبیده"
+  },
+  "animal_bite": {
+    "label": "گزش سگ، گربه یا حیوان دیگر"
+  },
+  "burn_face_hands_feet": {
+    "label": "سوختگی صورت، دست، پا، اندام تناسلی یا روی مفصل بزرگ"
+  },
+  "burn_large": {
+    "label": "سوختگی بزرگ‌تر از کف دست مصدوم"
+  },
+  "burn_deep": {
+    "label": "سوختگی سفید/زغالی/چرمی بدون درد"
+  },
+  "soot_nose": {
+    "label": "دوده در بینی/دهان، گرفتگی صدا یا موهای بینی سوخته"
+  },
+  "stuck_clothing": {
+    "label": "لباس به سوختگی چسبیده"
+  },
+  "electrical_contact": {
+    "label": "تماس با برق/سیم برق"
+  },
+  "chemical_contact": {
+    "label": "تماس با ماده شیمیایی"
+  },
+  "deformation": {
+    "label": "کجی/تغییر شکل زشت اندام"
+  },
+  "open_fracture": {
+    "label": "شکستگی باز (استخوان بیرون‌زده یا زخم عمیق با استخوان)"
+  },
+  "pain_on_movement": {
+    "label": "درد شدید با حرکت قسمت آسیب‌دیده"
+  },
+  "numbness": {
+    "label": "بی‌حسی یا کاهش حس انگشتان دست/پا"
+  },
+  "fall_from_height": {
+    "label": "افتادن از ارتفاع"
+  },
+  "car_accident": {
+    "label": "تصادف خودرو/برخورد"
+  },
+  "joint_swelling": {
+    "label": "تورم سریع و تغییر شکل مفصل"
+  },
+  "head_impact": {
+    "label": "ضربه مستقیم به سر"
+  },
+  "known_diabetic": {
+    "label": "مصدوم دیابتی شناخته‌شده است"
+  },
+  "fruity_breath": {
+    "label": "بوی میوه‌ای از دهان"
+  },
+  "kussmaul": {
+    "label": "تنفس عمیق، سریع و سخت"
+  },
+  "shivering": {
+    "label": "لرز شدید"
+  },
+  "cold_skin": {
+    "label": "پوست سرد و رنگ‌پریده"
+  },
+  "hot_dry_skin": {
+    "label": "پوست بسیار داغ و خشک"
+  },
+  "hot_flushed": {
+    "label": "پوست بسیار داغ، با یا بدون تعریق زیاد"
+  },
+  "known_allergen_exposure": {
+    "label": "بیماری آلرژی شناخته‌شده / مواجهه با ماده حساسیت‌زا"
+  },
+  "choking_signs": {
+    "label": "ناتوانی در حرف‌زدن، نفس‌کشیدن یا سرفهٔ مؤثر"
+  },
+  "coughing_effort": {
+    "label": "سرفهٔ قوی و مؤثر دارد و می‌تواند حرف بزند"
+  },
+  "drowning_recent": {
+    "label": "مصدوم از آب/استخر نجات پیدا کرده است"
+  },
+  "substance_access": {
+    "label": "دسترس به دارو/سم/ماده شیمیایی (ارزیابی شده یا مشکوک)"
+  },
+  "container_available": {
+    "label": "ظرف/باقی‌مانده ماده در دسترس است"
+  },
+  "embedded_eye": {
+    "label": "جسم خارجی فرورفته در چشم"
+  },
+  "object_embedded": {
+    "label": "جسم خارجی فرورفته در بدن"
+  },
+  "wound_deep": {
+    "label": "زخم عمیق یا طولانی"
+  },
+  "seizure_long": {
+    "label": "تشنج بیش از ۵ دقیقه طول کشیده"
+  },
+  "first_seizure": {
+    "label": "تشنج اولین بار است"
+  },
+  "pregnant": {
+    "label": "مصدوم باردار است"
+  },
+  "child_victim": {
+    "label": "مصدوم کودک است"
+  },
+  "elderly_victim": {
+    "label": "مصدوم مسن است"
+  },
+  "heart_known": {
+    "label": "سابقه بیماری قلبی"
+  },
+  "time_onset": {
+    "label": "زمان شروع علائم یا آخرین زمان سلامت معلوم است"
+  },
+  "shivering_stopped": {
+    "label": "در سرمای شدید، لرز متوقف شده است"
+  },
+  "severe_headache": {
+    "label": "سردرد شدید یا رو به بدترشدن پس از ضربه"
+  },
+  "unequal_pupils": {
+    "label": "مردمک‌های دو چشم هم‌اندازه نیستند"
+  },
+  "blood_thinner": {
+    "label": "داروی رقیق‌کنندهٔ خون مصرف می‌کند یا اختلال خونریزی دارد"
+  },
+  "neck_pain": {
+    "label": "درد یا حساسیت گردن پس از ضربه"
+  },
+  "nosebleed": {
+    "label": "خونریزی از بینی"
+  },
+  "bleeding_persistent": {
+    "label": "خونریزی با فشار پیوسته متوقف نمی‌شود"
+  }
+}

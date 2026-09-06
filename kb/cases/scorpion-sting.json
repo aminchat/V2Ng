@@ -1,0 +1,64 @@
+{
+  "id": "scorpion-sting",
+  "title": "نیش عقرب",
+  "icon": "🦂",
+  "category": "bite",
+  "version": 2,
+  "updatedAt": "2026-09-06",
+  "summary": "ارزیابی فوری؛ درد کم، مسمومیت شدید یا عوارض تأخیری را رد نمی‌کند",
+  "sources": [
+    "WHO EMRO epidemiology of scorpionism in southern Iran, 2026",
+    "Scorpion envenomation in Iran: Hemiscorpius lepturus and Androctonus crassicauda clinical literature",
+    "Iranian clinical grading and management studies for scorpion envenomation"
+  ],
+  "nationalNote": "Hemiscorpius lepturus (گادیم) در جنوب و جنوب‌غرب ایران ممکن است ابتدا درد کمی ایجاد کند اما با تأخیر موجب همولیز، نکروز و آسیب کلیه شود. Androctonus crassicauda نیز از گونه‌های مهم ایران است. کودکان، به‌ویژه زیر ۱۰ سال، آسیب‌پذیرترند.",
+  "match": {
+    "scorpion_seen": 6,
+    "local_pain": 1,
+    "local_swelling": 2
+  },
+  "riskQuestions": [
+    "difficulty_breathing",
+    "muscle_tremor",
+    "confusion",
+    "sweating_cold",
+    "local_swelling",
+    "bruising",
+    "child_victim",
+    "elderly_victim",
+    "fainting"
+  ],
+  "call115": {
+    "always": true,
+    "text": "در ایران، کودک، علائم عمومی، نیش در جنوب/جنوب‌غرب یا هر نیش با گونهٔ نامعلوم نیازمند تماس فوری با ۱۱۵ است؛ درد کم اطمینان‌بخش نیست"
+  },
+  "actions": [
+    "از عقرب فاصله بگیرید و بدون تلاش برای گرفتن آن، با ۱۱۵ تماس بگیرید؛ زمان و محل جغرافیایی نیش را بگویید.",
+    "محل را با آب و صابون بشویید و زیورآلات یا لباس تنگ نزدیک اندام را خارج کنید.",
+    "فرد و اندام را آرام و کم‌حرکت نگه دارید. برای کاهش درد از کمپرس خنکِ پیچیده در پارچه استفاده کنید؛ یخ مستقیم نگذارید.",
+    "تنفس، هوشیاری، تعریق، استفراغ، لرزش، ادرار تیره، زردی، خونریزی یا گسترش تورم را بازبینی کنید و تغییرات را به ۱۱۵ گزارش دهید.",
+    "کودکان، سالمندان و افراد دارای بیماری زمینه‌ای را با اولویت بالا منتقل کنید. حتی با درد اندک، ارزیابی پزشکی را عقب نیندازید.",
+    "پادزهر و درمان‌های دارویی فقط بر اساس گونهٔ محتمل، زمان، منطقه و علائم و در مرکز درمانی تصمیم‌گیری می‌شوند."
+  ],
+  "redFlags": [
+    {
+      "when": [
+        "difficulty_breathing",
+        "muscle_tremor",
+        "confusion",
+        "sweating_cold",
+        "bruising",
+        "child_victim",
+        "fainting"
+      ],
+      "text": "مسمومیت عمومی یا فرد پرخطر؛ تماس و انتقال فوری"
+    }
+  ],
+  "prohibitions": [
+    "تورنیکه یا بانداژ تنگ نبندید و زخم را نبرید یا مکش نکنید",
+    "یخ مستقیم، الکل، مواد گیاهی یا شیمیایی روی محل نگذارید",
+    "داروی خواب‌آور یا مسکن ضدالتهابی را خودسرانه ندهید",
+    "به‌علت نبود درد یا کم‌بودن آن، مراجعه را عقب نیندازید",
+    "برای گرفتن عقرب خطر نکنید"
+  ]
+}
