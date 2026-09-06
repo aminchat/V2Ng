@@ -1,4 +1,4 @@
-import { KnowledgeBase } from './kb.js';
+import { KnowledgeBase } from './kb.js?v=8';
 import {
   TRIAGE_QUESTIONS,
   hasCriticalSymptoms,
@@ -17,7 +17,7 @@ import {
   triggeredFlags,
   triageRoute,
   triageSymptoms,
-} from './engine.js';
+} from './engine.js?v=8';
 
 const kb = new KnowledgeBase();
 const app = document.getElementById('app');
@@ -753,7 +753,7 @@ async function checkForAppUpdate({ force = false } = {}) {
 async function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return;
   try {
-    const registration = await navigator.serviceWorker.register('./sw.js?v=7', {
+    const registration = await navigator.serviceWorker.register('./sw.js?v=8', {
       scope: './',
       updateViaCache: 'none',
     });
@@ -835,10 +835,12 @@ kb.load()
   .then((result) => {
     state.ready = true;
     render({ focus: true });
+    window.dispatchEvent(new Event('emdadgar:boot-complete'));
     if (result.fromCache) backgroundSync();
   })
   .catch((error) => {
     console.error(error);
     state.fatalError = error;
     renderFatal(error);
+    window.dispatchEvent(new Event('emdadgar:boot-complete'));
   });
