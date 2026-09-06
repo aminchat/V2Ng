@@ -1,5 +1,6 @@
 const CACHE_PREFIX = 'emdadgar-';
-const SHELL_CACHE = `${CACHE_PREFIX}shell-v4`;
+// v5: symptoms category strip navigation (css/app.css + js/app.js) changed.
+const SHELL_CACHE = `${CACHE_PREFIX}shell-v5`;
 const SHELL_FILES = [
   './',
   './index.html',

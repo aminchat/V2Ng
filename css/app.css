@@ -25,6 +25,13 @@
 * { box-sizing: border-box; }
 html { min-height: 100%; scroll-behavior: smooth; }
 body { margin: 0; min-height: 100%; background: var(--bg); }
+
+/* The horizontal category strip must never widen the document. The width-increasing
+   chain (grid/flex with unbreakable content) is fixed below, and these guards only
+   back that up: html hides viewport overflow; body uses overflow-x: clip so it never
+   becomes a scroll container (hidden would break position: sticky in the topbar). */
+html { overflow-x: hidden; }
+body { max-width: 100%; overflow-x: clip; }
 button, input { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
 button { color: inherit; }
@@ -69,6 +76,8 @@ h1[tabindex="-1"]:focus { outline: none; }
   background: var(--surface);
   box-shadow: var(--shadow);
 }
+/* Layout chain that keeps horizontal overflow inside the strip instead of widening the page. */
+.app-shell, .body, .category-fieldset, .category-nav { min-width: 0; max-width: 100%; }
 
 .topbar {
   position: sticky;
@@ -216,12 +225,52 @@ h1[tabindex="-1"]:focus { outline: none; }
 .btn.text { color: var(--primary-dark); background: transparent; }
 .card-spaced { margin-top: 16px; }
 
-.category-fieldset { margin: 0 0 20px; padding: 0; border: 0; }
+.category-fieldset {
+  margin: 0 0 20px;
+  padding: 0;
+  border: 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-inline-size: 0;
+}
 .category-fieldset legend, .body section > h2, .steps > h2, .related > h2, .prohibitions > h2, .red-flags > h2 {
   margin: 0 0 12px;
   font-size: 1rem;
 }
-.category-scroll { display: flex; gap: 8px; padding: 4px 2px 8px; overflow-x: auto; scrollbar-width: thin; }
+/* Grid wrapper: the outer auto columns hold the prev/next controls and the middle
+   minmax(0, 1fr) track gives the scroller a bounded width, so the nowrap tab pills
+   can never stretch the page. */
+.category-nav {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+.category-scroll {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 4px 2px 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable;
+  scroll-snap-type: inline proximity;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(159 31 43 / 55%) var(--surface-soft);
+}
+/* Make the horizontal scrollbar visible on WebKit (Windows Chrome/Edge overlay bars). */
+.category-scroll::-webkit-scrollbar { height: 10px; }
+.category-scroll::-webkit-scrollbar-track { border-radius: 999px; background: var(--surface-soft); }
+.category-scroll::-webkit-scrollbar-thumb { border-radius: 999px; background: rgb(159 31 43 / 55%); }
+.category-scroll::-webkit-scrollbar-thumb:hover { background: rgb(159 31 43 / 75%); }
 .cat-btn, .chip {
   min-height: 44px;
   padding: 10px 14px;
@@ -230,7 +279,33 @@ h1[tabindex="-1"]:focus { outline: none; }
   background: var(--surface);
   cursor: pointer;
 }
-.cat-btn { flex: none; white-space: nowrap; }
+.cat-btn {
+  flex: 0 0 auto;
+  min-height: 44px;
+  white-space: nowrap;
+  scroll-snap-align: center;
+}
+.cat-nav-btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--primary-dark);
+  font-size: 1.3rem;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.cat-nav-btn:hover:not(:disabled) { border-color: var(--primary); }
+.cat-nav-btn:disabled { opacity: .35; cursor: default; }
 .cat-btn.active, .chip.active, .chip[aria-pressed="true"] { color: #fff; border-color: var(--primary); background: var(--primary); }
 .chips { display: flex; flex-wrap: wrap; gap: 9px; }
 .risk-chips { margin-bottom: 10px; }
@@ -351,6 +426,13 @@ h1[tabindex="-1"]:focus { outline: none; }
   .topbar { padding-inline: 14px; }
   .kb-grid { grid-template-columns: 1fr; }
   .pill { max-width: 115px; }
+}
+
+/* Very narrow screens: shrink the prev/next controls so the strip keeps room, but the
+   strip itself must still pan by touch without moving the page. */
+@media (max-width: 420px) {
+  .category-nav { gap: 6px; }
+  .cat-nav-btn { width: 36px; min-width: 36px; height: 36px; min-height: 36px; font-size: 1.15rem; }
 }
 
 @media (min-width: 761px) {

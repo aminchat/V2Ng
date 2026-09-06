@@ -193,6 +193,7 @@ test('service worker derives subpath boundaries from registration scope', servic
 test('service worker deliberately bypasses HTTP caching for KB', serviceWorker.includes('if (url.pathname.startsWith(`${scopePath}kb/`)) return'));
 test('service worker only deletes its own cache namespace', serviceWorker.includes('key.startsWith(CACHE_PREFIX)'));
 test('service worker does not call skipWaiting during an active emergency flow', !serviceWorker.includes('skipWaiting'));
+test('service worker shell cache bumped to v5 for the category strip changes', serviceWorker.includes('shell-v5') && !serviceWorker.includes('shell-v4'));
 
 const html = readFileSync(join(root, 'index.html'), 'utf8');
 const appSource = readFileSync(join(root, 'js/app.js'), 'utf8');
@@ -204,6 +205,22 @@ test('related-topic ranking includes current and historical selections', appSour
 test('router guards malformed URI decoding', appSource.includes('decodeURIComponent') && appSource.includes('} catch {'));
 test('background KB synchronization is started after cached load', appSource.includes('if (result.fromCache) backgroundSync()'));
 test('rendered KB values pass through HTML escaping', appSource.includes('${e(item.title)}') && appSource.includes('${e(action)}'));
+
+const cssSource = readFileSync(join(root, 'css/app.css'), 'utf8');
+
+/* ---------- Symptoms category strip (RTL) ---------- */
+test('category markup keeps the strip between previous/next controls', appSource.includes('class="category-nav"') && appSource.includes('id="category-prev"') && appSource.includes('id="category-scroll"') && appSource.includes('id="category-next"'));
+test('category strip is an accessible labelled tablist', appSource.includes('role="tablist"') && appSource.includes('aria-label="دسته‌های نشانه‌ها"'));
+test('category tabs carry an accessible selected state and roving tab order', appSource.includes('role="tab"') && appSource.includes('aria-selected="${active') && appSource.includes('tabindex="${active'));
+test('active category is brought into view without vertical page jumps', appSource.includes('scrollIntoView({ block: \'nearest\', inline: \'center\' })'));
+test('category Arrow/Home/End keys exist and mirror the RTL direction', appSource.includes("'ArrowRight'") && appSource.includes("'ArrowLeft'") && appSource.includes("'Home'") && appSource.includes("'End'") && appSource.includes('getComputedStyle(scroll).direction'));
+test('category wheel listener is registered with passive: false', appSource.includes('{ passive: false }'));
+test('category wheel handler only claims scrolling while overflow remains', appSource.includes('scroll.scrollWidth - scroll.clientWidth') && appSource.includes('event.preventDefault()'));
+test('category fieldset cannot widen the page (min-inline-size zero)', cssSource.includes('min-inline-size: 0'));
+test('category nav grid bounds the scroller track', cssSource.includes('grid-template-columns: auto minmax(0, 1fr) auto'));
+test('category scroller contains horizontal overflow on its own axis', cssSource.includes('overflow-x: auto') && cssSource.includes('overflow-y: hidden') && cssSource.includes('overscroll-behavior-x: contain'));
+test('app shell and page never create horizontal overflow', cssSource.includes('overflow-x: hidden') && cssSource.includes('.app-shell, .body, .category-fieldset, .category-nav { min-width: 0; max-width: 100%; }'));
+test('horizontal scrollbar styling is visible in WebKit and Firefox', cssSource.includes('::-webkit-scrollbar') && cssSource.includes('scrollbar-color'));
 
 /* ---------- Tool robustness ---------- */
 const badArgs = spawnSync(process.execPath, [join(root, 'tools/build-manifest.mjs'), '--unknown'], { encoding: 'utf8' });
