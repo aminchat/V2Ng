@@ -96,6 +96,13 @@ function statusPill() {
     : '<span class="pill offline">● آفلاین؛ راهنمای ذخیره‌شده در دسترس است</span>';
 }
 
+function compatibilityNotice() {
+  if (!window.indexedDB) {
+    return '<div class="compatibility-notice" role="alert">مرورگر شما از فضای ذخیره‌سازی آفلاین پشتیبانی نمی‌کند. راهنما فقط در حین اتصال اینترنت قابل استفاده هستند.</div>';
+  }
+  return '';
+}
+
 function renderHome() {
   app.innerHTML = `
     <header class="topbar">
@@ -103,6 +110,7 @@ function renderHome() {
       ${statusPill()}
     </header>
     <main class="body home-body">
+      ${compatibilityNotice()}
       <section class="safety-notice" aria-labelledby="safety-heading">
         <h2 id="safety-heading">اگر وضعیت تهدیدکنندهٔ حیات است</h2>
         <p>ابتدا ایمنی صحنه را بسنجید. با <strong>۱۱۵</strong> تماس بگیرید، تلفن را روی بلندگو بگذارید و راهنمای اپراتور را دنبال کنید.</p>
@@ -211,6 +219,10 @@ function renderSymptoms() {
     ? kb.categories[state.diffCategory]?.diffSymptoms || []
     : [...new Set(categoryIds.flatMap((id) => kb.categories[id].diffSymptoms || []))];
 
+  const historicalSelected = state.diffCategory
+    ? state.diffSelected.filter((id) => !visibleSymptoms.includes(id))
+    : [];
+
   app.innerHTML = `
     <header class="topbar">
       <button class="icon-btn" id="back-home" type="button" aria-label="بازگشت به خانه">‹</button>
@@ -218,6 +230,7 @@ function renderSymptoms() {
       <a class="mini-call" href="tel:115" aria-label="تماس با اورژانس ۱۱۵">۱۱۵</a>
     </header>
     <main class="body">
+      ${compatibilityNotice()}
       <aside class="disclaimer compact"><strong>تشخیص نیست:</strong> اگر بیهوشی، تنفس غیرطبیعی، انسداد شدید راه هوایی یا خونریزی شدید وجود دارد، به «بررسی فوری» برگردید و با ۱۱۵ تماس بگیرید.</aside>
       <fieldset class="category-fieldset">
         <legend>دستهٔ نشانه‌ها</legend>
@@ -228,8 +241,14 @@ function renderSymptoms() {
       </fieldset>
       <section aria-labelledby="symptom-heading">
         <h2 id="symptom-heading">همهٔ نشانه‌های موجود را انتخاب کنید</h2>
+        <p class="section-help">نشانه‌ها را بر اساس دسته فیلتر کنید یا همه را ببینید</p>
         <div class="chips">${symptomChips(visibleSymptoms, state.diffSelected)}</div>
       </section>
+      ${historicalSelected.length ? `<section class="historical-symptoms" aria-labelledby="historical-heading">
+        <h2 id="historical-heading">از دسته‌های دیگر انتخاب شده</h2>
+        <p>این نشانه‌ها در دسته‌های دیگر انتخاب شدن و در نتایج لحاظ می‌شن</p>
+        <div class="chips">${symptomChips(historicalSelected, state.diffSelected)}</div>
+      </section>` : ''}
       <button class="btn primary full card-spaced" id="show-results" type="button" ${state.diffSelected.length ? '' : 'disabled'}>بررسی مسیرهای مرتبط (${state.diffSelected.length})</button>
     </main>`;
 
@@ -265,7 +284,7 @@ function renderDifferentialResults() {
     </header>
     <main class="body">
       ${critical ? `<section class="emergency-banner"><h2>نشانهٔ خطر انتخاب شده است</h2><p>بررسی نرم‌افزار را متوقف کنید و اکنون با ۱۱۵ تماس بگیرید. اگر فرد تنفس طبیعی ندارد، CPR را آغاز کنید.</p><a class="btn emergency full" href="tel:115">☎ تماس با ۱۱۵</a></section>` : ''}
-      <section class="selected-summary"><h2>نشانه‌های انتخاب‌شده</h2><p>${selectedLabels.map(e).join('، ')}</p></section>
+      <section class="selected-summary"><h2>نشانه‌های انتخاب‌شده</h2><h3>بر اساس هم‌پوشانی با پایگاه دانش</h3><p>${selectedLabels.map(e).join('، ')}</p></section>
       <p class="result-explainer">این فهرست فقط موضوعات آموزشی مرتبط را بر پایهٔ هم‌پوشانی نشانه‌ها مرتب می‌کند و احتمال بیماری یا تشخیص پزشکی نیست. پیش از اقدام، پرسش‌های هشدار هر راهنما را مرور کنید.</p>
       <div class="result-list">
         ${ranked.length ? ranked.map(({ case: item, matched }) => `
@@ -273,7 +292,7 @@ function renderDifferentialResults() {
             <div class="case-icon" aria-hidden="true">${e(item.icon)}</div>
             <div><h2>${e(item.title)}</h2><p>${e(item.summary)}</p><small>${matched.length} نشانهٔ مرتبط</small></div>
             <a class="btn outline" href="${e(caseHref(item.id))}">بازکردن راهنما</a>
-          </article>`).join('') : '<div class="empty"><h2>مسیر مشخصی پیدا نشد</h2><p>نشانه‌ها را ویرایش کنید. اگر نگران هستید یا حال فرد بدتر می‌شود با ۱۱۵ تماس بگیرید.</p></div>'}
+          </article>`).join('') : '<div class="empty"><h2>مسیر مشخصی پیدا نشد</h2><p class="empty-inline">هیچ راهنمایی با نشانه‌های انتخاب‌شده هم‌پوشانی ندارد.</p><p>نشانه‌ها را ویرایش کنید. اگر نگران هستید یا حال فرد بدتر می‌شود با ۱۱۵ تماس بگیرید.</p></div>'}
       </div>
       <button class="btn secondary full card-spaced" id="edit-bottom" type="button">ویرایش نشانه‌ها</button>
     </main>`;
@@ -389,6 +408,7 @@ function renderKb() {
       ${statusPill()}
     </header>
     <main class="body">
+      ${compatibilityNotice()}
       <section class="sync-card" aria-labelledby="sync-heading">
         <h2 id="sync-heading">پایگاه دانش نسخهٔ ${e(kb.metadata?.kbVersion ?? '—')}</h2>
         <p>آخرین همگام‌سازی: ${e(lastSync)}</p>
