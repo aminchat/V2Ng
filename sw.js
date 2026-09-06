@@ -1,11 +1,10 @@
 const CACHE_PREFIX = 'emdadgar-';
-// v5: symptoms category strip navigation (css/app.css + js/app.js) changed.
-const SHELL_CACHE = `${CACHE_PREFIX}shell-v5`;
+const SHELL_CACHE = `${CACHE_PREFIX}shell-v6`;
 const SHELL_FILES = [
   './',
   './index.html',
-  './css/app.css',
-  './js/app.js',
+  './css/app.css?v=6',
+  './js/app.js?v=6',
   './js/engine.js',
   './js/kb.js',
   './js/schema.js',
@@ -19,8 +18,15 @@ const SHELL_FILES = [
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(SHELL_CACHE).then((cache) => cache.addAll(SHELL_FILES.map((url) => new Request(url, { cache: 'reload' })))),
+    caches.open(SHELL_CACHE).then((cache) => cache.addAll(
+      SHELL_FILES.map((url) => new Request(url, { cache: 'reload' })),
+    )),
   );
+});
+
+// Activation is user-controlled: app.js sends this message from the visible update banner.
+self.addEventListener('message', (event) => {
+  if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
@@ -37,27 +43,32 @@ function isWithinScope(url) {
   return url.origin === self.location.origin && url.href.startsWith(self.registration.scope);
 }
 
+async function networkFirst(request, fallbackKey = request) {
+  const cache = await caches.open(SHELL_CACHE);
+  try {
+    const response = await fetch(new Request(request, { cache: 'no-cache' }));
+    if (response.ok) await cache.put(fallbackKey, response.clone());
+    return response;
+  } catch {
+    return (await cache.match(fallbackKey)) || Response.error();
+  }
+}
+
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
   if (!isWithinScope(url)) return;
 
-  // Knowledge-base responses are deliberately not HTTP-cached. The app verifies a
-  // complete snapshot and commits it atomically to IndexedDB before using it.
+  // KB snapshots deliberately bypass HTTP caching; the app validates and commits them
+  // atomically to IndexedDB before use.
   const scopePath = new URL(self.registration.scope).pathname;
   if (url.pathname.startsWith(`${scopePath}kb/`)) return;
 
   if (event.request.mode === 'navigate') {
-    event.respondWith(
-      fetch(event.request).catch(async () => {
-        const cache = await caches.open(SHELL_CACHE);
-        return (await cache.match('./index.html')) || Response.error();
-      }),
-    );
+    event.respondWith(networkFirst(event.request, './index.html'));
     return;
   }
 
-  event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request)),
-  );
+  // Online loads receive fresh shell assets; offline loads fall back to shell-v6.
+  event.respondWith(networkFirst(event.request));
 });
