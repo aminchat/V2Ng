@@ -192,8 +192,11 @@ test('service worker precaches the schema module and shell', serviceWorker.inclu
 test('service worker derives subpath boundaries from registration scope', serviceWorker.includes('self.registration.scope'));
 test('service worker deliberately bypasses HTTP caching for KB', serviceWorker.includes('if (url.pathname.startsWith(`${scopePath}kb/`)) return'));
 test('service worker only deletes its own cache namespace', serviceWorker.includes('key.startsWith(CACHE_PREFIX)'));
-test('service worker does not call skipWaiting during an active emergency flow', !serviceWorker.includes('skipWaiting'));
-test('service worker shell cache bumped to v5 for the category strip changes', serviceWorker.includes('shell-v5') && !serviceWorker.includes('shell-v4'));
+const installSection = serviceWorker.slice(serviceWorker.indexOf("self.addEventListener('install'"), serviceWorker.indexOf("self.addEventListener('message'"));
+test('service worker never activates an update automatically during an emergency flow', !installSection.includes('skipWaiting'));
+test('service worker only accepts explicit SKIP_WAITING activation messages', serviceWorker.includes("event.data?.type === 'SKIP_WAITING'") && serviceWorker.includes('self.skipWaiting()'));
+test('service worker shell cache is v6', serviceWorker.includes('shell-v6') && !serviceWorker.includes('shell-v5'));
+test('service worker uses network-first shell delivery with an offline cache fallback', serviceWorker.includes('async function networkFirst') && serviceWorker.includes("cache: 'no-cache'") && serviceWorker.includes('cache.match(fallbackKey)'));
 
 const html = readFileSync(join(root, 'index.html'), 'utf8');
 const appSource = readFileSync(join(root, 'js/app.js'), 'utf8');
@@ -208,19 +211,30 @@ test('rendered KB values pass through HTML escaping', appSource.includes('${e(it
 
 const cssSource = readFileSync(join(root, 'css/app.css'), 'utf8');
 
-/* ---------- Symptoms category strip (RTL) ---------- */
-test('category markup keeps the strip between previous/next controls', appSource.includes('class="category-nav"') && appSource.includes('id="category-prev"') && appSource.includes('id="category-scroll"') && appSource.includes('id="category-next"'));
-test('category strip is an accessible labelled tablist', appSource.includes('role="tablist"') && appSource.includes('aria-label="دسته‌های نشانه‌ها"'));
-test('category tabs carry an accessible selected state and roving tab order', appSource.includes('role="tab"') && appSource.includes('aria-selected="${active') && appSource.includes('tabindex="${active'));
-test('active category is brought into view without vertical page jumps', appSource.includes('scrollIntoView({ block: \'nearest\', inline: \'center\' })'));
-test('category Arrow/Home/End keys exist and mirror the RTL direction', appSource.includes("'ArrowRight'") && appSource.includes("'ArrowLeft'") && appSource.includes("'Home'") && appSource.includes("'End'") && appSource.includes('getComputedStyle(scroll).direction'));
-test('category wheel listener is registered with passive: false', appSource.includes('{ passive: false }'));
-test('category wheel handler only claims scrolling while overflow remains', appSource.includes('scroll.scrollWidth - scroll.clientWidth') && appSource.includes('event.preventDefault()'));
-test('category fieldset cannot widen the page (min-inline-size zero)', cssSource.includes('min-inline-size: 0'));
-test('category nav grid bounds the scroller track', cssSource.includes('grid-template-columns: auto minmax(0, 1fr) auto'));
-test('category scroller contains horizontal overflow on its own axis', cssSource.includes('overflow-x: auto') && cssSource.includes('overflow-y: hidden') && cssSource.includes('overscroll-behavior-x: contain'));
-test('app shell and page never create horizontal overflow', cssSource.includes('overflow-x: hidden') && cssSource.includes('.app-shell, .body, .category-fieldset, .category-nav { min-width: 0; max-width: 100%; }'));
-test('horizontal scrollbar styling is visible in WebKit and Firefox', cssSource.includes('::-webkit-scrollbar') && cssSource.includes('scrollbar-color'));
+/* ---------- Responsive symptom categories ---------- */
+test('desktop category buttons are an accessible labelled group', appSource.includes('id="category-tabs"') && appSource.includes('role="group"') && appSource.includes('aria-label="دسته‌های نشانه‌ها"'));
+test('desktop category buttons expose their pressed state', appSource.includes('data-cat="${e(id)}"') && appSource.includes('aria-pressed="${active}"'));
+test('mobile category select has a visible associated label', appSource.includes('for="category-select"') && appSource.includes('id="category-select"') && appSource.includes('انتخاب دستهٔ نشانه‌ها'));
+test('category options are generated from the same data as desktop controls', appSource.includes('const categoryItems = [null, ...categoryIds]') && appSource.includes('const categoryOptions = categoryItems.map'));
+test('both category controls update the shared category state', appSource.includes('selectSymptomCategory(button.dataset.cat)') && appSource.includes("select.addEventListener('change', () => selectSymptomCategory(select.value))"));
+test('category selection preserves symptom selections', !appSource.slice(appSource.indexOf('function selectSymptomCategory'), appSource.indexOf('function setupCategoryControls')).includes('diffSelected'));
+test('desktop categories wrap instead of scrolling horizontally', cssSource.includes('.category-tabs') && cssSource.includes('flex-wrap: wrap'));
+test('mobile switches from wrapped buttons to a full-width select', cssSource.includes('@media (max-width: 600px)') && cssSource.includes('.category-tabs { display: none; }') && cssSource.includes('.category-select-label, .category-select { display: block; }'));
+test('category fieldset cannot widen the page', cssSource.includes('min-inline-size: 0') && cssSource.includes('.category-fieldset'));
+test('obsolete RTL category scroll code is gone', !appSource.includes('scrollLeft') && !appSource.includes('scrollIntoView') && !appSource.includes("addEventListener('wheel'") && !appSource.includes('category-prev'));
+
+/* ---------- User-controlled app updates ---------- */
+test('versioned v6 assets bypass an older cache during this upgrade', html.includes('css/app.css?v=6') && html.includes('js/app.js?v=6') && serviceWorker.includes('./css/app.css?v=6') && serviceWorker.includes('./js/app.js?v=6'));
+test('the update banner is outside the rerendered app shell', html.indexOf('id="app-update"') < html.indexOf('id="app"'));
+test('the update banner offers now and later actions', html.includes('id="app-update-now"') && html.includes('id="app-update-later"'));
+test('registration bypasses HTTP cache when checking the worker', appSource.includes("updateViaCache: 'none'") && appSource.includes("register('./sw.js?v=6'"));
+test('an already waiting worker is offered immediately', appSource.includes('if (registration.waiting) offerAppUpdate(registration.waiting)'));
+test('new worker installation is observed', appSource.includes("registration.addEventListener('updatefound'"));
+test('updates activate only after the user requests them', appSource.includes("worker.postMessage({ type: 'SKIP_WAITING' })") && appSource.includes("appUpdateNow?.addEventListener('click'"));
+test('later dismisses the same waiting worker for the remainder of the session', appSource.includes('const isNewWorker = waitingServiceWorker !== worker') && appSource.includes('if (isNewWorker) updateDismissed = false') && appSource.includes('updateDismissed = true'));
+test('controller change reload is guarded against loops and unsolicited activation', appSource.includes('if (!updateActivationRequested || reloadingForUpdate) return') && appSource.includes('reloadingForUpdate = true') && appSource.includes('location.reload()'));
+test('update banner is withheld from active emergency and symptom flows', appSource.includes("['home', 'kb'].includes(currentRoute().name)"));
+test('returning to the foreground checks for updates with throttling', appSource.includes("document.addEventListener('visibilitychange'") && appSource.includes('UPDATE_CHECK_INTERVAL'));
 
 /* ---------- Tool robustness ---------- */
 const badArgs = spawnSync(process.execPath, [join(root, 'tools/build-manifest.mjs'), '--unknown'], { encoding: 'utf8' });
