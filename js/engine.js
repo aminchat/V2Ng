@@ -152,6 +152,99 @@ export function toggleHistoricalSymptom(historical, symptomId, symptoms) {
     : [...historical, symptomId];
 }
 
+export function normalizePersianSearch(value = '') {
+  return String(value)
+    .normalize('NFKC')
+    .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, '')
+    .replace(/[يى]/g, 'ی')
+    .replace(/ك/g, 'ک')
+    .replace(/[ةۀ]/g, 'ه')
+    .replace(/[أإٱ]/g, 'ا')
+    .replace(/ؤ/g, 'و')
+    .replace(/[‌‍]/g, ' ')
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .trim()
+    .replace(/\s+/g, ' ');
+}
+
+function displayPriority(id, symptoms) {
+  return Number.isInteger(symptoms[id]?.displayPriority) ? symptoms[id].displayPriority : 0;
+}
+
+export function sortSymptomIds(ids, symptoms) {
+  return [...new Set(ids)].filter((id) => symptoms[id]).sort((firstId, secondId) => (
+    displayPriority(secondId, symptoms) - displayPriority(firstId, symptoms)
+    || symptoms[firstId].label.localeCompare(symptoms[secondId].label, 'fa')
+  ));
+}
+
+export function quickSymptomIds(symptoms) {
+  return sortSymptomIds(
+    Object.keys(symptoms).filter((id) => symptoms[id]?.quickAccess),
+    symptoms,
+  );
+}
+
+export function searchSymptoms(query, symptoms, limit = 24) {
+  const normalizedQuery = normalizePersianSearch(query);
+  if (normalizedQuery.length < 2) return [];
+  const terms = normalizedQuery.split(' ');
+  const compactQuery = normalizedQuery.replace(/\s/g, '');
+
+  return Object.entries(symptoms)
+    .map(([id, symptom]) => {
+      const label = normalizePersianSearch(symptom.label);
+      const aliases = (symptom.aliases || []).map(normalizePersianSearch);
+      const fields = [label, ...aliases];
+      const corpus = fields.join(' ');
+      const compactFields = fields.map((field) => field.replace(/\s/g, ''));
+      const tokenMatch = terms.every((term) => corpus.includes(term));
+      const compactMatch = compactFields.some((field) => field.includes(compactQuery));
+      if (!tokenMatch && !compactMatch) return null;
+
+      let score = 100;
+      if (label === normalizedQuery || label.replace(/\s/g, '') === compactQuery) score = 500;
+      else if (label.startsWith(normalizedQuery)) score = 430;
+      else if (aliases.includes(normalizedQuery) || compactFields.slice(1).includes(compactQuery)) score = 400;
+      else if (aliases.some((alias) => alias.startsWith(normalizedQuery))) score = 350;
+      else if (label.includes(normalizedQuery)) score = 300;
+      else if (aliases.some((alias) => alias.includes(normalizedQuery)) || compactMatch) score = 250;
+      return { id, score: score + displayPriority(id, symptoms) / 100 };
+    })
+    .filter(Boolean)
+    .sort((first, second) => (
+      second.score - first.score
+      || symptoms[first.id].label.localeCompare(symptoms[second.id].label, 'fa')
+    ))
+    .slice(0, limit)
+    .map((entry) => entry.id);
+}
+
+export function suggestSymptoms(selected, cases, symptoms, limit = 6) {
+  const selectedSet = new Set(selected);
+  if (!selectedSet.size) return [];
+  const scores = new Map();
+
+  for (const item of Object.values(cases)) {
+    const matches = Object.entries(item.match || {}).filter(([id]) => selectedSet.has(id));
+    if (!matches.length) continue;
+    const affinity = matches.reduce((sum, [, weight]) => sum + weight, 0);
+    for (const [candidateId, weight] of Object.entries(item.match || {})) {
+      if (selectedSet.has(candidateId) || !symptoms[candidateId]) continue;
+      scores.set(candidateId, (scores.get(candidateId) || 0) + affinity * weight);
+    }
+  }
+
+  return [...scores]
+    .sort(([firstId, firstScore], [secondId, secondScore]) => (
+      secondScore - firstScore
+      || displayPriority(secondId, symptoms) - displayPriority(firstId, symptoms)
+      || symptoms[firstId].label.localeCompare(symptoms[secondId].label, 'fa')
+    ))
+    .slice(0, limit)
+    .map(([id]) => id);
+}
+
 export function rankCases(selected, cases, limit = 5) {
   const selectedSet = new Set(selected);
   return Object.values(cases)
