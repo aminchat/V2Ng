@@ -15,12 +15,22 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon-192.png" type="image/png">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/app.css?v=6">
 </head>
 <body>
   <a class="skip-link" href="#app">پرش به محتوای اصلی</a>
   <div id="route-announcer" class="visually-hidden" role="status" aria-live="polite"></div>
   <div id="sync-announcer" class="visually-hidden" role="status" aria-live="polite"></div>
+  <aside id="app-update" class="app-update" aria-labelledby="app-update-title" hidden>
+    <div>
+      <strong id="app-update-title">نسخهٔ جدید امدادگر آماده است</strong>
+      <p>برای فعال‌شدن نسخهٔ تازه، برنامه یک‌بار بازنشانی می‌شود.</p>
+    </div>
+    <div class="app-update-actions">
+      <button id="app-update-now" class="btn primary" type="button">اکنون به‌روزرسانی</button>
+      <button id="app-update-later" class="btn secondary" type="button">بعداً</button>
+    </div>
+  </aside>
   <div id="app" class="app-shell">
     <main class="loading" role="status" aria-live="polite">
       <div class="spinner" aria-hidden="true"></div>
@@ -28,6 +38,6 @@
     </main>
   </div>
   <noscript><div class="noscript">برای اجرای امدادگر باید JavaScript مرورگر فعال باشد. در وضعیت اورژانسی با ۱۱۵ تماس بگیرید.</div></noscript>
-  <script type="module" src="js/app.js"></script>
+  <script type="module" src="js/app.js?v=6"></script>
 </body>
 </html>
