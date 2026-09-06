@@ -32,8 +32,9 @@ body { margin: 0; min-height: 100%; background: var(--bg); }
    becomes a scroll container (hidden would break position: sticky in the topbar). */
 html { overflow-x: hidden; }
 body { max-width: 100%; overflow-x: clip; }
-button, input { font: inherit; }
+button, input, select { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
+[hidden] { display: none !important; }
 button { color: inherit; }
 a { color: var(--primary-dark); }
 
@@ -288,6 +289,77 @@ h1[tabindex="-1"]:focus { outline: none; }
   color: var(--text);
   background: var(--surface);
 }
+.symptom-search-card {
+  margin-bottom: 18px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-soft);
+}
+.symptom-search-card h2 { margin: 0 0 10px; font-size: 1rem; }
+.symptom-search-card p { margin: 8px 0 0; color: var(--muted); font-size: .82rem; line-height: 1.65; }
+.search-field { position: relative; }
+.search-field input {
+  width: 100%;
+  min-width: 0;
+  min-height: 50px;
+  padding: 11px 14px 11px 48px;
+  border: 1px solid #cdbeb9;
+  border-radius: 13px;
+  color: var(--text);
+  background: var(--surface);
+}
+.search-field input:focus { border-color: var(--focus); }
+.search-field button {
+  position: absolute;
+  inset-block: 5px;
+  inset-inline-end: 5px;
+  width: 40px;
+  border: 0;
+  border-radius: 10px;
+  color: var(--muted);
+  background: transparent;
+  font-size: 1.45rem;
+  cursor: pointer;
+}
+.search-results { margin: 0 0 22px; }
+.section-heading-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.section-heading-row h2 { margin: 0; font-size: 1rem; }
+.result-count { flex: none; color: var(--muted); font-size: .8rem; }
+.selected-tray {
+  margin: 0 0 20px;
+  padding: 15px;
+  border: 1px solid #c7b9b3;
+  border-radius: var(--radius);
+  background: #fffaf7;
+}
+.selected-tray h3 { margin: 14px 0 8px; color: #4f378b; font-size: .88rem; }
+.selected-chips { margin-top: 11px; }
+.selected-chips .chip { padding-block: 8px; }
+.historical-inline .chip.active { border-color: #5e43a5; background: #5e43a5; }
+.small-text-btn, .show-more-symptoms {
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid var(--primary);
+  border-radius: 10px;
+  color: var(--primary-dark);
+  background: var(--surface);
+  font-weight: 700;
+  cursor: pointer;
+}
+.show-more-symptoms { width: 100%; margin-top: 14px; min-height: 46px; }
+.suggested-symptoms {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #b8d7e8;
+  border-radius: var(--radius);
+  background: #f0f8fc;
+}
+.suggested-symptoms h2 { margin: 0 0 9px; font-size: 1rem; }
+.compact-empty { padding: 20px 16px; }
+.compact-empty h2 { margin: 0 0 7px; font-size: 1rem; }
+.compact-empty p { margin: 0; color: var(--muted); line-height: 1.7; }
+.symptom-result-bar { margin-top: 18px; }
 .chips { display: flex; flex-wrap: wrap; gap: 9px; }
 .risk-chips { margin-bottom: 10px; }
 
@@ -409,6 +481,15 @@ h1[tabindex="-1"]:focus { outline: none; }
   .app-update[hidden] { display: none; }
   .app-update-actions { margin-top: 12px; }
   .app-update-actions .btn { flex: 1; padding-inline: 10px; }
+  .symptom-result-bar {
+    position: sticky;
+    z-index: 8;
+    bottom: 0;
+    margin-inline: -6px;
+    padding: 10px 6px calc(10px + env(safe-area-inset-bottom));
+    background: rgb(255 255 255 / 94%);
+    backdrop-filter: blur(10px);
+  }
 }
 
 @media (max-width: 480px) {
