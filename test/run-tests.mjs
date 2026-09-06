@@ -12,7 +12,12 @@ import {
   historicalSymptomIds,
   isCurrentSymptomVisible,
   nextTriageQuestion,
+  normalizePersianSearch,
+  quickSymptomIds,
   rankCases,
+  searchSymptoms,
+  sortSymptomIds,
+  suggestSymptoms,
   symptomModels,
   toggleCurrentSymptom,
   toggleHistoricalSymptom,
@@ -67,6 +72,15 @@ test('schema rejects an unknown compatibility reference', validateKnowledgeBase(
 const invalidHistorySymptoms = clone(kb.symptoms);
 invalidHistorySymptoms.cyanosis.canBeHistorical = true;
 test('schema requires historical symptoms to have an assessability constraint', validateKnowledgeBase(invalidHistorySymptoms, kb.categories, kb.cases).some((error) => error.includes('canBeHistorical requires')));
+const invalidAliasSymptoms = clone(kb.symptoms);
+invalidAliasSymptoms.dizziness.aliases = [''];
+test('schema rejects empty search aliases', validateKnowledgeBase(invalidAliasSymptoms, kb.categories, kb.cases).some((error) => error.includes('aliases must contain')));
+const invalidDisplayPrioritySymptoms = clone(kb.symptoms);
+invalidDisplayPrioritySymptoms.dizziness.displayPriority = 101;
+test('schema bounds symptom display priority', validateKnowledgeBase(invalidDisplayPrioritySymptoms, kb.categories, kb.cases).some((error) => error.includes('displayPriority')));
+const excessiveQuickSymptoms = clone(kb.symptoms);
+Object.values(excessiveQuickSymptoms).slice(0, 11).forEach((symptom) => { symptom.quickAccess = true; });
+test('schema limits the quick-access list', validateKnowledgeBase(excessiveQuickSymptoms, kb.categories, kb.cases).some((error) => error.includes('quickAccess must be limited')));
 
 /* ---------- Triage integration ---------- */
 test('triage starts with consciousness', nextTriageQuestion({}) === 'conscious');
@@ -117,6 +131,20 @@ let historical = toggleHistoricalSymptom([], 'chest_pain', kb.symptoms);
 historical = toggleHistoricalSymptom(historical, 'chest_pain', kb.symptoms);
 test('historical symptom chips toggle deterministically', historical.length === 0);
 
+/* ---------- Fast symptom discovery ---------- */
+test('every symptom provides reviewed Persian search aliases', Object.values(kb.symptoms).every((symptom) => symptom.aliases?.length));
+test('Persian search normalizes Arabic letters and zero-width separators', normalizePersianSearch('  نفس‌تنگي و كاهش  ') === 'نفس تنگی و کاهش');
+test('search finds nosebleed by its common Persian alias', searchSymptoms('خون دماغ', kb.symptoms)[0] === 'nosebleed');
+test('search finds electrical contact despite half-space differences', searchSymptoms('برق گرفتگی', kb.symptoms).includes('electrical_contact'));
+test('search tolerates omitted Persian half-spaces', searchSymptoms('جواب نمیدهد', kb.symptoms).includes('unresponsive'));
+test('one-letter queries deliberately return no noisy results', searchSymptoms('د', kb.symptoms).length === 0);
+const quickIds = quickSymptomIds(kb.symptoms);
+test('quick access contains exactly eight reviewed symptoms', quickIds.length === 8 && quickIds.every((id) => kb.symptoms[id].quickAccess));
+test('display priority puts immediate danger signs before ordinary symptoms', sortSymptomIds(['dizziness', 'unresponsive'], kb.symptoms)[0] === 'unresponsive');
+const scorpionSuggestions = suggestSymptoms(['scorpion_seen'], kb.cases, kb.symptoms, 8);
+test('scorpion selection suggests related observable findings', scorpionSuggestions.includes('local_pain') && scorpionSuggestions.includes('local_swelling'));
+test('suggestions never repeat an already selected symptom', !scorpionSuggestions.includes('scorpion_seen'));
+
 /* ---------- Related-topic ranking ---------- */
 let ranked = rankCases(['saw_snake', 'local_swelling', 'swelling_spreading'], kb.cases);
 test('snake signs rank snake-bite first', ranked[0]?.case.id === 'snake-bite');
@@ -162,6 +190,7 @@ test('Iran poison-center instructions include the full 190 route', kb.cases.pois
 /* ---------- Manifest integrity ---------- */
 const manifest = JSON.parse(readFileSync(join(kbDir, 'manifest.json'), 'utf8'));
 test('manifest passes the browser-shared schema', validateManifest(manifest).length === 0);
+test('search metadata publishes as KB v5 with symptoms entry v4', manifest.kbVersion === 5 && manifest.entries.__symptoms.version === 4);
 test('manifest covers every case exactly once', Object.keys(manifest.cases).length === Object.keys(kb.cases).length);
 let hashesMatch = true;
 for (const [id, entry] of Object.entries(manifest.cases)) {
@@ -195,7 +224,7 @@ test('service worker only deletes its own cache namespace', serviceWorker.includ
 const installSection = serviceWorker.slice(serviceWorker.indexOf("self.addEventListener('install'"), serviceWorker.indexOf("self.addEventListener('message'"));
 test('service worker never activates an update automatically during an emergency flow', !installSection.includes('skipWaiting'));
 test('service worker only accepts explicit SKIP_WAITING activation messages', serviceWorker.includes("event.data?.type === 'SKIP_WAITING'") && serviceWorker.includes('self.skipWaiting()'));
-test('service worker shell cache is v6', serviceWorker.includes('shell-v6') && !serviceWorker.includes('shell-v5'));
+test('service worker shell cache is v7', serviceWorker.includes('shell-v7') && !serviceWorker.includes('shell-v6'));
 test('service worker uses network-first shell delivery with an offline cache fallback', serviceWorker.includes('async function networkFirst') && serviceWorker.includes("cache: 'no-cache'") && serviceWorker.includes('cache.match(fallbackKey)'));
 
 const html = readFileSync(join(root, 'index.html'), 'utf8');
@@ -207,6 +236,7 @@ test('symptom UI separates historical observations', appSource.includes('پیش 
 test('related-topic ranking includes current and historical selections', appSource.includes('[...state.diffSelected, ...state.diffHistorical]'));
 test('router guards malformed URI decoding', appSource.includes('decodeURIComponent') && appSource.includes('} catch {'));
 test('background KB synchronization is started after cached load', appSource.includes('if (result.fromCache) backgroundSync()'));
+test('a newly synced symptom index refreshes the open symptom finder', appSource.includes("['home', 'kb', 'symptoms'].includes(route.name)"));
 test('rendered KB values pass through HTML escaping', appSource.includes('${e(item.title)}') && appSource.includes('${e(action)}'));
 
 const cssSource = readFileSync(join(root, 'css/app.css'), 'utf8');
@@ -215,7 +245,8 @@ const cssSource = readFileSync(join(root, 'css/app.css'), 'utf8');
 test('desktop category buttons are an accessible labelled group', appSource.includes('id="category-tabs"') && appSource.includes('role="group"') && appSource.includes('aria-label="دسته‌های نشانه‌ها"'));
 test('desktop category buttons expose their pressed state', appSource.includes('data-cat="${e(id)}"') && appSource.includes('aria-pressed="${active}"'));
 test('mobile category select has a visible associated label', appSource.includes('for="category-select"') && appSource.includes('id="category-select"') && appSource.includes('انتخاب دستهٔ نشانه‌ها'));
-test('category options are generated from the same data as desktop controls', appSource.includes('const categoryItems = [null, ...categoryIds]') && appSource.includes('const categoryOptions = categoryItems.map'));
+test('category options are generated from the same data as desktop controls', appSource.includes('const categoryItems = [') && appSource.includes('...categoryIds.map') && appSource.includes('const categoryOptions = categoryItems.map'));
+test('quick and selected virtual categories are available in both responsive controls', appSource.includes("{ id: QUICK_CATEGORY, label: '★ پرکاربرد' }") && appSource.includes('{ id: SELECTED_CATEGORY, label: `✓ انتخاب‌شده‌ها (${selectionCount})` }'));
 test('both category controls update the shared category state', appSource.includes('selectSymptomCategory(button.dataset.cat)') && appSource.includes("select.addEventListener('change', () => selectSymptomCategory(select.value))"));
 test('category selection preserves symptom selections', !appSource.slice(appSource.indexOf('function selectSymptomCategory'), appSource.indexOf('function setupCategoryControls')).includes('diffSelected'));
 test('desktop categories wrap instead of scrolling horizontally', cssSource.includes('.category-tabs') && cssSource.includes('flex-wrap: wrap'));
@@ -223,11 +254,21 @@ test('mobile switches from wrapped buttons to a full-width select', cssSource.in
 test('category fieldset cannot widen the page', cssSource.includes('min-inline-size: 0') && cssSource.includes('.category-fieldset'));
 test('obsolete RTL category scroll code is gone', !appSource.includes('scrollLeft') && !appSource.includes('scrollIntoView') && !appSource.includes("addEventListener('wheel'") && !appSource.includes('category-prev'));
 
+/* ---------- Fast symptom-finder UI ---------- */
+test('global offline symptom search is labelled and has a clear action', appSource.includes('id="symptom-search"') && appSource.includes('id="clear-search"') && appSource.includes('جست‌وجو در همهٔ دسته‌ها و به‌صورت آفلاین'));
+test('typing updates search results without rerendering the input', appSource.includes("input.addEventListener('input', update)") && appSource.includes('searchPanel.innerHTML = searchResultsMarkup(input.value)'));
+test('search results still pass through compatibility visibility rules', appSource.includes("searchSymptoms(query, kb.symptoms)\n    .filter((id) => isCurrentSymptomVisible(id, state.diffSelected, kb.symptoms))"));
+test('selected current and historical symptoms stay in a removable tray', appSource.includes('class="selected-tray"') && appSource.includes('id="clear-symptoms"') && appSource.includes("'data-history-sym'"));
+test('related suggestions are explicitly not presented as diagnosis', appSource.includes('نشانه‌های مرتبط برای بررسی') && appSource.includes('تشخیص یا انتخاب خودکار نیستند'));
+test('long category lists use progressive disclosure', appSource.includes('INITIAL_SYMPTOM_LIMIT = 12') && appSource.includes('id="show-more-symptoms"') && appSource.includes('id="show-less-symptoms"'));
+test('mobile result action remains reachable without horizontal movement', cssSource.includes('.symptom-result-bar') && cssSource.includes('position: sticky'));
+test('search, selected tray, suggestions and show-more controls have responsive styling', ['.symptom-search-card', '.selected-tray', '.suggested-symptoms', '.show-more-symptoms'].every((selector) => cssSource.includes(selector)));
+
 /* ---------- User-controlled app updates ---------- */
-test('versioned v6 assets bypass an older cache during this upgrade', html.includes('css/app.css?v=6') && html.includes('js/app.js?v=6') && serviceWorker.includes('./css/app.css?v=6') && serviceWorker.includes('./js/app.js?v=6'));
+test('versioned v7 assets bypass an older cache during this upgrade', html.includes('css/app.css?v=7') && html.includes('js/app.js?v=7') && serviceWorker.includes('./css/app.css?v=7') && serviceWorker.includes('./js/app.js?v=7'));
 test('the update banner is outside the rerendered app shell', html.indexOf('id="app-update"') < html.indexOf('id="app"'));
 test('the update banner offers now and later actions', html.includes('id="app-update-now"') && html.includes('id="app-update-later"'));
-test('registration bypasses HTTP cache when checking the worker', appSource.includes("updateViaCache: 'none'") && appSource.includes("register('./sw.js?v=6'"));
+test('registration bypasses HTTP cache when checking the worker', appSource.includes("updateViaCache: 'none'") && appSource.includes("register('./sw.js?v=7'"));
 test('an already waiting worker is offered immediately', appSource.includes('if (registration.waiting) offerAppUpdate(registration.waiting)'));
 test('new worker installation is observed', appSource.includes("registration.addEventListener('updatefound'"));
 test('updates activate only after the user requests them', appSource.includes("worker.postMessage({ type: 'SKIP_WAITING' })") && appSource.includes("appUpdateNow?.addEventListener('click'"));
