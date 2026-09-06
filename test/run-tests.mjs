@@ -9,9 +9,13 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import {
   hasCriticalSymptoms,
+  historicalSymptomIds,
+  isCurrentSymptomVisible,
   nextTriageQuestion,
   rankCases,
   symptomModels,
+  toggleCurrentSymptom,
+  toggleHistoricalSymptom,
   triggeredFlags,
   triageRoute,
   triageSymptoms,
@@ -57,6 +61,12 @@ test('schema rejects a trigger absent from risk questions', validateKnowledgeBas
 const invalidDateKb = clone(kb.cases);
 invalidDateKb.fainting.updatedAt = '2026-02-31';
 test('schema rejects an impossible calendar date', validateKnowledgeBase(kb.symptoms, kb.categories, invalidDateKb).some((error) => error.includes('updatedAt')));
+const unknownCompatibilitySymptoms = clone(kb.symptoms);
+unknownCompatibilitySymptoms.unresponsive.exclusiveWith = ['not_a_symptom'];
+test('schema rejects an unknown compatibility reference', validateKnowledgeBase(unknownCompatibilitySymptoms, kb.categories, kb.cases).some((error) => error.includes('exclusiveWith references unknown')));
+const invalidHistorySymptoms = clone(kb.symptoms);
+invalidHistorySymptoms.cyanosis.canBeHistorical = true;
+test('schema requires historical symptoms to have an assessability constraint', validateKnowledgeBase(invalidHistorySymptoms, kb.categories, kb.cases).some((error) => error.includes('canBeHistorical requires')));
 
 /* ---------- Triage integration ---------- */
 test('triage starts with consciousness', nextTriageQuestion({}) === 'conscious');
@@ -75,6 +85,37 @@ test('triage answers map to real KB symptom IDs', triageSymptoms({ conscious: 'y
 const models = symptomModels(kb.categories.bite.diffSymptoms, kb.symptoms);
 test('UI symptom models preserve each symptom ID', models.length > 0 && models.every((model) => model.id && model.label));
 test('UI symptom models never produce undefined IDs', models.every((model) => model.id !== 'undefined'));
+
+/* ---------- Symptom compatibility ---------- */
+test('unresponsiveness hides effective cough', !isCurrentSymptomVisible('coughing_effort', ['unresponsive'], kb.symptoms));
+test('high-priority unresponsiveness remains selectable after effective cough', isCurrentSymptomVisible('unresponsive', ['coughing_effort'], kb.symptoms));
+test('no breathing hides normal breathing', !isCurrentSymptomVisible('breathing_normal', ['not_breathing'], kb.symptoms));
+test('normal breathing and breathing difficulty are mutually exclusive', !isCurrentSymptomVisible('difficulty_breathing', ['breathing_normal'], kb.symptoms));
+test('agonal gasps hide effective cough', !isCurrentSymptomVisible('coughing_effort', ['gasping'], kb.symptoms));
+test('severe choking hides effective cough', !isCurrentSymptomVisible('coughing_effort', ['choking_signs'], kb.symptoms));
+test('child and elderly selections are mutually exclusive', !isCurrentSymptomVisible('elderly_victim', ['child_victim'], kb.symptoms));
+test('dry-hot and sweaty-hot skin descriptions are mutually exclusive', !isCurrentSymptomVisible('hot_flushed', ['hot_dry_skin'], kb.symptoms));
+
+let compatibility = toggleCurrentSymptom(
+  ['coughing_effort', 'throat_tightness'],
+  [],
+  'unresponsive',
+  kb.symptoms,
+);
+test('selecting unresponsive removes a current effective cough', compatibility.selected.includes('unresponsive') && compatibility.removed.includes('coughing_effort') && !compatibility.selected.includes('coughing_effort'));
+test('selecting unresponsive preserves prior throat tightness as history', compatibility.movedToHistorical.includes('throat_tightness') && compatibility.historical.includes('throat_tightness'));
+test('subjective history becomes available when the person is unresponsive', historicalSymptomIds(['chest_pain', 'cyanosis'], ['unresponsive'], kb.symptoms).includes('chest_pain'));
+test('observable cyanosis is not moved into subjective history', !historicalSymptomIds(['chest_pain', 'cyanosis'], ['unresponsive'], kb.symptoms).includes('cyanosis'));
+compatibility = toggleCurrentSymptom(['unresponsive'], ['throat_tightness'], 'unresponsive', kb.symptoms);
+test('removing unresponsive restores an assessable historical selection', compatibility.selected.includes('throat_tightness') && compatibility.restored.includes('throat_tightness') && compatibility.historical.length === 0);
+compatibility = toggleCurrentSymptom(['breathing_normal', 'wheezing'], [], 'not_breathing', kb.symptoms);
+test('selecting no breathing removes normal breathing', compatibility.removed.includes('breathing_normal') && !compatibility.selected.includes('breathing_normal'));
+test('selecting no breathing preserves witnessed wheezing as history', compatibility.movedToHistorical.includes('wheezing') && compatibility.historical.includes('wheezing'));
+compatibility = toggleCurrentSymptom(['coughing_effort'], [], 'choking_signs', kb.symptoms);
+test('selecting severe choking replaces effective cough', compatibility.removed.includes('coughing_effort') && compatibility.selected.includes('choking_signs'));
+let historical = toggleHistoricalSymptom([], 'chest_pain', kb.symptoms);
+historical = toggleHistoricalSymptom(historical, 'chest_pain', kb.symptoms);
+test('historical symptom chips toggle deterministically', historical.length === 0);
 
 /* ---------- Related-topic ranking ---------- */
 let ranked = rankCases(['saw_snake', 'local_swelling', 'swelling_spreading'], kb.cases);
@@ -157,6 +198,9 @@ const html = readFileSync(join(root, 'index.html'), 'utf8');
 const appSource = readFileSync(join(root, 'js/app.js'), 'utf8');
 test('app shell has CSP and polite live regions', html.includes('Content-Security-Policy') && html.includes('route-announcer') && html.includes('sync-announcer'));
 test('symptom chips expose aria-pressed', appSource.includes('aria-pressed="${active}"'));
+test('symptom UI filters incompatible current options', appSource.includes('isCurrentSymptomVisible(id, state.diffSelected, kb.symptoms)'));
+test('symptom UI separates historical observations', appSource.includes('پیش از بیهوشی یا توقف تنفس') && appSource.includes('data-history-sym'));
+test('related-topic ranking includes current and historical selections', appSource.includes('[...state.diffSelected, ...state.diffHistorical]'));
 test('router guards malformed URI decoding', appSource.includes('decodeURIComponent') && appSource.includes('} catch {'));
 test('background KB synchronization is started after cached load', appSource.includes('if (result.fromCache) backgroundSync()'));
 test('rendered KB values pass through HTML escaping', appSource.includes('${e(item.title)}') && appSource.includes('${e(action)}'));

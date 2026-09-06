@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'emdadgar-';
-const SHELL_CACHE = `${CACHE_PREFIX}shell-v3`;
+const SHELL_CACHE = `${CACHE_PREFIX}shell-v4`;
 const SHELL_FILES = [
   './',
   './index.html',

@@ -51,6 +51,107 @@ export function symptomModels(ids, symptoms) {
   return ids.filter((id) => symptoms[id]).map((id) => ({ id, ...symptoms[id] }));
 }
 
+const NO_EFFECTIVE_BREATHING = new Set(['not_breathing', 'gasping']);
+
+export function symptomIncompatibility(firstId, secondId, symptoms) {
+  if (firstId === secondId || !symptoms[firstId] || !symptoms[secondId]) return null;
+  const first = symptoms[firstId];
+  const second = symptoms[secondId];
+  if ((first.exclusiveWith || []).includes(secondId) || (second.exclusiveWith || []).includes(firstId)) {
+    return 'exclusive';
+  }
+  if ((first.requiresResponsive && secondId === 'unresponsive') || (second.requiresResponsive && firstId === 'unresponsive')) {
+    return 'unassessable';
+  }
+  if ((first.requiresBreathing && NO_EFFECTIVE_BREATHING.has(secondId)) || (second.requiresBreathing && NO_EFFECTIVE_BREATHING.has(firstId))) {
+    return 'unassessable';
+  }
+  return null;
+}
+
+function symptomPriority(id, symptoms) {
+  return Number.isInteger(symptoms[id]?.selectionPriority) ? symptoms[id].selectionPriority : 10;
+}
+
+export function isCurrentSymptomVisible(candidateId, selected, symptoms) {
+  if (selected.includes(candidateId)) return true;
+  const candidatePriority = symptomPriority(candidateId, symptoms);
+  return !selected.some((selectedId) => (
+    symptomIncompatibility(candidateId, selectedId, symptoms)
+    && symptomPriority(selectedId, symptoms) >= candidatePriority
+  ));
+}
+
+export function historicalSymptomIds(ids, selected, symptoms) {
+  return ids.filter((id) => (
+    symptoms[id]?.canBeHistorical
+    && !selected.includes(id)
+    && selected.some((selectedId) => symptomIncompatibility(id, selectedId, symptoms) === 'unassessable')
+  ));
+}
+
+function restoreAssessableHistory(selected, historical, symptoms) {
+  const current = [...selected];
+  const remainingHistory = [];
+  const restored = [];
+  for (const id of historical) {
+    const stillUnassessable = current.some((selectedId) => symptomIncompatibility(id, selectedId, symptoms) === 'unassessable');
+    const conflicts = current.some((selectedId) => symptomIncompatibility(id, selectedId, symptoms));
+    if (!stillUnassessable && !conflicts) {
+      current.push(id);
+      restored.push(id);
+    } else {
+      remainingHistory.push(id);
+    }
+  }
+  return { selected: current, historical: remainingHistory, restored };
+}
+
+export function toggleCurrentSymptom(selected, historical, symptomId, symptoms) {
+  if (!symptoms[symptomId]) return { selected, historical, removed: [], movedToHistorical: [], restored: [], accepted: false };
+  if (selected.includes(symptomId)) {
+    const reconciled = restoreAssessableHistory(selected.filter((id) => id !== symptomId), historical, symptoms);
+    return { ...reconciled, removed: [], movedToHistorical: [], accepted: true };
+  }
+
+  const priority = symptomPriority(symptomId, symptoms);
+  const conflicts = selected.filter((id) => symptomIncompatibility(symptomId, id, symptoms));
+  if (conflicts.some((id) => symptomPriority(id, symptoms) >= priority)) {
+    return { selected, historical, removed: [], movedToHistorical: [], restored: [], accepted: false };
+  }
+
+  const removed = [];
+  const movedToHistorical = [];
+  const nextHistorical = [...historical];
+  const nextSelected = selected.filter((id) => {
+    const type = symptomIncompatibility(symptomId, id, symptoms);
+    if (!type) return true;
+    if (type === 'unassessable' && symptoms[id]?.canBeHistorical) {
+      if (!nextHistorical.includes(id)) nextHistorical.push(id);
+      movedToHistorical.push(id);
+    } else {
+      removed.push(id);
+    }
+    return false;
+  });
+  nextSelected.push(symptomId);
+  return {
+    selected: nextSelected,
+    historical: nextHistorical,
+    removed,
+    movedToHistorical,
+    restored: [],
+    accepted: true,
+  };
+}
+
+export function toggleHistoricalSymptom(historical, symptomId, symptoms) {
+  if (!symptoms[symptomId]?.canBeHistorical) return historical;
+  return historical.includes(symptomId)
+    ? historical.filter((id) => id !== symptomId)
+    : [...historical, symptomId];
+}
+
 export function rankCases(selected, cases, limit = 5) {
   const selectedSet = new Set(selected);
   return Object.values(cases)
