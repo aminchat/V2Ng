@@ -18,6 +18,9 @@ const kb = new KnowledgeBase();
 const app = document.getElementById('app');
 const routeAnnouncer = document.getElementById('route-announcer');
 const syncAnnouncer = document.getElementById('sync-announcer');
+const appUpdateBanner = document.getElementById('app-update');
+const appUpdateNow = document.getElementById('app-update-now');
+const appUpdateLater = document.getElementById('app-update-later');
 
 const state = {
   ready: false,
@@ -86,6 +89,7 @@ function render({ focus = true } = {}) {
   else if (route.name === 'not-found') heading = renderNotFound();
   else heading = renderHome();
 
+  refreshAppUpdateBanner();
   setDocumentTitle(route.name === 'home' ? '' : heading);
   if (focus) {
     requestAnimationFrame(() => {
@@ -238,109 +242,38 @@ function compatibilityMessage(symptomId, result) {
   return parts.length ? `با تغییر «${label}»، ${parts.join(' و ')}.` : '';
 }
 
-/* Set right before a category-selection render so the rebuilt bar can return focus to
-   the newly active tab (the old tab element no longer exists after innerHTML is reset). */
-let categoryNavRestoreFocus = false;
+let restoreCategoryControlFocus = false;
 
-function revealActiveCategoryTab(scroll, tab, force = false) {
-  if (!scroll || !tab) return;
-  const stripRect = scroll.getBoundingClientRect();
-  if (stripRect.bottom <= 0 || stripRect.top >= window.innerHeight) return; // strip off-screen: never jump the page
-  const tabRect = tab.getBoundingClientRect();
-  const fullyVisible = tabRect.left >= stripRect.left - 1 && tabRect.right <= stripRect.right + 1;
-  if (!force && fullyVisible) return;
-  // Horizontal alignment only; block 'nearest' avoids vertical page jumps.
-  tab.scrollIntoView({ block: 'nearest', inline: 'center' });
+function selectSymptomCategory(categoryId) {
+  const normalized = categoryId || null;
+  if (normalized === state.diffCategory) return;
+  state.diffCategory = normalized;
+  state.diffCompatibilityMessage = '';
+  restoreCategoryControlFocus = true;
+  render({ focus: false });
 }
 
-function setupCategoryNavigation() {
-  const scroll = document.getElementById('category-scroll');
-  const prev = document.getElementById('category-prev');
-  const next = document.getElementById('category-next');
-  if (!scroll || !prev || !next) return;
+function setupCategoryControls() {
+  const tabs = document.getElementById('category-tabs');
+  const select = document.getElementById('category-select');
+  if (!tabs || !select) return;
 
-  const getTabs = () => Array.from(scroll.querySelectorAll('.cat-btn'));
-  const isRtl = () => getComputedStyle(scroll).direction === 'rtl';
-
-  const selectCategory = (categoryId) => {
-    const normalized = categoryId || null;
-    if (normalized === state.diffCategory) return;
-    state.diffCategory = normalized;
-    state.diffCompatibilityMessage = '';
-    categoryNavRestoreFocus = true;
-    render({ focus: false });
-  };
-
-  const moveBy = (offset) => {
-    const tabs = getTabs();
-    if (!tabs.length) return;
-    const current = tabs.findIndex((tab) => (tab.dataset.cat || null) === state.diffCategory);
-    const activeIndex = current === -1 ? 0 : current;
-    const target = Math.min(Math.max(activeIndex + offset, 0), tabs.length - 1);
-    if (target !== activeIndex) selectCategory(tabs[target].dataset.cat);
-  };
-
-  prev.addEventListener('click', () => moveBy(-1));
-  next.addEventListener('click', () => moveBy(1));
-
-  scroll.addEventListener('click', (event) => {
-    const tab = event.target?.closest?.('.cat-btn');
-    if (!tab) return;
-    selectCategory(tab.dataset.cat);
+  tabs.addEventListener('click', (event) => {
+    const button = event.target?.closest?.('[data-cat]');
+    if (button) selectSymptomCategory(button.dataset.cat);
   });
+  select.addEventListener('change', () => selectSymptomCategory(select.value));
 
-  /* Roving-tabindex tablist keys: arrows step through the tab order (physical arrows are
-     mirrored in RTL), Home/End jump, Enter/Space select the focused tab. */
-  scroll.addEventListener('keydown', (event) => {
-    if (event.defaultPrevented) return;
-    const tab = event.target?.closest?.('.cat-btn');
-    if (!tab) return;
-    const tabs = getTabs();
-    const currentIndex = tabs.indexOf(tab);
-    if (currentIndex === -1) return;
-    let targetIndex = null;
-    if (event.key === 'ArrowRight') targetIndex = currentIndex + (isRtl() ? -1 : 1);
-    else if (event.key === 'ArrowLeft') targetIndex = currentIndex + (isRtl() ? 1 : -1);
-    else if (event.key === 'Home') targetIndex = 0;
-    else if (event.key === 'End') targetIndex = tabs.length - 1;
-    else if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      selectCategory(tab.dataset.cat);
-      return;
-    }
-    if (targetIndex < 0 || targetIndex >= tabs.length) return;
-    event.preventDefault();
-    selectCategory(tabs[targetIndex].dataset.cat);
+  if (!restoreCategoryControlFocus) return;
+  restoreCategoryControlFocus = false;
+  requestAnimationFrame(() => {
+    const mobileControl = window.matchMedia('(max-width: 600px)').matches;
+    const target = mobileControl
+      ? document.getElementById('category-select')
+      : Array.from(document.querySelectorAll('#category-tabs [data-cat]'))
+        .find((button) => (button.dataset.cat || null) === state.diffCategory);
+    target?.focus({ preventScroll: true });
   });
-
-  /* A vertical wheel over the strip scrolls it horizontally — but only while real overflow
-     remains in that direction; otherwise (or with no overflow) default page scrolling is
-     untouched and preventDefault is never called. */
-  scroll.addEventListener('wheel', (event) => {
-    const overflow = scroll.scrollWidth - scroll.clientWidth;
-    if (overflow <= 1 || !event.deltaY) return;
-    if (Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return; // horizontal gestures scroll natively
-    let delta = event.deltaY;
-    if (event.deltaMode === 1) delta *= 16; // line mode
-    else if (event.deltaMode === 2) delta *= scroll.clientWidth; // page mode
-    const rtl = isRtl();
-    // Modern engines (Chrome/Edge 85+, Firefox, Safari 14+) report RTL scrollLeft as 0 at
-    // the start (right edge) and negative towards the end; LTR is 0..overflow.
-    const progress = rtl ? -scroll.scrollLeft : scroll.scrollLeft;
-    if ((delta > 0 && progress >= overflow - 0.5) || (delta < 0 && progress <= 0.5)) return;
-    event.preventDefault();
-    scroll.scrollLeft += (rtl ? -1 : 1) * delta;
-  }, { passive: false });
-
-  const tabs = getTabs();
-  const activeIndex = tabs.findIndex((tab) => (tab.dataset.cat || null) === state.diffCategory);
-  const activeTab = activeIndex === -1 ? null : tabs[activeIndex];
-  prev.disabled = activeIndex <= 0;
-  next.disabled = activeIndex === -1 || activeIndex >= tabs.length - 1;
-  const restoreFocus = categoryNavRestoreFocus;
-  categoryNavRestoreFocus = false;
-  if (restoreFocus) activeTab?.focus({ preventScroll: true });
-  revealActiveCategoryTab(scroll, activeTab, restoreFocus);
 }
 
 function renderSymptoms() {
@@ -358,13 +291,19 @@ function renderSymptoms() {
     ? state.diffSelected.filter((id) => !categorySymptoms.includes(id))
     : [];
 
-  const categoryTabs = [null, ...categoryIds].map((categoryId) => {
+  const categoryItems = [null, ...categoryIds].map((categoryId) => {
     const active = (categoryId || null) === state.diffCategory;
     const label = categoryId
       ? `${kb.categories[categoryId].icon} ${kb.categories[categoryId].title}`
       : 'همه';
-    return `<button type="button" class="cat-btn${active ? ' active' : ''}" role="tab" data-cat="${e(categoryId || '')}" aria-selected="${active ? 'true' : 'false'}" tabindex="${active ? '0' : '-1'}">${e(label)}</button>`;
-  }).join('');
+    return { id: categoryId || '', label, active };
+  });
+  const categoryTabs = categoryItems.map(({ id, label, active }) => (
+    `<button type="button" class="cat-btn${active ? ' active' : ''}" data-cat="${e(id)}" aria-pressed="${active}">${e(label)}</button>`
+  )).join('');
+  const categoryOptions = categoryItems.map(({ id, label, active }) => (
+    `<option value="${e(id)}"${active ? ' selected' : ''}>${e(label)}</option>`
+  )).join('');
 
   app.innerHTML = `
     <header class="topbar">
@@ -378,11 +317,9 @@ function renderSymptoms() {
       ${state.diffCompatibilityMessage ? `<p class="compatibility-notice" role="status">${e(state.diffCompatibilityMessage)}</p>` : ''}
       <fieldset class="category-fieldset">
         <legend>دستهٔ نشانه‌ها</legend>
-        <div class="category-nav">
-          <button type="button" id="category-prev" class="cat-nav-btn" aria-label="دستهٔ قبلی"><span aria-hidden="true">›</span></button>
-          <div class="category-scroll" id="category-scroll" role="tablist" aria-label="دسته‌های نشانه‌ها">${categoryTabs}</div>
-          <button type="button" id="category-next" class="cat-nav-btn" aria-label="دستهٔ بعدی"><span aria-hidden="true">‹</span></button>
-        </div>
+        <div class="category-tabs" id="category-tabs" role="group" aria-label="دسته‌های نشانه‌ها">${categoryTabs}</div>
+        <label class="category-select-label" for="category-select">انتخاب دستهٔ نشانه‌ها</label>
+        <select class="category-select" id="category-select">${categoryOptions}</select>
       </fieldset>
       <section aria-labelledby="symptom-heading">
         <h2 id="symptom-heading">نشانه‌های فعلی را انتخاب کنید</h2>
@@ -404,7 +341,7 @@ function renderSymptoms() {
     </main>`;
 
   document.getElementById('back-home').addEventListener('click', () => navigate('#/'));
-  setupCategoryNavigation();
+  setupCategoryControls();
   document.querySelectorAll('#current-symptoms [data-sym], #other-selected-symptoms [data-sym]').forEach((button) => button.addEventListener('click', () => {
     const id = button.dataset.sym;
     const result = toggleCurrentSymptom(state.diffSelected, state.diffHistorical, id, kb.symptoms);
@@ -612,21 +549,89 @@ function showSyncAnnouncement(message) {
   if (syncAnnouncer) syncAnnouncer.textContent = message;
 }
 
+let serviceWorkerRegistration = null;
+let waitingServiceWorker = null;
+let updateDismissed = false;
+let updateActivationRequested = false;
+let reloadingForUpdate = false;
+let lastServiceWorkerUpdateCheck = 0;
+const UPDATE_CHECK_INTERVAL = 5 * 60 * 1000;
+
+function refreshAppUpdateBanner() {
+  if (!appUpdateBanner) return;
+  const safeRoute = state.ready && ['home', 'kb'].includes(currentRoute().name);
+  appUpdateBanner.hidden = !(waitingServiceWorker && !updateDismissed && safeRoute);
+}
+
+function offerAppUpdate(worker) {
+  if (!worker || !navigator.serviceWorker.controller) return;
+  const isNewWorker = waitingServiceWorker !== worker;
+  waitingServiceWorker = worker;
+  if (isNewWorker) updateDismissed = false;
+  refreshAppUpdateBanner();
+  showSyncAnnouncement('نسخهٔ جدید امدادگر آماده است. برای فعال‌سازی، دکمهٔ اکنون به‌روزرسانی را بزنید.');
+}
+
+function watchInstallingWorker(worker) {
+  if (!worker) return;
+  worker.addEventListener('statechange', () => {
+    if (worker.state === 'installed') offerAppUpdate(worker);
+  });
+}
+
+async function checkForAppUpdate({ force = false } = {}) {
+  if (!serviceWorkerRegistration || !navigator.onLine) return;
+  const now = Date.now();
+  if (!force && now - lastServiceWorkerUpdateCheck < UPDATE_CHECK_INTERVAL) return;
+  lastServiceWorkerUpdateCheck = now;
+  try {
+    await serviceWorkerRegistration.update();
+    if (serviceWorkerRegistration.waiting) offerAppUpdate(serviceWorkerRegistration.waiting);
+  } catch (error) {
+    console.warn('Service worker update check failed', error);
+  }
+}
+
 async function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return;
   try {
-    const registration = await navigator.serviceWorker.register('./sw.js', { scope: './' });
-    registration.addEventListener('updatefound', () => {
-      const worker = registration.installing;
-      worker?.addEventListener('statechange', () => {
-        if (worker.state === 'installed' && navigator.serviceWorker.controller) {
-          showSyncAnnouncement('نسخهٔ تازهٔ برنامه آماده است و با بازکردن دوبارهٔ برنامه فعال می‌شود.');
-        }
-      });
+    const registration = await navigator.serviceWorker.register('./sw.js?v=6', {
+      scope: './',
+      updateViaCache: 'none',
     });
+    serviceWorkerRegistration = registration;
+    if (registration.waiting) offerAppUpdate(registration.waiting);
+    registration.addEventListener('updatefound', () => watchInstallingWorker(registration.installing));
+    await checkForAppUpdate({ force: true });
   } catch (error) {
     console.warn('Service worker registration failed', error);
   }
+}
+
+appUpdateNow?.addEventListener('click', () => {
+  const worker = serviceWorkerRegistration?.waiting || waitingServiceWorker;
+  if (!worker) {
+    refreshAppUpdateBanner();
+    return;
+  }
+  updateActivationRequested = true;
+  appUpdateNow.disabled = true;
+  showSyncAnnouncement('نسخهٔ جدید در حال فعال‌شدن است…');
+  worker.postMessage({ type: 'SKIP_WAITING' });
+});
+
+appUpdateLater?.addEventListener('click', () => {
+  updateDismissed = true;
+  refreshAppUpdateBanner();
+  showSyncAnnouncement('به‌روزرسانی به بعد موکول شد.');
+});
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!updateActivationRequested || reloadingForUpdate) return;
+    reloadingForUpdate = true;
+    location.reload();
+  });
 }
 
 async function backgroundSync() {
@@ -656,6 +661,10 @@ window.addEventListener('online', () => {
   const route = currentRoute();
   if (route.name === 'home' || route.name === 'kb') render({ focus: false });
   backgroundSync();
+  checkForAppUpdate({ force: true });
+});
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') checkForAppUpdate();
 });
 window.addEventListener('offline', () => {
   showSyncAnnouncement('اتصال اینترنت قطع شد؛ راهنمای ذخیره‌شده در دسترس است.');
