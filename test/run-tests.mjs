@@ -222,14 +222,17 @@ test('service worker derives subpath boundaries from registration scope', servic
 test('service worker deliberately bypasses HTTP caching for KB', serviceWorker.includes('if (url.pathname.startsWith(`${scopePath}kb/`)) return'));
 test('service worker only deletes its own cache namespace', serviceWorker.includes('key.startsWith(CACHE_PREFIX)'));
 const installSection = serviceWorker.slice(serviceWorker.indexOf("self.addEventListener('install'"), serviceWorker.indexOf("self.addEventListener('message'"));
-test('service worker never activates an update automatically during an emergency flow', !installSection.includes('skipWaiting'));
-test('service worker only accepts explicit SKIP_WAITING activation messages', serviceWorker.includes("event.data?.type === 'SKIP_WAITING'") && serviceWorker.includes('self.skipWaiting()'));
-test('service worker shell cache is v7', serviceWorker.includes('shell-v7') && !serviceWorker.includes('shell-v6'));
+test('v8 only bypasses waiting to recover incompatible older workers and v5-v7 shell caches', installSection.includes("activeVersion !== '8'") && installSection.includes('RECOVERY_SHELL_CACHES.has(key)') && installSection.includes('if (needsRecovery) await self.skipWaiting()') && serviceWorker.includes('shell-v5') && serviceWorker.includes('shell-v6') && serviceWorker.includes('shell-v7'));
+test('normal future updates still accept explicit SKIP_WAITING activation messages', serviceWorker.includes("event.data?.type === 'SKIP_WAITING'") && serviceWorker.includes('self.skipWaiting()'));
+test('service worker shell cache is v8', serviceWorker.includes("const SHELL_CACHE = `${CACHE_PREFIX}shell-v8`"));
 test('service worker uses network-first shell delivery with an offline cache fallback', serviceWorker.includes('async function networkFirst') && serviceWorker.includes("cache: 'no-cache'") && serviceWorker.includes('cache.match(fallbackKey)'));
 
 const html = readFileSync(join(root, 'index.html'), 'utf8');
 const appSource = readFileSync(join(root, 'js/app.js'), 'utf8');
+const bootstrapSource = html.match(/<script>([\s\S]*?)<\/script>/)?.[1] || '';
+const bootstrapHash = createHash('sha256').update(bootstrapSource).digest('base64');
 test('app shell has CSP and polite live regions', html.includes('Content-Security-Policy') && html.includes('route-announcer') && html.includes('sync-announcer'));
+test('CSP authorizes exactly the inline recovery bootstrap by hash', bootstrapSource.length > 0 && html.includes(`script-src 'self' 'sha256-${bootstrapHash}'`));
 test('symptom chips expose aria-pressed', appSource.includes('aria-pressed="${active}"'));
 test('symptom UI filters incompatible current options', appSource.includes('isCurrentSymptomVisible(id, state.diffSelected, kb.symptoms)'));
 test('symptom UI separates historical observations', appSource.includes('پیش از بیهوشی یا توقف تنفس') && appSource.includes('data-history-sym'));
@@ -265,10 +268,12 @@ test('mobile result action remains reachable without horizontal movement', cssSo
 test('search, selected tray, suggestions and show-more controls have responsive styling', ['.symptom-search-card', '.selected-tray', '.suggested-symptoms', '.show-more-symptoms'].every((selector) => cssSource.includes(selector)));
 
 /* ---------- User-controlled app updates ---------- */
-test('versioned v7 assets bypass an older cache during this upgrade', html.includes('css/app.css?v=7') && html.includes('js/app.js?v=7') && serviceWorker.includes('./css/app.css?v=7') && serviceWorker.includes('./js/app.js?v=7'));
+test('versioned v8 shell assets bypass an older cache during this upgrade', html.includes('css/app.css?v=8') && html.includes('js/app.js?v=8') && serviceWorker.includes('./css/app.css?v=8') && serviceWorker.includes('./js/app.js?v=8'));
+test('every browser module dependency is versioned together', appSource.includes("'./kb.js?v=8'") && appSource.includes("'./engine.js?v=8'") && kbSource.includes("'./schema.js?v=8'") && serviceWorker.includes('./js/kb.js?v=8') && serviceWorker.includes('./js/engine.js?v=8') && serviceWorker.includes('./js/schema.js?v=8'));
+test('independent inline bootstrap replaces an indefinitely stuck loader', bootstrapSource.includes('setTimeout(showLoadFailure, 20000)') && bootstrapSource.includes('boot-retry') && bootstrapSource.includes('location.reload()') && appSource.includes("'emdadgar:boot-complete'"));
 test('the update banner is outside the rerendered app shell', html.indexOf('id="app-update"') < html.indexOf('id="app"'));
 test('the update banner offers now and later actions', html.includes('id="app-update-now"') && html.includes('id="app-update-later"'));
-test('registration bypasses HTTP cache when checking the worker', appSource.includes("updateViaCache: 'none'") && appSource.includes("register('./sw.js?v=7'"));
+test('registration bypasses HTTP cache when checking the worker', appSource.includes("updateViaCache: 'none'") && appSource.includes("register('./sw.js?v=8'"));
 test('an already waiting worker is offered immediately', appSource.includes('if (registration.waiting) offerAppUpdate(registration.waiting)'));
 test('new worker installation is observed', appSource.includes("registration.addEventListener('updatefound'"));
 test('updates activate only after the user requests them', appSource.includes("worker.postMessage({ type: 'SKIP_WAITING' })") && appSource.includes("appUpdateNow?.addEventListener('click'"));
