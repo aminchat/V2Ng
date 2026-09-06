@@ -216,15 +216,25 @@ test('remote bytes are hashed before JSON is staged', kbSource.indexOf('const ac
 
 const webManifest = JSON.parse(readFileSync(join(root, 'manifest.webmanifest'), 'utf8'));
 test('PWA start URL and scope are relative', webManifest.start_url.startsWith('./') && webManifest.scope === './');
+const manifestBase = new URL('https://example.test/V2Ng/manifest.webmanifest');
+const resolvedStartUrl = new URL(webManifest.start_url, manifestBase);
+const resolvedScope = new URL(webManifest.scope, manifestBase);
+test('PWA identity is stable and its launch URL remains inside scope', webManifest.id === './' && resolvedStartUrl.href.startsWith(resolvedScope.href) && resolvedStartUrl.searchParams.get('source') === 'pwa' && resolvedStartUrl.hash === '#/');
+test('PWA manifest has installable names and standalone display', Boolean(webManifest.name && webManifest.short_name) && webManifest.display === 'standalone' && webManifest.prefer_related_applications === false);
+const regularIconSizes = new Set(webManifest.icons.filter((icon) => icon.purpose === 'any').map((icon) => icon.sizes));
+const maskableIconSizes = new Set(webManifest.icons.filter((icon) => icon.purpose === 'maskable').map((icon) => icon.sizes));
+test('PWA manifest supplies 192 and 512 PNG icons', ['192x192', '512x512'].every((size) => regularIconSizes.has(size)) && webManifest.icons.every((icon) => icon.type === 'image/png'));
+test('PWA manifest supplies maskable 192 and 512 icons', ['192x192', '512x512'].every((size) => maskableIconSizes.has(size)));
 const serviceWorker = readFileSync(join(root, 'sw.js'), 'utf8');
 test('service worker precaches the schema module and shell', serviceWorker.includes('./js/schema.js') && serviceWorker.includes('./index.html'));
+test('service worker precaches the versioned install manifest and every app icon', serviceWorker.includes('./manifest.webmanifest?v=9') && webManifest.icons.every((icon) => serviceWorker.includes(`./${icon.src}`)) && serviceWorker.includes('./icons/apple-touch-icon.png'));
 test('service worker derives subpath boundaries from registration scope', serviceWorker.includes('self.registration.scope'));
 test('service worker deliberately bypasses HTTP caching for KB', serviceWorker.includes('if (url.pathname.startsWith(`${scopePath}kb/`)) return'));
 test('service worker only deletes its own cache namespace', serviceWorker.includes('key.startsWith(CACHE_PREFIX)'));
 const installSection = serviceWorker.slice(serviceWorker.indexOf("self.addEventListener('install'"), serviceWorker.indexOf("self.addEventListener('message'"));
-test('v8 only bypasses waiting to recover incompatible older workers and v5-v7 shell caches', installSection.includes("activeVersion !== '8'") && installSection.includes('RECOVERY_SHELL_CACHES.has(key)') && installSection.includes('if (needsRecovery) await self.skipWaiting()') && serviceWorker.includes('shell-v5') && serviceWorker.includes('shell-v6') && serviceWorker.includes('shell-v7'));
+test('v9 only bypasses waiting to recover incompatible older workers and v5-v8 shell caches', installSection.includes('RECOVERY_WORKER_VERSIONS.has(activeVersion)') && installSection.includes('RECOVERY_SHELL_CACHES.has(key)') && installSection.includes('if (needsRecovery) await self.skipWaiting()') && serviceWorker.includes("new Set([null, '5', '6', '7', '8'])") && ['shell-v5', 'shell-v6', 'shell-v7', 'shell-v8'].every((name) => serviceWorker.includes(name)));
 test('normal future updates still accept explicit SKIP_WAITING activation messages', serviceWorker.includes("event.data?.type === 'SKIP_WAITING'") && serviceWorker.includes('self.skipWaiting()'));
-test('service worker shell cache is v8', serviceWorker.includes("const SHELL_CACHE = `${CACHE_PREFIX}shell-v8`"));
+test('service worker shell cache is v9', serviceWorker.includes("const SHELL_CACHE = `${CACHE_PREFIX}shell-v9`"));
 test('service worker uses network-first shell delivery with an offline cache fallback', serviceWorker.includes('async function networkFirst') && serviceWorker.includes("cache: 'no-cache'") && serviceWorker.includes('cache.match(fallbackKey)'));
 
 const html = readFileSync(join(root, 'index.html'), 'utf8');
@@ -233,6 +243,14 @@ const bootstrapSource = html.match(/<script>([\s\S]*?)<\/script>/)?.[1] || '';
 const bootstrapHash = createHash('sha256').update(bootstrapSource).digest('base64');
 test('app shell has CSP and polite live regions', html.includes('Content-Security-Policy') && html.includes('route-announcer') && html.includes('sync-announcer'));
 test('CSP authorizes exactly the inline recovery bootstrap by hash', bootstrapSource.length > 0 && html.includes(`script-src 'self' 'sha256-${bootstrapHash}'`));
+test('HTML links the versioned manifest and explicit Apple touch icon', html.includes('rel="manifest" href="manifest.webmanifest?v=9"') && html.includes('rel="apple-touch-icon"') && html.includes('sizes="180x180"'));
+test('HTML enables standalone-capable iOS presentation', html.includes('name="apple-mobile-web-app-capable" content="yes"') && html.includes('name="apple-mobile-web-app-title" content="امدادگر"'));
+const homeSource = appSource.slice(appSource.indexOf('function renderHome()'), appSource.indexOf('function renderTriage()'));
+const installSetupSource = appSource.slice(appSource.indexOf('function setupInstallCard()'), appSource.indexOf('function renderHome()'));
+test('install UI appears only on the non-emergency home screen', homeSource.includes('id="install-card"') && homeSource.includes('setupInstallCard()') && appSource.match(/id="install-card"/g)?.length === 1);
+test('Chromium install prompt is deferred until the install button is clicked', appSource.includes("window.addEventListener('beforeinstallprompt'") && appSource.includes('event.preventDefault()') && appSource.includes('deferredInstallPrompt = event') && installSetupSource.includes('await prompt.prompt()') && installSetupSource.includes('await prompt.userChoice'));
+test('successful installation and standalone mode hide the install card', appSource.includes("window.addEventListener('appinstalled'") && appSource.includes("standaloneDisplay.matches || navigator.standalone === true") && appSource.includes("return 'installed'"));
+test('iPhone fallback gives Safari Add to Home Screen instructions', appSource.includes('isIosDevice') && appSource.includes('Add to Home Screen') && appSource.includes('Open as Web App'));
 test('symptom chips expose aria-pressed', appSource.includes('aria-pressed="${active}"'));
 test('symptom UI filters incompatible current options', appSource.includes('isCurrentSymptomVisible(id, state.diffSelected, kb.symptoms)'));
 test('symptom UI separates historical observations', appSource.includes('پیش از بیهوشی یا توقف تنفس') && appSource.includes('data-history-sym'));
@@ -243,6 +261,7 @@ test('a newly synced symptom index refreshes the open symptom finder', appSource
 test('rendered KB values pass through HTML escaping', appSource.includes('${e(item.title)}') && appSource.includes('${e(action)}'));
 
 const cssSource = readFileSync(join(root, 'css/app.css'), 'utf8');
+test('install card has bounded responsive styling and touch-sized action', cssSource.includes('.install-card {') && cssSource.includes('.install-card-heading > div { flex: 1; min-width: 0; }') && homeSource.includes('class="btn outline full"'));
 
 /* ---------- Responsive symptom categories ---------- */
 test('desktop category buttons are an accessible labelled group', appSource.includes('id="category-tabs"') && appSource.includes('role="group"') && appSource.includes('aria-label="دسته‌های نشانه‌ها"'));
@@ -268,12 +287,12 @@ test('mobile result action remains reachable without horizontal movement', cssSo
 test('search, selected tray, suggestions and show-more controls have responsive styling', ['.symptom-search-card', '.selected-tray', '.suggested-symptoms', '.show-more-symptoms'].every((selector) => cssSource.includes(selector)));
 
 /* ---------- User-controlled app updates ---------- */
-test('versioned v8 shell assets bypass an older cache during this upgrade', html.includes('css/app.css?v=8') && html.includes('js/app.js?v=8') && serviceWorker.includes('./css/app.css?v=8') && serviceWorker.includes('./js/app.js?v=8'));
-test('every browser module dependency is versioned together', appSource.includes("'./kb.js?v=8'") && appSource.includes("'./engine.js?v=8'") && kbSource.includes("'./schema.js?v=8'") && serviceWorker.includes('./js/kb.js?v=8') && serviceWorker.includes('./js/engine.js?v=8') && serviceWorker.includes('./js/schema.js?v=8'));
+test('versioned v9 shell assets bypass an older cache during this upgrade', html.includes('css/app.css?v=9') && html.includes('js/app.js?v=9') && serviceWorker.includes('./css/app.css?v=9') && serviceWorker.includes('./js/app.js?v=9'));
+test('every browser module dependency is versioned together', appSource.includes("'./kb.js?v=9'") && appSource.includes("'./engine.js?v=9'") && kbSource.includes("'./schema.js?v=9'") && serviceWorker.includes('./js/kb.js?v=9') && serviceWorker.includes('./js/engine.js?v=9') && serviceWorker.includes('./js/schema.js?v=9'));
 test('independent inline bootstrap replaces an indefinitely stuck loader', bootstrapSource.includes('setTimeout(showLoadFailure, 20000)') && bootstrapSource.includes('boot-retry') && bootstrapSource.includes('location.reload()') && appSource.includes("'emdadgar:boot-complete'"));
 test('the update banner is outside the rerendered app shell', html.indexOf('id="app-update"') < html.indexOf('id="app"'));
 test('the update banner offers now and later actions', html.includes('id="app-update-now"') && html.includes('id="app-update-later"'));
-test('registration bypasses HTTP cache when checking the worker', appSource.includes("updateViaCache: 'none'") && appSource.includes("register('./sw.js?v=8'"));
+test('registration bypasses HTTP cache when checking the worker', appSource.includes("updateViaCache: 'none'") && appSource.includes("register('./sw.js?v=9'"));
 test('an already waiting worker is offered immediately', appSource.includes('if (registration.waiting) offerAppUpdate(registration.waiting)'));
 test('new worker installation is observed', appSource.includes("registration.addEventListener('updatefound'"));
 test('updates activate only after the user requests them', appSource.includes("worker.postMessage({ type: 'SKIP_WAITING' })") && appSource.includes("appUpdateNow?.addEventListener('click'"));
