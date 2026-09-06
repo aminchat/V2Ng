@@ -5,7 +5,12 @@ import {
   historicalSymptomIds,
   isCurrentSymptomVisible,
   nextTriageQuestion,
+  normalizePersianSearch,
+  quickSymptomIds,
   rankCases,
+  searchSymptoms,
+  sortSymptomIds,
+  suggestSymptoms,
   symptomModels,
   toggleCurrentSymptom,
   toggleHistoricalSymptom,
@@ -22,6 +27,10 @@ const appUpdateBanner = document.getElementById('app-update');
 const appUpdateNow = document.getElementById('app-update-now');
 const appUpdateLater = document.getElementById('app-update-later');
 
+const QUICK_CATEGORY = '__quick';
+const SELECTED_CATEGORY = '__selected';
+const INITIAL_SYMPTOM_LIMIT = 12;
+
 const state = {
   ready: false,
   fatalError: null,
@@ -30,10 +39,12 @@ const state = {
   caseId: null,
   caseAnswers: [],
   caseStage: 'questions',
-  diffCategory: null,
+  diffCategory: QUICK_CATEGORY,
   diffSelected: [],
   diffHistorical: [],
   diffCompatibilityMessage: '',
+  diffQuery: '',
+  diffShowAll: false,
   diffStage: 'questions',
   lastRouteName: null,
   preparedCaseId: null,
@@ -154,7 +165,9 @@ function renderHome() {
     state.diffSelected = [];
     state.diffHistorical = [];
     state.diffCompatibilityMessage = '';
-    state.diffCategory = null;
+    state.diffQuery = '';
+    state.diffShowAll = false;
+    state.diffCategory = QUICK_CATEGORY;
     navigate('#/symptoms');
   });
   document.getElementById('open-kb').addEventListener('click', () => navigate('#/kb'));
@@ -171,7 +184,9 @@ function renderTriage() {
       state.diffSelected = [];
       state.diffHistorical = [];
       state.diffCompatibilityMessage = '';
-      state.diffCategory = null;
+      state.diffQuery = '';
+      state.diffShowAll = false;
+      state.diffCategory = QUICK_CATEGORY;
       navigate('#/symptoms');
       return 'بررسی فوری';
     }
@@ -249,6 +264,7 @@ function selectSymptomCategory(categoryId) {
   if (normalized === state.diffCategory) return;
   state.diffCategory = normalized;
   state.diffCompatibilityMessage = '';
+  state.diffShowAll = false;
   restoreCategoryControlFocus = true;
   render({ focus: false });
 }
@@ -276,34 +292,149 @@ function setupCategoryControls() {
   });
 }
 
+let restoreSearchFocus = false;
+
+function selectedSymptomsMarkup() {
+  const current = sortSymptomIds(state.diffSelected, kb.symptoms);
+  const historical = sortSymptomIds(state.diffHistorical, kb.symptoms);
+  if (!current.length && !historical.length) return '';
+  return `<section class="selected-tray" aria-labelledby="selected-tray-heading">
+    <div class="section-heading-row">
+      <h2 id="selected-tray-heading">انتخاب‌شده‌ها (${new Set([...current, ...historical]).size})</h2>
+      <button class="small-text-btn" id="clear-symptoms" type="button">پاک‌کردن همه</button>
+    </div>
+    ${current.length ? `<div class="chips selected-chips">${symptomChips(current, state.diffSelected)}</div>` : ''}
+    ${historical.length ? `<h3>گزارش‌شده پیش از بیهوشی یا توقف تنفس</h3><div class="chips selected-chips historical-inline">${symptomChips(historical, state.diffHistorical, 'data-history-sym')}</div>` : ''}
+  </section>`;
+}
+
+function searchResultsMarkup(query) {
+  const normalized = normalizePersianSearch(query);
+  if (normalized.length < 2) {
+    return '<p class="empty-inline">برای جست‌وجو حداقل دو حرف وارد کنید.</p>';
+  }
+  const ids = searchSymptoms(query, kb.symptoms)
+    .filter((id) => isCurrentSymptomVisible(id, state.diffSelected, kb.symptoms));
+  if (!ids.length) {
+    return '<div class="empty compact-empty"><h2>نشانه‌ای پیدا نشد</h2><p>نام دیگری امتحان کنید یا از دسته‌بندی‌ها استفاده کنید.</p></div>';
+  }
+  return `<div class="section-heading-row"><h2>نتیجهٔ جست‌وجو</h2><span class="result-count">${ids.length} مورد</span></div>
+    <div class="chips" id="search-symptoms">${symptomChips(ids, state.diffSelected)}</div>`;
+}
+
+function applyCurrentSymptom(symptomId) {
+  const result = toggleCurrentSymptom(state.diffSelected, state.diffHistorical, symptomId, kb.symptoms);
+  state.diffSelected = result.selected;
+  state.diffHistorical = result.historical;
+  state.diffCompatibilityMessage = compatibilityMessage(symptomId, result);
+  restoreSearchFocus = Boolean(state.diffQuery);
+  render({ focus: false });
+}
+
+function wireCurrentSymptomButtons(root = document) {
+  root.querySelectorAll('[data-sym]').forEach((button) => button.addEventListener('click', () => {
+    applyCurrentSymptom(button.dataset.sym);
+  }));
+}
+
+function wireHistoricalSymptomButtons(root = document) {
+  root.querySelectorAll('[data-history-sym]').forEach((button) => button.addEventListener('click', () => {
+    state.diffHistorical = toggleHistoricalSymptom(state.diffHistorical, button.dataset.historySym, kb.symptoms);
+    state.diffCompatibilityMessage = '';
+    render({ focus: false });
+  }));
+}
+
+function setupSymptomSearch() {
+  const input = document.getElementById('symptom-search');
+  const clear = document.getElementById('clear-search');
+  const searchPanel = document.getElementById('search-results');
+  const browserPanel = document.getElementById('symptom-browser');
+  if (!input || !clear || !searchPanel || !browserPanel) return;
+
+  const update = () => {
+    state.diffQuery = input.value;
+    const hasQuery = Boolean(input.value.trim());
+    clear.hidden = !hasQuery;
+    searchPanel.hidden = !hasQuery;
+    browserPanel.hidden = hasQuery;
+    if (hasQuery) {
+      searchPanel.innerHTML = searchResultsMarkup(input.value);
+      wireCurrentSymptomButtons(searchPanel);
+    } else {
+      searchPanel.innerHTML = '';
+    }
+  };
+
+  input.addEventListener('input', update);
+  clear.addEventListener('click', () => {
+    input.value = '';
+    update();
+    input.focus({ preventScroll: true });
+  });
+
+  if (restoreSearchFocus) {
+    restoreSearchFocus = false;
+    requestAnimationFrame(() => {
+      const refreshed = document.getElementById('symptom-search');
+      refreshed?.focus({ preventScroll: true });
+      const end = refreshed?.value.length || 0;
+      refreshed?.setSelectionRange(end, end);
+    });
+  }
+}
+
 function renderSymptoms() {
   const categoryIds = Object.keys(kb.categories);
   if (state.diffStage === 'result') return renderDifferentialResults();
 
-  const categorySymptoms = state.diffCategory
-    ? kb.categories[state.diffCategory]?.diffSymptoms || []
-    : [...new Set(categoryIds.flatMap((id) => kb.categories[id].diffSymptoms || []))];
-  const currentSymptoms = categorySymptoms.filter((id) => isCurrentSymptomVisible(id, state.diffSelected, kb.symptoms));
-  const historicalSymptoms = historicalSymptomIds(categorySymptoms, state.diffSelected, kb.symptoms);
-  const selectionCount = new Set([...state.diffSelected, ...state.diffHistorical]).size;
+  const configuredQuickIds = quickSymptomIds(kb.symptoms);
+  const allCategorySymptoms = [...new Set(categoryIds.flatMap((id) => kb.categories[id].diffSymptoms || []))];
+  const quickIds = configuredQuickIds.length
+    ? configuredQuickIds
+    : sortSymptomIds(allCategorySymptoms, kb.symptoms).slice(0, 8);
+  let categorySymptoms;
+  if (state.diffCategory === QUICK_CATEGORY) categorySymptoms = quickIds;
+  else if (state.diffCategory === SELECTED_CATEGORY) categorySymptoms = [...state.diffSelected];
+  else if (state.diffCategory) categorySymptoms = kb.categories[state.diffCategory]?.diffSymptoms || [];
+  else categorySymptoms = allCategorySymptoms;
 
-  const otherCategorySelected = state.diffCategory
-    ? state.diffSelected.filter((id) => !categorySymptoms.includes(id))
-    : [];
+  const compatibleSymptoms = sortSymptomIds(
+    categorySymptoms.filter((id) => isCurrentSymptomVisible(id, state.diffSelected, kb.symptoms)),
+    kb.symptoms,
+  );
+  const isCompactCategory = [QUICK_CATEGORY, SELECTED_CATEGORY].includes(state.diffCategory);
+  const initiallyVisible = new Set(compatibleSymptoms.slice(0, INITIAL_SYMPTOM_LIMIT));
+  for (const id of state.diffSelected) {
+    if (compatibleSymptoms.includes(id)) initiallyVisible.add(id);
+  }
+  const currentSymptoms = state.diffShowAll || isCompactCategory
+    ? compatibleSymptoms
+    : compatibleSymptoms.filter((id) => initiallyVisible.has(id));
+  const hiddenSymptomCount = compatibleSymptoms.length - currentSymptoms.length;
+  const historicalSymptoms = state.diffCategory === SELECTED_CATEGORY
+    ? []
+    : sortSymptomIds(historicalSymptomIds(categorySymptoms, state.diffSelected, kb.symptoms), kb.symptoms);
+  const allEvidence = [...new Set([...state.diffSelected, ...state.diffHistorical])];
+  const suggestions = suggestSymptoms(allEvidence, kb.cases, kb.symptoms, 12)
+    .filter((id) => isCurrentSymptomVisible(id, state.diffSelected, kb.symptoms))
+    .slice(0, 6);
+  const selectionCount = allEvidence.length;
 
-  const categoryItems = [null, ...categoryIds].map((categoryId) => {
-    const active = (categoryId || null) === state.diffCategory;
-    const label = categoryId
-      ? `${kb.categories[categoryId].icon} ${kb.categories[categoryId].title}`
-      : 'همه';
-    return { id: categoryId || '', label, active };
-  });
+  const categoryItems = [
+    { id: QUICK_CATEGORY, label: '★ پرکاربرد' },
+    { id: SELECTED_CATEGORY, label: `✓ انتخاب‌شده‌ها (${selectionCount})` },
+    { id: '', label: 'همه' },
+    ...categoryIds.map((id) => ({ id, label: `${kb.categories[id].icon} ${kb.categories[id].title}` })),
+  ].map((item) => ({ ...item, active: (item.id || null) === (state.diffCategory || null) }));
   const categoryTabs = categoryItems.map(({ id, label, active }) => (
     `<button type="button" class="cat-btn${active ? ' active' : ''}" data-cat="${e(id)}" aria-pressed="${active}">${e(label)}</button>`
   )).join('');
   const categoryOptions = categoryItems.map(({ id, label, active }) => (
     `<option value="${e(id)}"${active ? ' selected' : ''}>${e(label)}</option>`
   )).join('');
+  const activeCategoryLabel = categoryItems.find((item) => item.active)?.label.replace(/^[★✓]\s*/, '') || 'همهٔ نشانه‌ها';
+  const hasSearch = Boolean(state.diffQuery.trim());
 
   app.innerHTML = `
     <header class="topbar">
@@ -311,51 +442,79 @@ function renderSymptoms() {
       <div><div class="eyebrow">راهنمای نشانه‌محور</div><h1 id="view-heading" tabindex="-1">چه نشانه‌ای می‌بینید؟</h1></div>
       <a class="mini-call" href="tel:115" aria-label="تماس با اورژانس ۱۱۵">۱۱۵</a>
     </header>
-    <main class="body">
+    <main class="body symptoms-body">
       ${compatibilityNotice()}
-      <aside class="disclaimer compact"><strong>تشخیص نیست:</strong> اگر بیهوشی، تنفس غیرطبیعی، انسداد شدید راه هوایی یا خونریزی شدید وجود دارد، به «بررسی فوری» برگردید و با ۱۱۵ تماس بگیرید.</aside>
+      <aside class="disclaimer compact"><strong>خطر فوری؟</strong> اگر فرد بیهوش است، تنفس طبیعی ندارد، دچار انسداد شدید راه هوایی یا خونریزی شدید است، به «بررسی فوری» برگردید و با ۱۱۵ تماس بگیرید.</aside>
       ${state.diffCompatibilityMessage ? `<p class="compatibility-notice" role="status">${e(state.diffCompatibilityMessage)}</p>` : ''}
-      <fieldset class="category-fieldset">
-        <legend>دستهٔ نشانه‌ها</legend>
-        <div class="category-tabs" id="category-tabs" role="group" aria-label="دسته‌های نشانه‌ها">${categoryTabs}</div>
-        <label class="category-select-label" for="category-select">انتخاب دستهٔ نشانه‌ها</label>
-        <select class="category-select" id="category-select">${categoryOptions}</select>
-      </fieldset>
-      <section aria-labelledby="symptom-heading">
-        <h2 id="symptom-heading">نشانه‌های فعلی را انتخاب کنید</h2>
-        <p class="section-help">گزینه‌هایی که با وضعیت‌های انتخاب‌شده سازگار نیستند، خودکار مخفی می‌شوند.</p>
-        <div class="chips" id="current-symptoms">${symptomChips(currentSymptoms, state.diffSelected)}</div>
-        ${currentSymptoms.length ? '' : '<p class="empty-inline">در این دسته گزینهٔ سازگار دیگری باقی نمانده است.</p>'}
+
+      <section class="symptom-search-card" aria-labelledby="search-heading">
+        <h2 id="search-heading">جست‌وجوی سریع نشانه</h2>
+        <div class="search-field">
+          <input id="symptom-search" type="search" value="${e(state.diffQuery)}" placeholder="مثلاً تنگی نفس، سرگیجه یا خونریزی" autocomplete="off" enterkeyhint="search" aria-describedby="search-help">
+          <button id="clear-search" type="button" aria-label="پاک‌کردن جست‌وجو" ${hasSearch ? '' : 'hidden'}>×</button>
+        </div>
+        <p id="search-help">نام رایج نشانه را بنویسید؛ جست‌وجو در همهٔ دسته‌ها و به‌صورت آفلاین انجام می‌شود.</p>
       </section>
-      ${otherCategorySelected.length ? `<section class="historical-symptoms" aria-labelledby="other-selected-heading">
-        <h2 id="other-selected-heading">از دسته‌های دیگر انتخاب شده</h2>
-        <p>این نشانه‌ها در دسته‌های دیگر انتخاب شدن و در نتایج لحاظ می‌شن</p>
-        <div class="chips" id="other-selected-symptoms">${symptomChips(otherCategorySelected, state.diffSelected)}</div>
-      </section>` : ''}
-      ${historicalSymptoms.length ? `<section class="historical-symptoms" aria-labelledby="historical-heading">
-        <h2 id="historical-heading">پیش از بیهوشی یا توقف تنفس</h2>
-        <p>فقط نشانه‌ای را انتخاب کنید که فرد پیش‌تر گفته یا شاهد آن را دیده است؛ این موارد نشانهٔ فعلی محسوب نمی‌شوند.</p>
-        <div class="chips">${symptomChips(historicalSymptoms, state.diffHistorical, 'data-history-sym')}</div>
-      </section>` : ''}
-      <button class="btn primary full card-spaced" id="show-results" type="button" ${selectionCount ? '' : 'disabled'}>بررسی مسیرهای مرتبط (${selectionCount})</button>
+
+      ${selectedSymptomsMarkup()}
+
+      <section id="search-results" class="search-results" aria-live="polite" ${hasSearch ? '' : 'hidden'}>${hasSearch ? searchResultsMarkup(state.diffQuery) : ''}</section>
+
+      <div id="symptom-browser" ${hasSearch ? 'hidden' : ''}>
+        <fieldset class="category-fieldset">
+          <legend>دستهٔ نشانه‌ها</legend>
+          <div class="category-tabs" id="category-tabs" role="group" aria-label="دسته‌های نشانه‌ها">${categoryTabs}</div>
+          <label class="category-select-label" for="category-select">انتخاب دستهٔ نشانه‌ها</label>
+          <select class="category-select" id="category-select">${categoryOptions}</select>
+        </fieldset>
+
+        ${suggestions.length ? `<section class="suggested-symptoms" aria-labelledby="suggested-heading">
+          <h2 id="suggested-heading">نشانه‌های مرتبط برای بررسی</h2>
+          <p class="section-help">این‌ها فقط گزینه‌های مرتبط با انتخاب‌های شما هستند و تشخیص یا انتخاب خودکار نیستند.</p>
+          <div class="chips">${symptomChips(suggestions, state.diffSelected)}</div>
+        </section>` : ''}
+
+        <section aria-labelledby="symptom-heading">
+          <h2 id="symptom-heading">${e(activeCategoryLabel)}</h2>
+          <p class="section-help">گزینه‌های ناسازگار خودکار مخفی می‌شوند. فقط مواردی را انتخاب کنید که وجودشان را می‌بینید یا می‌دانید.</p>
+          <div class="chips" id="current-symptoms">${symptomChips(currentSymptoms, state.diffSelected)}</div>
+          ${currentSymptoms.length ? '' : `<p class="empty-inline">${state.diffCategory === SELECTED_CATEGORY ? 'هنوز نشانه‌ای انتخاب نشده است.' : 'در این دسته گزینهٔ سازگار دیگری باقی نمانده است.'}</p>`}
+          ${hiddenSymptomCount > 0 ? `<button class="show-more-symptoms" id="show-more-symptoms" type="button">نمایش ${hiddenSymptomCount} نشانهٔ دیگر</button>` : ''}
+          ${state.diffShowAll && !isCompactCategory && compatibleSymptoms.length > INITIAL_SYMPTOM_LIMIT ? '<button class="show-more-symptoms" id="show-less-symptoms" type="button">نمایش کمتر</button>' : ''}
+        </section>
+
+        ${historicalSymptoms.length ? `<section class="historical-symptoms" aria-labelledby="historical-heading">
+          <h2 id="historical-heading">پیش از بیهوشی یا توقف تنفس</h2>
+          <p>فقط نشانه‌ای را انتخاب کنید که فرد پیش‌تر گفته یا شاهد آن را دیده است؛ این موارد نشانهٔ فعلی محسوب نمی‌شوند.</p>
+          <div class="chips">${symptomChips(historicalSymptoms, state.diffHistorical, 'data-history-sym')}</div>
+        </section>` : ''}
+      </div>
+
+      <div class="symptom-result-bar">
+        <button class="btn primary full" id="show-results" type="button" ${selectionCount ? '' : 'disabled'}>بررسی مسیرهای مرتبط (${selectionCount})</button>
+      </div>
     </main>`;
 
   document.getElementById('back-home').addEventListener('click', () => navigate('#/'));
   setupCategoryControls();
-  document.querySelectorAll('#current-symptoms [data-sym], #other-selected-symptoms [data-sym]').forEach((button) => button.addEventListener('click', () => {
-    const id = button.dataset.sym;
-    const result = toggleCurrentSymptom(state.diffSelected, state.diffHistorical, id, kb.symptoms);
-    state.diffSelected = result.selected;
-    state.diffHistorical = result.historical;
-    state.diffCompatibilityMessage = compatibilityMessage(id, result);
+  setupSymptomSearch();
+  wireCurrentSymptomButtons();
+  wireHistoricalSymptomButtons();
+  document.getElementById('clear-symptoms')?.addEventListener('click', () => {
+    state.diffSelected = [];
+    state.diffHistorical = [];
+    state.diffCompatibilityMessage = 'همهٔ نشانه‌های انتخاب‌شده پاک شدند.';
+    state.diffShowAll = false;
     render({ focus: false });
-  }));
-  document.querySelectorAll('[data-history-sym]').forEach((button) => button.addEventListener('click', () => {
-    const id = button.dataset.historySym;
-    state.diffHistorical = toggleHistoricalSymptom(state.diffHistorical, id, kb.symptoms);
-    state.diffCompatibilityMessage = '';
+  });
+  document.getElementById('show-more-symptoms')?.addEventListener('click', () => {
+    state.diffShowAll = true;
     render({ focus: false });
-  }));
+  });
+  document.getElementById('show-less-symptoms')?.addEventListener('click', () => {
+    state.diffShowAll = false;
+    render({ focus: false });
+  });
   document.getElementById('show-results').addEventListener('click', () => {
     state.diffStage = 'result';
     state.diffCompatibilityMessage = '';
@@ -363,7 +522,6 @@ function renderSymptoms() {
   });
   return 'انتخاب نشانه‌ها';
 }
-
 function renderDifferentialResults() {
   const allSelected = [...new Set([...state.diffSelected, ...state.diffHistorical])];
   const ranked = rankCases(allSelected, kb.cases);
@@ -595,7 +753,7 @@ async function checkForAppUpdate({ force = false } = {}) {
 async function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return;
   try {
-    const registration = await navigator.serviceWorker.register('./sw.js?v=6', {
+    const registration = await navigator.serviceWorker.register('./sw.js?v=7', {
       scope: './',
       updateViaCache: 'none',
     });
@@ -641,7 +799,7 @@ async function backgroundSync() {
     if (result.changed.length) {
       showSyncAnnouncement('پایگاه دانش معتبر با موفقیت به‌روزرسانی شد.');
       const route = currentRoute();
-      if (route.name === 'home' || route.name === 'kb') render({ focus: false });
+      if (['home', 'kb', 'symptoms'].includes(route.name)) render({ focus: false });
     }
   } catch (error) {
     console.warn('Background KB sync failed', error);
