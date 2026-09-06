@@ -57,6 +57,25 @@ h1[tabindex="-1"]:focus { outline: none; }
 }
 .skip-link:focus { transform: translateY(0); }
 
+.app-update {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: min(calc(100% - 24px), 736px);
+  margin: 12px auto;
+  padding: 14px 16px;
+  border: 2px solid var(--primary);
+  border-radius: 14px;
+  background: var(--primary-soft);
+  box-shadow: var(--shadow);
+}
+.app-update[hidden] { display: none; }
+.app-update strong { display: block; color: var(--primary-dark); }
+.app-update p { margin: 4px 0 0; color: var(--muted); font-size: .85rem; line-height: 1.6; }
+.app-update-actions { display: flex; flex: none; gap: 8px; }
+.app-update-actions .btn { min-height: 44px; white-space: nowrap; }
+
 .visually-hidden {
   position: absolute !important;
   width: 1px !important;
@@ -76,8 +95,8 @@ h1[tabindex="-1"]:focus { outline: none; }
   background: var(--surface);
   box-shadow: var(--shadow);
 }
-/* Layout chain that keeps horizontal overflow inside the strip instead of widening the page. */
-.app-shell, .body, .category-fieldset, .category-nav { min-width: 0; max-width: 100%; }
+/* Every symptom-category control is width-bounded; no page-level horizontal scroller is needed. */
+.app-shell, .body, .category-fieldset, .category-tabs, .category-select { min-width: 0; max-width: 100%; }
 
 .topbar {
   position: sticky;
@@ -238,39 +257,12 @@ h1[tabindex="-1"]:focus { outline: none; }
   margin: 0 0 12px;
   font-size: 1rem;
 }
-/* Grid wrapper: the outer auto columns hold the prev/next controls and the middle
-   minmax(0, 1fr) track gives the scroller a bounded width, so the nowrap tab pills
-   can never stretch the page. */
-.category-nav {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-}
-.category-scroll {
+.category-tabs {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  padding: 4px 2px 8px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  overscroll-behavior-x: contain;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-gutter: stable;
-  scroll-snap-type: inline proximity;
-  scrollbar-width: thin;
-  scrollbar-color: rgb(159 31 43 / 55%) var(--surface-soft);
 }
-/* Make the horizontal scrollbar visible on WebKit (Windows Chrome/Edge overlay bars). */
-.category-scroll::-webkit-scrollbar { height: 10px; }
-.category-scroll::-webkit-scrollbar-track { border-radius: 999px; background: var(--surface-soft); }
-.category-scroll::-webkit-scrollbar-thumb { border-radius: 999px; background: rgb(159 31 43 / 55%); }
-.category-scroll::-webkit-scrollbar-thumb:hover { background: rgb(159 31 43 / 75%); }
 .cat-btn, .chip {
   min-height: 44px;
   padding: 10px 14px;
@@ -279,34 +271,23 @@ h1[tabindex="-1"]:focus { outline: none; }
   background: var(--surface);
   cursor: pointer;
 }
-.cat-btn {
-  flex: 0 0 auto;
-  min-height: 44px;
-  white-space: nowrap;
-  scroll-snap-align: center;
+.cat-btn { flex: 0 1 auto; }
+.cat-btn.active, .cat-btn[aria-pressed="true"], .chip.active, .chip[aria-pressed="true"] {
+  color: #fff;
+  border-color: var(--primary);
+  background: var(--primary);
 }
-.cat-nav-btn {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  min-width: 44px;
-  height: 44px;
-  min-height: 44px;
-  padding: 0;
+.category-select-label, .category-select { display: none; }
+.category-select-label { margin-bottom: 7px; color: var(--muted); font-size: .86rem; font-weight: 700; }
+.category-select {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 12px;
   border: 1px solid var(--border);
-  border-radius: 50%;
+  border-radius: 12px;
+  color: var(--text);
   background: var(--surface);
-  color: var(--primary-dark);
-  font-size: 1.3rem;
-  font-weight: 900;
-  line-height: 1;
-  cursor: pointer;
-  user-select: none;
-  -webkit-user-select: none;
 }
-.cat-nav-btn:hover:not(:disabled) { border-color: var(--primary); }
-.cat-nav-btn:disabled { opacity: .35; cursor: default; }
-.cat-btn.active, .chip.active, .chip[aria-pressed="true"] { color: #fff; border-color: var(--primary); background: var(--primary); }
 .chips { display: flex; flex-wrap: wrap; gap: 9px; }
 .risk-chips { margin-bottom: 10px; }
 
@@ -421,18 +402,20 @@ h1[tabindex="-1"]:focus { outline: none; }
 .noscript { margin: 20px; padding: 20px; border: 2px solid var(--danger); background: #fff; line-height: 1.8; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+@media (max-width: 600px) {
+  .category-tabs { display: none; }
+  .category-select-label, .category-select { display: block; }
+  .app-update { display: block; }
+  .app-update[hidden] { display: none; }
+  .app-update-actions { margin-top: 12px; }
+  .app-update-actions .btn { flex: 1; padding-inline: 10px; }
+}
+
 @media (max-width: 480px) {
   .body { padding-inline: 14px; }
   .topbar { padding-inline: 14px; }
   .kb-grid { grid-template-columns: 1fr; }
   .pill { max-width: 115px; }
-}
-
-/* Very narrow screens: shrink the prev/next controls so the strip keeps room, but the
-   strip itself must still pan by touch without moving the page. */
-@media (max-width: 420px) {
-  .category-nav { gap: 6px; }
-  .cat-nav-btn { width: 36px; min-width: 36px; height: 36px; min-height: 36px; font-size: 1.15rem; }
 }
 
 @media (min-width: 761px) {
