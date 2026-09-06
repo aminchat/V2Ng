@@ -1,4 +1,4 @@
-import { KnowledgeBase } from './kb.js?v=8';
+import { KnowledgeBase } from './kb.js?v=9';
 import {
   TRIAGE_QUESTIONS,
   hasCriticalSymptoms,
@@ -17,7 +17,7 @@ import {
   triggeredFlags,
   triageRoute,
   triageSymptoms,
-} from './engine.js?v=8';
+} from './engine.js?v=9';
 
 const kb = new KnowledgeBase();
 const app = document.getElementById('app');
@@ -26,6 +26,35 @@ const syncAnnouncer = document.getElementById('sync-announcer');
 const appUpdateBanner = document.getElementById('app-update');
 const appUpdateNow = document.getElementById('app-update-now');
 const appUpdateLater = document.getElementById('app-update-later');
+const standaloneDisplay = window.matchMedia('(display-mode: standalone)');
+
+let deferredInstallPrompt = null;
+let installInstructionsExpanded = false;
+let installCompleted = standaloneDisplay.matches || navigator.standalone === true;
+
+const isIosDevice = () => /iPad|iPhone|iPod/i.test(navigator.userAgent)
+  || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const isLikelyMobile = () => navigator.userAgentData?.mobile === true
+  || /Android|Mobile|iPad|iPhone|iPod/i.test(navigator.userAgent);
+
+window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  installInstructionsExpanded = false;
+  refreshInstallCard();
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null;
+  installCompleted = true;
+  refreshInstallCard();
+  showSyncAnnouncement('امدادگر با موفقیت روی دستگاه نصب شد.');
+});
+
+standaloneDisplay.addEventListener?.('change', (event) => {
+  installCompleted = event.matches;
+  refreshInstallCard();
+});
 
 const QUICK_CATEGORY = '__quick';
 const SELECTED_CATEGORY = '__selected';
@@ -124,6 +153,89 @@ function compatibilityNotice() {
   return '';
 }
 
+function currentInstallMode() {
+  if (installCompleted || standaloneDisplay.matches || navigator.standalone === true) return 'installed';
+  if (deferredInstallPrompt) return 'prompt';
+  if (isIosDevice()) return 'ios';
+  if (isLikelyMobile()) return 'manual';
+  return 'hidden';
+}
+
+function manualInstallInstructions(mode) {
+  if (mode === 'ios') {
+    return `<ol>
+      <li>این صفحه را در <strong>Safari</strong> باز کنید.</li>
+      <li>دکمهٔ <strong>Share / اشتراک‌گذاری</strong> را بزنید.</li>
+      <li><strong>Add to Home Screen / افزودن به صفحهٔ اصلی</strong> را انتخاب کنید.</li>
+      <li>گزینهٔ <strong>Open as Web App</strong> را روشن نگه دارید و <strong>Add</strong> را بزنید.</li>
+    </ol>`;
+  }
+  return `<ol>
+    <li>منوی مرورگر را باز کنید.</li>
+    <li><strong>نصب برنامه</strong> یا <strong>افزودن به صفحهٔ اصلی</strong> را انتخاب کنید.</li>
+    <li>نصب را تأیید کنید؛ سپس امدادگر از آیکن صفحهٔ اصلی و به‌صورت مستقل باز می‌شود.</li>
+  </ol>`;
+}
+
+function refreshInstallCard() {
+  const card = document.getElementById('install-card');
+  if (!card) return;
+  const mode = currentInstallMode();
+  card.hidden = mode === 'installed' || mode === 'hidden';
+  if (card.hidden) return;
+
+  const description = document.getElementById('install-description');
+  const button = document.getElementById('install-app');
+  const instructions = document.getElementById('install-instructions');
+  if (!description || !button || !instructions) return;
+
+  const promptAvailable = mode === 'prompt';
+  description.textContent = promptAvailable
+    ? 'برای دسترسی سریع‌تر و استفادهٔ آفلاین، امدادگر را روی گوشی نصب کنید.'
+    : mode === 'ios'
+      ? 'نصب در iPhone و iPad از منوی اشتراک‌گذاری Safari انجام می‌شود.'
+      : 'اگر دکمهٔ نصب مرورگر نمایش داده نمی‌شود، از منوی مرورگر به صفحهٔ اصلی اضافه کنید.';
+  button.textContent = promptAvailable ? 'نصب امدادگر' : 'نمایش راهنمای نصب';
+  button.disabled = false;
+  button.setAttribute('aria-expanded', String(!promptAvailable && installInstructionsExpanded));
+  instructions.innerHTML = promptAvailable ? '' : manualInstallInstructions(mode);
+  instructions.hidden = promptAvailable || !installInstructionsExpanded;
+}
+
+function setupInstallCard() {
+  const button = document.getElementById('install-app');
+  if (!button) return;
+  refreshInstallCard();
+  button.addEventListener('click', async () => {
+    const status = document.getElementById('install-status');
+    if (deferredInstallPrompt) {
+      const prompt = deferredInstallPrompt;
+      deferredInstallPrompt = null;
+      button.disabled = true;
+      try {
+        await prompt.prompt();
+        const choice = await prompt.userChoice;
+        if (choice.outcome === 'accepted') {
+          installCompleted = true;
+          showSyncAnnouncement('نصب امدادگر تأیید شد. آیکن برنامه به دستگاه اضافه می‌شود.');
+        } else {
+          installInstructionsExpanded = true;
+          if (status) status.textContent = 'نصب انجام نشد؛ هر زمان خواستید می‌توانید دوباره از منوی مرورگر اقدام کنید.';
+        }
+      } catch (error) {
+        console.warn('Install prompt failed', error);
+        installInstructionsExpanded = true;
+        if (status) status.textContent = 'پنجرهٔ نصب باز نشد؛ از راهنمای نصب دستی استفاده کنید.';
+      }
+      refreshInstallCard();
+      return;
+    }
+
+    installInstructionsExpanded = !installInstructionsExpanded;
+    refreshInstallCard();
+  });
+}
+
 function renderHome() {
   app.innerHTML = `
     <header class="topbar">
@@ -149,6 +261,18 @@ function renderHome() {
         <span aria-hidden="true">📚</span>
         <span><strong>مرور همهٔ راهنماها</strong><small>${kb.listCases().length} موضوع کمک‌های اولیه</small></span>
       </button>
+      <section class="install-card" id="install-card" aria-labelledby="install-heading" hidden>
+        <div class="install-card-heading">
+          <span class="install-icon" aria-hidden="true">⇩</span>
+          <div>
+            <h2 id="install-heading">نصب امدادگر روی گوشی</h2>
+            <p id="install-description"></p>
+          </div>
+        </div>
+        <button class="btn outline full" id="install-app" type="button" aria-controls="install-instructions" aria-expanded="false">نصب امدادگر</button>
+        <div class="install-instructions" id="install-instructions" hidden></div>
+        <p class="install-status" id="install-status" role="status" aria-live="polite"></p>
+      </section>
       <aside class="disclaimer">
         <strong>محدودیت مهم:</strong> این نرم‌افزار ابزار آموزشی و پشتیبان تصمیم است، نه تشخیص پزشکی یا جایگزین آموزش عملی، پزشک یا اپراتور اورژانس. در تردید یا بدترشدن حال فرد با ۱۱۵ تماس بگیرید.
       </aside>
@@ -171,6 +295,7 @@ function renderHome() {
     navigate('#/symptoms');
   });
   document.getElementById('open-kb').addEventListener('click', () => navigate('#/kb'));
+  setupInstallCard();
   return 'خانه';
 }
 
@@ -753,7 +878,7 @@ async function checkForAppUpdate({ force = false } = {}) {
 async function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return;
   try {
-    const registration = await navigator.serviceWorker.register('./sw.js?v=8', {
+    const registration = await navigator.serviceWorker.register('./sw.js?v=9', {
       scope: './',
       updateViaCache: 'none',
     });
