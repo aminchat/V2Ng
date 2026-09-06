@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#b4232f">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="امدادگر؛ راهنمای آفلاین و فارسی کمک‌های اولیه با مسیر بررسی خطرهای فوری">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="امدادگر">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <title>امدادگر — راهنمای آفلاین کمک‌های اولیه</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <a class="skip-link" href="#app">پرش به محتوای اصلی</a>
+  <div id="route-announcer" class="visually-hidden" role="status" aria-live="polite"></div>
+  <div id="sync-announcer" class="visually-hidden" role="status" aria-live="polite"></div>
+  <div id="app" class="app-shell">
+    <main class="loading" role="status" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>در حال آماده‌سازی راهنمای معتبر…</p>
+    </main>
+  </div>
+  <noscript><div class="noscript">برای اجرای امدادگر باید JavaScript مرورگر فعال باشد. در وضعیت اورژانسی با ۱۱۵ تماس بگیرید.</div></noscript>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

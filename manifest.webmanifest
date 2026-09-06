@@ -1,0 +1,36 @@
+{
+  "name": "امدادگر — راهنمای کمک‌های اولیه",
+  "short_name": "امدادگر",
+  "description": "راهنمای فارسی و آفلاین کمک‌های اولیه با بررسی خطرهای فوری",
+  "lang": "fa",
+  "dir": "rtl",
+  "id": "./",
+  "start_url": "./#/",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#fff8f4",
+  "theme_color": "#b4232f",
+  "categories": ["medical", "health", "education"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "بررسی فوری",
+      "short_name": "بررسی فوری",
+      "url": "./#/triage",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "همهٔ راهنماها",
+      "short_name": "راهنماها",
+      "url": "./#/kb",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ]
+}

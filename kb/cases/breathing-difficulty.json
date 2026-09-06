@@ -1,0 +1,61 @@
+{
+  "id": "breathing-difficulty",
+  "title": "تنگی نفس / حملهٔ تنفسی",
+  "icon": "🫁",
+  "category": "resuscitation",
+  "version": 2,
+  "updatedAt": "2026-09-06",
+  "summary": "وضعیت راحت، کمک به داروی نجاتِ تجویزشده و تماس سریع در نشانه‌های شدید",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Asthma",
+    "WHO Basic Emergency Care"
+  ],
+  "match": {
+    "difficulty_breathing": 5,
+    "wheezing": 3,
+    "cyanosis": 3,
+    "chest_pain": 1
+  },
+  "riskQuestions": [
+    "wheezing",
+    "cyanosis",
+    "difficulty_breathing",
+    "confusion",
+    "drowsiness",
+    "speech_difficulty",
+    "child_victim"
+  ],
+  "call115": {
+    "always": false,
+    "when": [
+      "cyanosis",
+      "confusion",
+      "drowsiness",
+      "speech_difficulty"
+    ],
+    "text": "کبودی لب، گیجی یا ناتوانی در صحبت کردن جملات کامل = حمله شدید"
+  },
+  "actions": [
+    "اگر محیط دود، گاز یا خطر دارد، بدون به‌خطرانداختن خود فرد را به هوای سالم ببرید و با ۱۱۵ تماس بگیرید.",
+    "فرد هوشیار را در وضعیتی که راحت‌تر نفس می‌کشد، معمولاً نشسته و کمی متمایل به جلو، قرار دهید و لباس تنگ را باز کنید.",
+    "برای استفاده از اسپری نجات یا داروی استنشاقی که برای خود او تجویز شده است، طبق برنامهٔ شخصی/دستور وسیله کمک کنید.",
+    "در ناتوانی در گفتن جمله، کبودی، گیجی، خواب‌آلودگی، صدای تنفسی بسیار کم، یا بهبودنیافتن سریع با داروی نجات، فوراً ۱۱۵ را بگیرید.",
+    "فرد را تنها نگذارید و تنفس و هوشیاری را پیوسته بررسی کنید؛ اگر تنفس طبیعی متوقف شد CPR را آغاز کنید."
+  ],
+  "redFlags": [
+    {
+      "when": [
+        "cyanosis",
+        "confusion",
+        "drowsiness",
+        "speech_difficulty"
+      ],
+      "text": "کبودی لب، گیجی یا ناتوانی در صحبت = حمله شدید — ۱۱۵ فوری"
+    }
+  ],
+  "prohibitions": [
+    "داروی شخص دیگری را ندهید",
+    "فرد هوشیار را مجبور به درازکشیدن، راه‌رفتن یا فعالیت نکنید",
+    "برای اثر دارو در حضور نشانه‌های شدید، تماس با ۱۱۵ را عقب نیندازید"
+  ]
+}
