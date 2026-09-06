@@ -43,6 +43,31 @@ export function validateKnowledgeBase(symptoms, categories, cases) {
     if (!SYMPTOM_RE.test(id)) errors.push(`symptom "${id}" has an invalid id`);
     if (!plainObject(symptom) || typeof symptom.label !== 'string' || !symptom.label.trim()) {
       errors.push(`symptom "${id}" must contain a non-empty label`);
+      continue;
+    }
+    if (symptom.exclusiveWith !== undefined) {
+      if (!Array.isArray(symptom.exclusiveWith)) {
+        errors.push(`symptom "${id}": exclusiveWith must be an array`);
+      } else {
+        const seen = new Set();
+        for (const excludedId of symptom.exclusiveWith) {
+          if (typeof excludedId !== 'string' || !symptoms[excludedId]) errors.push(`symptom "${id}": exclusiveWith references unknown symptom "${excludedId}"`);
+          if (excludedId === id) errors.push(`symptom "${id}" cannot exclude itself`);
+          if (seen.has(excludedId)) errors.push(`symptom "${id}": duplicate exclusiveWith entry "${excludedId}"`);
+          seen.add(excludedId);
+        }
+      }
+    }
+    for (const field of ['requiresResponsive', 'requiresBreathing', 'canBeHistorical']) {
+      if (symptom[field] !== undefined && typeof symptom[field] !== 'boolean') {
+        errors.push(`symptom "${id}": ${field} must be boolean`);
+      }
+    }
+    if (symptom.canBeHistorical && !symptom.requiresResponsive && !symptom.requiresBreathing) {
+      errors.push(`symptom "${id}": canBeHistorical requires an assessability constraint`);
+    }
+    if (symptom.selectionPriority !== undefined && (!Number.isInteger(symptom.selectionPriority) || symptom.selectionPriority < 0 || symptom.selectionPriority > 100)) {
+      errors.push(`symptom "${id}": selectionPriority must be an integer from 0 to 100`);
     }
   }
 

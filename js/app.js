@@ -2,9 +2,13 @@ import { KnowledgeBase } from './kb.js';
 import {
   TRIAGE_QUESTIONS,
   hasCriticalSymptoms,
+  historicalSymptomIds,
+  isCurrentSymptomVisible,
   nextTriageQuestion,
   rankCases,
   symptomModels,
+  toggleCurrentSymptom,
+  toggleHistoricalSymptom,
   triggeredFlags,
   triageRoute,
   triageSymptoms,
@@ -25,6 +29,8 @@ const state = {
   caseStage: 'questions',
   diffCategory: null,
   diffSelected: [],
+  diffHistorical: [],
+  diffCompatibilityMessage: '',
   diffStage: 'questions',
   lastRouteName: null,
   preparedCaseId: null,
@@ -142,6 +148,8 @@ function renderHome() {
   document.getElementById('start-symptoms').addEventListener('click', () => {
     state.diffStage = 'questions';
     state.diffSelected = [];
+    state.diffHistorical = [];
+    state.diffCompatibilityMessage = '';
     state.diffCategory = null;
     navigate('#/symptoms');
   });
@@ -155,6 +163,11 @@ function renderTriage() {
   if (!questionId && route) {
     if (route === 'symptoms') {
       state.triageAnswers = {};
+      state.diffStage = 'questions';
+      state.diffSelected = [];
+      state.diffHistorical = [];
+      state.diffCompatibilityMessage = '';
+      state.diffCategory = null;
       navigate('#/symptoms');
       return 'بررسی فوری';
     }
@@ -204,23 +217,40 @@ function renderTriage() {
   return 'خطرهای فوری';
 }
 
-function symptomChips(symptomIds, selected) {
+function symptomChips(symptomIds, selected, dataAttribute = 'data-sym') {
   return symptomModels(symptomIds, kb.symptoms).map((symptom) => {
     const active = selected.includes(symptom.id);
-    return `<button class="chip${active ? ' active' : ''}" type="button" data-sym="${e(symptom.id)}" aria-pressed="${active}">${e(symptom.label)}</button>`;
+    return `<button class="chip${active ? ' active' : ''}" type="button" ${dataAttribute}="${e(symptom.id)}" aria-pressed="${active}">${e(symptom.label)}</button>`;
   }).join('');
+}
+
+function symptomLabels(ids) {
+  return ids.map((id) => kb.symptoms[id]?.label).filter(Boolean);
+}
+
+function compatibilityMessage(symptomId, result) {
+  const label = kb.symptoms[symptomId]?.label || 'این نشانه';
+  const parts = [];
+  if (result.removed.length) parts.push(`${result.removed.length} نشانهٔ ناسازگار حذف شد`);
+  if (result.movedToHistorical.length) parts.push(`${result.movedToHistorical.length} نشانه به بخش «پیش از بیهوشی یا توقف تنفس» منتقل شد`);
+  if (result.restored.length) parts.push(`${result.restored.length} نشانهٔ پیشین دوباره به فهرست فعلی بازگشت`);
+  if (!result.accepted) return `«${label}» با یک وضعیت پرخطر انتخاب‌شده سازگار نیست.`;
+  return parts.length ? `با تغییر «${label}»، ${parts.join(' و ')}.` : '';
 }
 
 function renderSymptoms() {
   const categoryIds = Object.keys(kb.categories);
   if (state.diffStage === 'result') return renderDifferentialResults();
 
-  const visibleSymptoms = state.diffCategory
+  const categorySymptoms = state.diffCategory
     ? kb.categories[state.diffCategory]?.diffSymptoms || []
     : [...new Set(categoryIds.flatMap((id) => kb.categories[id].diffSymptoms || []))];
+  const currentSymptoms = categorySymptoms.filter((id) => isCurrentSymptomVisible(id, state.diffSelected, kb.symptoms));
+  const historicalSymptoms = historicalSymptomIds(categorySymptoms, state.diffSelected, kb.symptoms);
+  const selectionCount = new Set([...state.diffSelected, ...state.diffHistorical]).size;
 
-  const historicalSelected = state.diffCategory
-    ? state.diffSelected.filter((id) => !visibleSymptoms.includes(id))
+  const otherCategorySelected = state.diffCategory
+    ? state.diffSelected.filter((id) => !categorySymptoms.includes(id))
     : [];
 
   app.innerHTML = `
@@ -232,6 +262,7 @@ function renderSymptoms() {
     <main class="body">
       ${compatibilityNotice()}
       <aside class="disclaimer compact"><strong>تشخیص نیست:</strong> اگر بیهوشی، تنفس غیرطبیعی، انسداد شدید راه هوایی یا خونریزی شدید وجود دارد، به «بررسی فوری» برگردید و با ۱۱۵ تماس بگیرید.</aside>
+      ${state.diffCompatibilityMessage ? `<p class="compatibility-notice" role="status">${e(state.diffCompatibilityMessage)}</p>` : ''}
       <fieldset class="category-fieldset">
         <legend>دستهٔ نشانه‌ها</legend>
         <div class="category-scroll">
@@ -240,41 +271,58 @@ function renderSymptoms() {
         </div>
       </fieldset>
       <section aria-labelledby="symptom-heading">
-        <h2 id="symptom-heading">همهٔ نشانه‌های موجود را انتخاب کنید</h2>
-        <p class="section-help">نشانه‌ها را بر اساس دسته فیلتر کنید یا همه را ببینید</p>
-        <div class="chips">${symptomChips(visibleSymptoms, state.diffSelected)}</div>
+        <h2 id="symptom-heading">نشانه‌های فعلی را انتخاب کنید</h2>
+        <p class="section-help">گزینه‌هایی که با وضعیت‌های انتخاب‌شده سازگار نیستند، خودکار مخفی می‌شوند.</p>
+        <div class="chips" id="current-symptoms">${symptomChips(currentSymptoms, state.diffSelected)}</div>
+        ${currentSymptoms.length ? '' : '<p class="empty-inline">در این دسته گزینهٔ سازگار دیگری باقی نمانده است.</p>'}
       </section>
-      ${historicalSelected.length ? `<section class="historical-symptoms" aria-labelledby="historical-heading">
-        <h2 id="historical-heading">از دسته‌های دیگر انتخاب شده</h2>
+      ${otherCategorySelected.length ? `<section class="historical-symptoms" aria-labelledby="other-selected-heading">
+        <h2 id="other-selected-heading">از دسته‌های دیگر انتخاب شده</h2>
         <p>این نشانه‌ها در دسته‌های دیگر انتخاب شدن و در نتایج لحاظ می‌شن</p>
-        <div class="chips">${symptomChips(historicalSelected, state.diffSelected)}</div>
+        <div class="chips" id="other-selected-symptoms">${symptomChips(otherCategorySelected, state.diffSelected)}</div>
       </section>` : ''}
-      <button class="btn primary full card-spaced" id="show-results" type="button" ${state.diffSelected.length ? '' : 'disabled'}>بررسی مسیرهای مرتبط (${state.diffSelected.length})</button>
+      ${historicalSymptoms.length ? `<section class="historical-symptoms" aria-labelledby="historical-heading">
+        <h2 id="historical-heading">پیش از بیهوشی یا توقف تنفس</h2>
+        <p>فقط نشانه‌ای را انتخاب کنید که فرد پیش‌تر گفته یا شاهد آن را دیده است؛ این موارد نشانهٔ فعلی محسوب نمی‌شوند.</p>
+        <div class="chips">${symptomChips(historicalSymptoms, state.diffHistorical, 'data-history-sym')}</div>
+      </section>` : ''}
+      <button class="btn primary full card-spaced" id="show-results" type="button" ${selectionCount ? '' : 'disabled'}>بررسی مسیرهای مرتبط (${selectionCount})</button>
     </main>`;
 
   document.getElementById('back-home').addEventListener('click', () => navigate('#/'));
   document.querySelectorAll('[data-cat]').forEach((button) => button.addEventListener('click', () => {
     state.diffCategory = button.dataset.cat || null;
+    state.diffCompatibilityMessage = '';
     render({ focus: false });
   }));
-  document.querySelectorAll('[data-sym]').forEach((button) => button.addEventListener('click', () => {
+  document.querySelectorAll('#current-symptoms [data-sym], #other-selected-symptoms [data-sym]').forEach((button) => button.addEventListener('click', () => {
     const id = button.dataset.sym;
-    state.diffSelected = state.diffSelected.includes(id)
-      ? state.diffSelected.filter((selectedId) => selectedId !== id)
-      : [...state.diffSelected, id];
+    const result = toggleCurrentSymptom(state.diffSelected, state.diffHistorical, id, kb.symptoms);
+    state.diffSelected = result.selected;
+    state.diffHistorical = result.historical;
+    state.diffCompatibilityMessage = compatibilityMessage(id, result);
+    render({ focus: false });
+  }));
+  document.querySelectorAll('[data-history-sym]').forEach((button) => button.addEventListener('click', () => {
+    const id = button.dataset.historySym;
+    state.diffHistorical = toggleHistoricalSymptom(state.diffHistorical, id, kb.symptoms);
+    state.diffCompatibilityMessage = '';
     render({ focus: false });
   }));
   document.getElementById('show-results').addEventListener('click', () => {
     state.diffStage = 'result';
+    state.diffCompatibilityMessage = '';
     render({ focus: true });
   });
   return 'انتخاب نشانه‌ها';
 }
 
 function renderDifferentialResults() {
-  const ranked = rankCases(state.diffSelected, kb.cases);
+  const allSelected = [...new Set([...state.diffSelected, ...state.diffHistorical])];
+  const ranked = rankCases(allSelected, kb.cases);
   const critical = hasCriticalSymptoms(state.diffSelected);
-  const selectedLabels = state.diffSelected.map((id) => kb.symptoms[id]?.label).filter(Boolean);
+  const selectedLabels = symptomLabels(state.diffSelected);
+  const historicalLabels = symptomLabels(state.diffHistorical);
 
   app.innerHTML = `
     <header class="topbar">
@@ -284,8 +332,8 @@ function renderDifferentialResults() {
     </header>
     <main class="body">
       ${critical ? `<section class="emergency-banner"><h2>نشانهٔ خطر انتخاب شده است</h2><p>بررسی نرم‌افزار را متوقف کنید و اکنون با ۱۱۵ تماس بگیرید. اگر فرد تنفس طبیعی ندارد، CPR را آغاز کنید.</p><a class="btn emergency full" href="tel:115">☎ تماس با ۱۱۵</a></section>` : ''}
-      <section class="selected-summary"><h2>نشانه‌های انتخاب‌شده</h2><h3>بر اساس هم‌پوشانی با پایگاه دانش</h3><p>${selectedLabels.map(e).join('، ')}</p></section>
-      <p class="result-explainer">این فهرست فقط موضوعات آموزشی مرتبط را بر پایهٔ هم‌پوشانی نشانه‌ها مرتب می‌کند و احتمال بیماری یا تشخیص پزشکی نیست. پیش از اقدام، پرسش‌های هشدار هر راهنما را مرور کنید.</p>
+      <section class="selected-summary"><h2>نشانه‌های فعلی</h2><p>${selectedLabels.length ? selectedLabels.map(e).join('، ') : 'موردی ثبت نشده است.'}</p>${historicalLabels.length ? `<h3>گزارش‌شده پیش از بیهوشی یا توقف تنفس</h3><p>${historicalLabels.map(e).join('، ')}</p>` : ''}</section>
+      <p class="result-explainer">این فهرست فقط موضوعات آموزشی مرتبط را بر پایهٔ هم‌پوشانی نشانه‌های فعلی و سابقهٔ گزارش‌شده مرتب می‌کند و احتمال بیماری یا تشخیص پزشکی نیست. پیش از اقدام، پرسش‌های هشدار هر راهنما را مرور کنید.</p>
       <div class="result-list">
         ${ranked.length ? ranked.map(({ case: item, matched }) => `
           <article class="result-card">

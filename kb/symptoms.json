@@ -1,18 +1,37 @@
 {
   "conscious": {
-    "label": "به صدا/تکان واکنش نشان می‌دهد"
+    "label": "به صدا/تکان واکنش نشان می‌دهد",
+    "exclusiveWith": [
+      "unresponsive"
+    ],
+    "selectionPriority": 20
   },
   "unresponsive": {
-    "label": "بی‌هوش / بی‌واکنش"
+    "label": "بی‌هوش / بی‌واکنش",
+    "selectionPriority": 100
   },
   "breathing_normal": {
-    "label": "تنفس عادی"
+    "label": "تنفس عادی",
+    "exclusiveWith": [
+      "not_breathing",
+      "gasping",
+      "difficulty_breathing",
+      "wheezing",
+      "choking_signs",
+      "cyanosis"
+    ],
+    "selectionPriority": 20
   },
   "gasping": {
-    "label": "تنفس طبیعی ندارد؛ فقط نفس‌های بریده و گاه‌به‌گاه دارد"
+    "label": "تنفس طبیعی ندارد؛ فقط نفس‌های بریده و گاه‌به‌گاه دارد",
+    "selectionPriority": 100
   },
   "not_breathing": {
-    "label": "هیچ تنفسی ندارد"
+    "label": "هیچ تنفسی ندارد",
+    "exclusiveWith": [
+      "gasping"
+    ],
+    "selectionPriority": 100
   },
   "bleeding_heavy": {
     "label": "خونریزی شدید/جهنده یا خیس‌شدن سریع پانسمان"
@@ -21,7 +40,9 @@
     "label": "غش/از دست دادن موقت هوشیاری"
   },
   "dizziness": {
-    "label": "سرگیجه"
+    "label": "سرگیجه",
+    "requiresResponsive": true,
+    "canBeHistorical": true
   },
   "nausea_vomiting": {
     "label": "تهوع یا استفراغ"
@@ -30,28 +51,40 @@
     "label": "استفراغ مکرر"
   },
   "difficulty_breathing": {
-    "label": "تنگی تنفس / سخت نفس کشیدن"
+    "label": "تنگی تنفس / سخت نفس کشیدن",
+    "requiresBreathing": true,
+    "canBeHistorical": true
   },
   "chest_pain": {
-    "label": "درد یا سنگینی سینه"
+    "label": "درد یا سنگینی سینه",
+    "requiresResponsive": true,
+    "canBeHistorical": true
   },
   "confusion": {
-    "label": "گیجی/ناهماهنگی"
+    "label": "گیجی/ناهماهنگی",
+    "requiresResponsive": true,
+    "canBeHistorical": true
   },
   "drowsiness": {
-    "label": "خواب‌آلودگی غیرعادی"
+    "label": "خواب‌آلودگی غیرعادی",
+    "requiresResponsive": true,
+    "canBeHistorical": true
   },
   "sweating_cold": {
     "label": "عرق سرد و پوست سرد/مرطوب"
   },
   "speech_difficulty": {
-    "label": "گفتار نامفهوم یا ناتوانی در گفتن جملهٔ کامل"
+    "label": "گفتار نامفهوم یا ناتوانی در گفتن جملهٔ کامل",
+    "requiresResponsive": true,
+    "canBeHistorical": true
   },
   "facial_droop": {
     "label": "افتادگی یک طرف صورت"
   },
   "arm_weakness": {
-    "label": "بی‌حالی یک دست یا پا"
+    "label": "بی‌حالی یک دست یا پا",
+    "requiresResponsive": true,
+    "canBeHistorical": true
   },
   "seizure_activity": {
     "label": "تشنج/لرزش عمومی"
@@ -63,7 +96,9 @@
     "label": "لرزش یا اسپاسم عضلانی"
   },
   "local_pain": {
-    "label": "درد در محل ضربه/نیش"
+    "label": "درد در محل ضربه/نیش",
+    "requiresResponsive": true,
+    "canBeHistorical": true
   },
   "local_swelling": {
     "label": "تورم در محل ضربه/نیش"
@@ -87,10 +122,14 @@
     "label": "تورم لب، زبان یا صورت"
   },
   "throat_tightness": {
-    "label": "احساس تنگی گلوی/سختی قورت دادن یا صحبت"
+    "label": "احساس تنگی گلوی/سختی قورت دادن یا صحبت",
+    "requiresResponsive": true,
+    "canBeHistorical": true
   },
   "wheezing": {
-    "label": "خس‌خس یا صدای سوت هنگام تنفس"
+    "label": "خس‌خس یا صدای سوت هنگام تنفس",
+    "requiresBreathing": true,
+    "canBeHistorical": true
   },
   "cyanosis": {
     "label": "کبودی لب یا ناخن"
@@ -144,10 +183,14 @@
     "label": "شکستگی باز (استخوان بیرون‌زده یا زخم عمیق با استخوان)"
   },
   "pain_on_movement": {
-    "label": "درد شدید با حرکت قسمت آسیب‌دیده"
+    "label": "درد شدید با حرکت قسمت آسیب‌دیده",
+    "requiresResponsive": true,
+    "canBeHistorical": true
   },
   "numbness": {
-    "label": "بی‌حسی یا کاهش حس انگشتان دست/پا"
+    "label": "بی‌حسی یا کاهش حس انگشتان دست/پا",
+    "requiresResponsive": true,
+    "canBeHistorical": true
   },
   "fall_from_height": {
     "label": "افتادن از ارتفاع"
@@ -177,19 +220,28 @@
     "label": "پوست سرد و رنگ‌پریده"
   },
   "hot_dry_skin": {
-    "label": "پوست بسیار داغ و خشک"
+    "label": "پوست بسیار داغ و خشک",
+    "exclusiveWith": [
+      "hot_flushed"
+    ]
   },
   "hot_flushed": {
-    "label": "پوست بسیار داغ، با یا بدون تعریق زیاد"
+    "label": "پوست بسیار داغ و قرمز همراه تعریق زیاد"
   },
   "known_allergen_exposure": {
     "label": "بیماری آلرژی شناخته‌شده / مواجهه با ماده حساسیت‌زا"
   },
   "choking_signs": {
-    "label": "ناتوانی در حرف‌زدن، نفس‌کشیدن یا سرفهٔ مؤثر"
+    "label": "ناتوانی در حرف‌زدن، نفس‌کشیدن یا سرفهٔ مؤثر",
+    "exclusiveWith": [
+      "coughing_effort"
+    ],
+    "selectionPriority": 90
   },
   "coughing_effort": {
-    "label": "سرفهٔ قوی و مؤثر دارد و می‌تواند حرف بزند"
+    "label": "سرفهٔ قوی و مؤثر دارد و می‌تواند حرف بزند",
+    "requiresResponsive": true,
+    "requiresBreathing": true
   },
   "drowning_recent": {
     "label": "مصدوم از آب/استخر نجات پیدا کرده است"
@@ -219,7 +271,10 @@
     "label": "مصدوم باردار است"
   },
   "child_victim": {
-    "label": "مصدوم کودک است"
+    "label": "مصدوم کودک است",
+    "exclusiveWith": [
+      "elderly_victim"
+    ]
   },
   "elderly_victim": {
     "label": "مصدوم مسن است"
@@ -234,7 +289,9 @@
     "label": "در سرمای شدید، لرز متوقف شده است"
   },
   "severe_headache": {
-    "label": "سردرد شدید یا رو به بدترشدن پس از ضربه"
+    "label": "سردرد شدید یا رو به بدترشدن پس از ضربه",
+    "requiresResponsive": true,
+    "canBeHistorical": true
   },
   "unequal_pupils": {
     "label": "مردمک‌های دو چشم هم‌اندازه نیستند"
@@ -243,7 +300,9 @@
     "label": "داروی رقیق‌کنندهٔ خون مصرف می‌کند یا اختلال خونریزی دارد"
   },
   "neck_pain": {
-    "label": "درد یا حساسیت گردن پس از ضربه"
+    "label": "درد یا حساسیت گردن پس از ضربه",
+    "requiresResponsive": true,
+    "canBeHistorical": true
   },
   "nosebleed": {
     "label": "خونریزی از بینی"

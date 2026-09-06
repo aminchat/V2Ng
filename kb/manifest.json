@@ -1,11 +1,11 @@
 {
-  "kbVersion": 3,
+  "kbVersion": 4,
   "updatedAt": "2026-09-06",
   "generator": "tools/build-manifest.mjs",
   "entries": {
     "__symptoms": {
-      "version": 2,
-      "hash": "8d6dab2f54fe9cac85a4c1694db2834b993cae3c832e8adb0361ce7e284eb84f",
+      "version": 3,
+      "hash": "d14ea68e25c4f3000b47e13f89418f6ce39120314d2ceb76ec86ec10571354d4",
       "url": "kb/symptoms.json"
     },
     "__categories": {
