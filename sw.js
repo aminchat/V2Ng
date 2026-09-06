@@ -1,19 +1,21 @@
 const CACHE_PREFIX = 'emdadgar-';
-const SHELL_CACHE = `${CACHE_PREFIX}shell-v8`;
+const SHELL_CACHE = `${CACHE_PREFIX}shell-v9`;
+const RECOVERY_WORKER_VERSIONS = new Set([null, '5', '6', '7', '8']);
 const RECOVERY_SHELL_CACHES = new Set([
   `${CACHE_PREFIX}shell-v5`,
   `${CACHE_PREFIX}shell-v6`,
   `${CACHE_PREFIX}shell-v7`,
+  `${CACHE_PREFIX}shell-v8`,
 ]);
 const SHELL_FILES = [
   './',
   './index.html',
-  './css/app.css?v=8',
-  './js/app.js?v=8',
-  './js/engine.js?v=8',
-  './js/kb.js?v=8',
-  './js/schema.js?v=8',
-  './manifest.webmanifest',
+  './css/app.css?v=9',
+  './js/app.js?v=9',
+  './js/engine.js?v=9',
+  './js/kb.js?v=9',
+  './js/schema.js?v=9',
+  './manifest.webmanifest?v=9',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/maskable-192.png',
@@ -27,13 +29,15 @@ self.addEventListener('install', (event) => {
     const activeWorker = self.registration.active;
     const activeVersion = activeWorker
       ? new URL(activeWorker.scriptURL).searchParams.get('v')
-      : '8';
-    const needsRecovery = activeVersion !== '8'
-      || existingCaches.some((key) => RECOVERY_SHELL_CACHES.has(key));
+      : null;
+    const needsRecovery = Boolean(activeWorker) && (
+      RECOVERY_WORKER_VERSIONS.has(activeVersion)
+      || existingCaches.some((key) => RECOVERY_SHELL_CACHES.has(key))
+    );
     const cache = await caches.open(SHELL_CACHE);
     await cache.addAll(SHELL_FILES.map((url) => new Request(url, { cache: 'reload' })));
 
-    // v5–v7 can strand the page before app.js can display the normal update action.
+    // v5–v8 can strand the page before app.js can display the normal update action.
     // Taking control does not reload an open emergency flow; it only repairs later requests.
     if (needsRecovery) await self.skipWaiting();
   })());
@@ -84,6 +88,6 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Online loads receive fresh shell assets; offline loads fall back to shell-v8.
+  // Online loads receive fresh shell assets; offline loads fall back to shell-v9.
   event.respondWith(networkFirst(event.request));
 });
