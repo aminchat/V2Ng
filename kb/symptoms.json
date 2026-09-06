@@ -4,11 +4,22 @@
     "exclusiveWith": [
       "unresponsive"
     ],
-    "selectionPriority": 20
+    "selectionPriority": 20,
+    "aliases": [
+      "هوشیار است",
+      "واکنش نشان می‌دهد"
+    ]
   },
   "unresponsive": {
     "label": "بی‌هوش / بی‌واکنش",
-    "selectionPriority": 100
+    "selectionPriority": 100,
+    "aliases": [
+      "بیهوش",
+      "جواب نمی‌دهد",
+      "واکنش ندارد",
+      "از حال رفته"
+    ],
+    "displayPriority": 100
   },
   "breathing_normal": {
     "label": "تنفس عادی",
@@ -20,294 +31,675 @@
       "choking_signs",
       "cyanosis"
     ],
-    "selectionPriority": 20
+    "selectionPriority": 20,
+    "aliases": [
+      "نفس عادی",
+      "طبیعی نفس می‌کشد"
+    ]
   },
   "gasping": {
     "label": "تنفس طبیعی ندارد؛ فقط نفس‌های بریده و گاه‌به‌گاه دارد",
-    "selectionPriority": 100
+    "selectionPriority": 100,
+    "aliases": [
+      "نفس بریده",
+      "نفس‌های گاه‌به‌گاه",
+      "تنفس غیرطبیعی"
+    ],
+    "displayPriority": 100
   },
   "not_breathing": {
     "label": "هیچ تنفسی ندارد",
     "exclusiveWith": [
       "gasping"
     ],
-    "selectionPriority": 100
+    "selectionPriority": 100,
+    "aliases": [
+      "نفس نمی‌کشد",
+      "قطع تنفس",
+      "تنفس ندارد"
+    ],
+    "displayPriority": 100
   },
   "bleeding_heavy": {
-    "label": "خونریزی شدید/جهنده یا خیس‌شدن سریع پانسمان"
+    "label": "خونریزی شدید/جهنده یا خیس‌شدن سریع پانسمان",
+    "aliases": [
+      "خونریزی زیاد",
+      "خون فواره‌ای",
+      "خون جهنده"
+    ],
+    "displayPriority": 95
   },
   "fainting": {
-    "label": "غش/از دست دادن موقت هوشیاری"
+    "label": "غش/از دست دادن موقت هوشیاری",
+    "aliases": [
+      "از حال رفتن",
+      "سنکوپ"
+    ]
   },
   "dizziness": {
     "label": "سرگیجه",
     "requiresResponsive": true,
-    "canBeHistorical": true
+    "canBeHistorical": true,
+    "aliases": [
+      "گیج رفتن سر",
+      "سبکی سر"
+    ],
+    "displayPriority": 72,
+    "quickAccess": true
   },
   "nausea_vomiting": {
-    "label": "تهوع یا استفراغ"
+    "label": "تهوع یا استفراغ",
+    "aliases": [
+      "حالت تهوع",
+      "بالا آوردن"
+    ],
+    "displayPriority": 70,
+    "quickAccess": true
   },
   "vomiting_repeated": {
-    "label": "استفراغ مکرر"
+    "label": "استفراغ مکرر",
+    "aliases": [
+      "بالا آوردن مکرر",
+      "استفراغ پشت سر هم"
+    ],
+    "displayPriority": 75
   },
   "difficulty_breathing": {
     "label": "تنگی تنفس / سخت نفس کشیدن",
     "requiresBreathing": true,
-    "canBeHistorical": true
+    "canBeHistorical": true,
+    "aliases": [
+      "نفس تنگی",
+      "کم آوردن نفس",
+      "تنگی نفس"
+    ],
+    "displayPriority": 92,
+    "quickAccess": true
   },
   "chest_pain": {
     "label": "درد یا سنگینی سینه",
     "requiresResponsive": true,
-    "canBeHistorical": true
+    "canBeHistorical": true,
+    "aliases": [
+      "درد قفسه سینه",
+      "فشار سینه"
+    ],
+    "displayPriority": 86,
+    "quickAccess": true
   },
   "confusion": {
     "label": "گیجی/ناهماهنگی",
     "requiresResponsive": true,
-    "canBeHistorical": true
+    "canBeHistorical": true,
+    "aliases": [
+      "منگی",
+      "حواس‌پرتی",
+      "ناهماهنگی"
+    ],
+    "displayPriority": 88
   },
   "drowsiness": {
     "label": "خواب‌آلودگی غیرعادی",
     "requiresResponsive": true,
-    "canBeHistorical": true
+    "canBeHistorical": true,
+    "aliases": [
+      "خواب آلود",
+      "سخت بیدار می‌شود"
+    ]
   },
   "sweating_cold": {
-    "label": "عرق سرد و پوست سرد/مرطوب"
+    "label": "عرق سرد و پوست سرد/مرطوب",
+    "aliases": [
+      "عرق سرد",
+      "پوست سرد و خیس"
+    ]
   },
   "speech_difficulty": {
     "label": "گفتار نامفهوم یا ناتوانی در گفتن جملهٔ کامل",
     "requiresResponsive": true,
-    "canBeHistorical": true
+    "canBeHistorical": true,
+    "aliases": [
+      "اختلال گفتار",
+      "حرف زدن نامفهوم",
+      "نمی‌تواند جمله بگوید"
+    ],
+    "displayPriority": 82
   },
   "facial_droop": {
-    "label": "افتادگی یک طرف صورت"
+    "label": "افتادگی یک طرف صورت",
+    "aliases": [
+      "کجی صورت",
+      "افتادگی صورت"
+    ],
+    "displayPriority": 82
   },
   "arm_weakness": {
     "label": "بی‌حالی یک دست یا پا",
     "requiresResponsive": true,
-    "canBeHistorical": true
+    "canBeHistorical": true,
+    "aliases": [
+      "ضعف دست",
+      "ضعف پا",
+      "بی‌حالی یک طرف بدن"
+    ],
+    "displayPriority": 82
   },
   "seizure_activity": {
-    "label": "تشنج/لرزش عمومی"
+    "label": "تشنج/لرزش عمومی",
+    "aliases": [
+      "تشنج",
+      "صرع",
+      "حمله تشنجی"
+    ],
+    "displayPriority": 90
   },
   "ptosis": {
-    "label": "افتادگی پلک/سختی بازکردن چشم (مسمومیت عصبی)"
+    "label": "افتادگی پلک/سختی بازکردن چشم (مسمومیت عصبی)",
+    "aliases": [
+      "پلک افتاده",
+      "نمی‌تواند چشم را باز کند"
+    ]
   },
   "muscle_tremor": {
-    "label": "لرزش یا اسپاسم عضلانی"
+    "label": "لرزش یا اسپاسم عضلانی",
+    "aliases": [
+      "لرزش عضله",
+      "گرفتگی عضله"
+    ]
   },
   "local_pain": {
     "label": "درد در محل ضربه/نیش",
     "requiresResponsive": true,
-    "canBeHistorical": true
+    "canBeHistorical": true,
+    "aliases": [
+      "درد محل",
+      "محل ضربه درد دارد"
+    ],
+    "displayPriority": 65,
+    "quickAccess": true
   },
   "local_swelling": {
-    "label": "تورم در محل ضربه/نیش"
+    "label": "تورم در محل ضربه/نیش",
+    "aliases": [
+      "ورم محل",
+      "آماس محل"
+    ],
+    "displayPriority": 62,
+    "quickAccess": true
   },
   "local_redness": {
-    "label": "قرمزی در محل"
+    "label": "قرمزی در محل",
+    "aliases": [
+      "سرخی محل",
+      "قرمز شدن پوست"
+    ]
   },
   "swelling_spreading": {
-    "label": "تورم در حال گسترش سریع (فراتر از مفصل/کل اندام)"
+    "label": "تورم در حال گسترش سریع (فراتر از مفصل/کل اندام)",
+    "aliases": [
+      "ورم در حال گسترش",
+      "تورم سریع اندام"
+    ],
+    "displayPriority": 80
   },
   "bruising": {
-    "label": "کبودی/لکه‌های بنفش روی پوست"
+    "label": "کبودی/لکه‌های بنفش روی پوست",
+    "aliases": [
+      "کبودشدگی",
+      "خون‌مردگی"
+    ]
   },
   "bleeding_gums": {
-    "label": "خونریزی لثه یا محل سوراخ‌های تزریق"
+    "label": "خونریزی لثه یا محل سوراخ‌های تزریق",
+    "aliases": [
+      "خون آمدن از لثه",
+      "خونریزی دهان"
+    ]
   },
   "hives_widespread": {
-    "label": "کهیر گسترده دور از محل نیش"
+    "label": "کهیر گسترده دور از محل نیش",
+    "aliases": [
+      "کهیر",
+      "دانه پوستی گسترده"
+    ]
   },
   "lip_tongue_swelling": {
-    "label": "تورم لب، زبان یا صورت"
+    "label": "تورم لب، زبان یا صورت",
+    "aliases": [
+      "ورم لب",
+      "ورم زبان",
+      "ورم صورت"
+    ],
+    "displayPriority": 84
   },
   "throat_tightness": {
     "label": "احساس تنگی گلوی/سختی قورت دادن یا صحبت",
     "requiresResponsive": true,
-    "canBeHistorical": true
+    "canBeHistorical": true,
+    "aliases": [
+      "گلو تنگ شده",
+      "سختی بلع",
+      "مشکل قورت دادن"
+    ],
+    "displayPriority": 84
   },
   "wheezing": {
     "label": "خس‌خس یا صدای سوت هنگام تنفس",
     "requiresBreathing": true,
-    "canBeHistorical": true
+    "canBeHistorical": true,
+    "aliases": [
+      "خس خس",
+      "سوت سینه"
+    ]
   },
   "cyanosis": {
-    "label": "کبودی لب یا ناخن"
+    "label": "کبودی لب یا ناخن",
+    "aliases": [
+      "لب کبود",
+      "ناخن کبود"
+    ],
+    "displayPriority": 92
   },
   "saw_snake": {
-    "label": "مار دیده شده یا گزش مار قویاً محتمل است"
+    "label": "مار دیده شده یا گزش مار قویاً محتمل است",
+    "aliases": [
+      "مارگزیدگی",
+      "مار گزیده"
+    ]
   },
   "two_punctures": {
-    "label": "دو جای سوزن‌خوردگی کنار هم در محل گزش"
+    "label": "دو جای سوزن‌خوردگی کنار هم در محل گزش",
+    "aliases": [
+      "جای دندان مار",
+      "دو سوراخ گزش"
+    ]
   },
   "scorpion_seen": {
-    "label": "عقرب دیده شد یا نزد مصدوم است"
+    "label": "عقرب دیده شد یا نزد مصدوم است",
+    "aliases": [
+      "عقرب‌زدگی",
+      "عقرب گزیده"
+    ]
   },
   "stinger_visible": {
-    "label": "نیش/جسم خارجی در پوست دیده می‌شود"
+    "label": "نیش/جسم خارجی در پوست دیده می‌شود",
+    "aliases": [
+      "نیش زنبور",
+      "نیش داخل پوست"
+    ]
   },
   "multiple_stings": {
-    "label": "نیش‌های متعدد"
+    "label": "نیش‌های متعدد",
+    "aliases": [
+      "چند نیش",
+      "نیش زیاد"
+    ]
   },
   "tick_attached": {
-    "label": "کنه به پوست چسبیده"
+    "label": "کنه به پوست چسبیده",
+    "aliases": [
+      "گزش کنه",
+      "کنه روی پوست"
+    ]
   },
   "animal_bite": {
-    "label": "گزش سگ، گربه یا حیوان دیگر"
+    "label": "گزش سگ، گربه یا حیوان دیگر",
+    "aliases": [
+      "گازگرفتگی حیوان",
+      "سگ گاز گرفته",
+      "گربه گاز گرفته"
+    ]
   },
   "burn_face_hands_feet": {
-    "label": "سوختگی صورت، دست، پا، اندام تناسلی یا روی مفصل بزرگ"
+    "label": "سوختگی صورت، دست، پا، اندام تناسلی یا روی مفصل بزرگ",
+    "aliases": [
+      "سوختگی صورت",
+      "سوختگی دست",
+      "سوختگی پا"
+    ]
   },
   "burn_large": {
-    "label": "سوختگی بزرگ‌تر از کف دست مصدوم"
+    "label": "سوختگی بزرگ‌تر از کف دست مصدوم",
+    "aliases": [
+      "سوختگی وسیع",
+      "سوختگی بزرگ"
+    ]
   },
   "burn_deep": {
-    "label": "سوختگی سفید/زغالی/چرمی بدون درد"
+    "label": "سوختگی سفید/زغالی/چرمی بدون درد",
+    "aliases": [
+      "سوختگی زغالی",
+      "سوختگی سفید",
+      "سوختگی چرمی"
+    ],
+    "displayPriority": 80
   },
   "soot_nose": {
-    "label": "دوده در بینی/دهان، گرفتگی صدا یا موهای بینی سوخته"
+    "label": "دوده در بینی/دهان، گرفتگی صدا یا موهای بینی سوخته",
+    "aliases": [
+      "دوده بینی",
+      "دوده دهان",
+      "گرفتگی صدا بعد از دود"
+    ]
   },
   "stuck_clothing": {
-    "label": "لباس به سوختگی چسبیده"
+    "label": "لباس به سوختگی چسبیده",
+    "aliases": [
+      "لباس چسبیده به زخم",
+      "لباس چسبیده به سوختگی"
+    ]
   },
   "electrical_contact": {
-    "label": "تماس با برق/سیم برق"
+    "label": "تماس با برق/سیم برق",
+    "aliases": [
+      "برق‌گرفتگی",
+      "شوک الکتریکی"
+    ]
   },
   "chemical_contact": {
-    "label": "تماس با ماده شیمیایی"
+    "label": "تماس با ماده شیمیایی",
+    "aliases": [
+      "سوختگی شیمیایی",
+      "ریختن ماده شیمیایی"
+    ]
   },
   "deformation": {
-    "label": "کجی/تغییر شکل زشت اندام"
+    "label": "کجی/تغییر شکل زشت اندام",
+    "aliases": [
+      "بدشکلی اندام",
+      "کجی اندام"
+    ]
   },
   "open_fracture": {
-    "label": "شکستگی باز (استخوان بیرون‌زده یا زخم عمیق با استخوان)"
+    "label": "شکستگی باز (استخوان بیرون‌زده یا زخم عمیق با استخوان)",
+    "aliases": [
+      "استخوان بیرون زده",
+      "شکستگی همراه زخم"
+    ],
+    "displayPriority": 80
   },
   "pain_on_movement": {
     "label": "درد شدید با حرکت قسمت آسیب‌دیده",
     "requiresResponsive": true,
-    "canBeHistorical": true
+    "canBeHistorical": true,
+    "aliases": [
+      "درد با حرکت",
+      "نمی‌تواند اندام را حرکت دهد"
+    ]
   },
   "numbness": {
     "label": "بی‌حسی یا کاهش حس انگشتان دست/پا",
     "requiresResponsive": true,
-    "canBeHistorical": true
+    "canBeHistorical": true,
+    "aliases": [
+      "بی حسی",
+      "گزگز"
+    ]
   },
   "fall_from_height": {
-    "label": "افتادن از ارتفاع"
+    "label": "افتادن از ارتفاع",
+    "aliases": [
+      "سقوط",
+      "از ارتفاع افتاده"
+    ]
   },
   "car_accident": {
-    "label": "تصادف خودرو/برخورد"
+    "label": "تصادف خودرو/برخورد",
+    "aliases": [
+      "تصادف",
+      "سانحه رانندگی"
+    ]
   },
   "joint_swelling": {
-    "label": "تورم سریع و تغییر شکل مفصل"
+    "label": "تورم سریع و تغییر شکل مفصل",
+    "aliases": [
+      "ورم مفصل",
+      "بدشکلی مفصل"
+    ]
   },
   "head_impact": {
-    "label": "ضربه مستقیم به سر"
+    "label": "ضربه مستقیم به سر",
+    "aliases": [
+      "ضربه سر",
+      "آسیب سر"
+    ],
+    "displayPriority": 68,
+    "quickAccess": true
   },
   "known_diabetic": {
-    "label": "مصدوم دیابتی شناخته‌شده است"
+    "label": "مصدوم دیابتی شناخته‌شده است",
+    "aliases": [
+      "دیابت",
+      "بیمار قندی"
+    ]
   },
   "fruity_breath": {
-    "label": "بوی میوه‌ای از دهان"
+    "label": "بوی میوه‌ای از دهان",
+    "aliases": [
+      "بوی میوه دهان",
+      "بوی استون دهان"
+    ]
   },
   "kussmaul": {
-    "label": "تنفس عمیق، سریع و سخت"
+    "label": "تنفس عمیق، سریع و سخت",
+    "aliases": [
+      "نفس عمیق و سریع",
+      "تنفس کوسمال"
+    ]
   },
   "shivering": {
-    "label": "لرز شدید"
+    "label": "لرز شدید",
+    "aliases": [
+      "لرز",
+      "بدن می‌لرزد"
+    ]
   },
   "cold_skin": {
-    "label": "پوست سرد و رنگ‌پریده"
+    "label": "پوست سرد و رنگ‌پریده",
+    "aliases": [
+      "پوست سرد",
+      "رنگ‌پریدگی"
+    ]
   },
   "hot_dry_skin": {
     "label": "پوست بسیار داغ و خشک",
     "exclusiveWith": [
       "hot_flushed"
+    ],
+    "aliases": [
+      "پوست داغ و خشک",
+      "بدن خیلی داغ"
     ]
   },
   "hot_flushed": {
-    "label": "پوست بسیار داغ و قرمز همراه تعریق زیاد"
+    "label": "پوست بسیار داغ و قرمز همراه تعریق زیاد",
+    "aliases": [
+      "پوست داغ و عرق کرده",
+      "تعریق زیاد در گرما"
+    ]
   },
   "known_allergen_exposure": {
-    "label": "بیماری آلرژی شناخته‌شده / مواجهه با ماده حساسیت‌زا"
+    "label": "بیماری آلرژی شناخته‌شده / مواجهه با ماده حساسیت‌زا",
+    "aliases": [
+      "حساسیت",
+      "آلرژی",
+      "تماس با ماده حساسیت‌زا"
+    ]
   },
   "choking_signs": {
     "label": "ناتوانی در حرف‌زدن، نفس‌کشیدن یا سرفهٔ مؤثر",
     "exclusiveWith": [
       "coughing_effort"
     ],
-    "selectionPriority": 90
+    "selectionPriority": 90,
+    "aliases": [
+      "خفگی",
+      "گیر کردن غذا",
+      "راه هوایی بسته"
+    ],
+    "displayPriority": 96
   },
   "coughing_effort": {
     "label": "سرفهٔ قوی و مؤثر دارد و می‌تواند حرف بزند",
     "requiresResponsive": true,
-    "requiresBreathing": true
+    "requiresBreathing": true,
+    "aliases": [
+      "سرفه مؤثر",
+      "می‌تواند سرفه کند"
+    ]
   },
   "drowning_recent": {
-    "label": "مصدوم از آب/استخر نجات پیدا کرده است"
+    "label": "مصدوم از آب/استخر نجات پیدا کرده است",
+    "aliases": [
+      "غرق‌شدگی",
+      "از آب نجات یافته"
+    ]
   },
   "substance_access": {
-    "label": "دسترس به دارو/سم/ماده شیمیایی (ارزیابی شده یا مشکوک)"
+    "label": "دسترس به دارو/سم/ماده شیمیایی (ارزیابی شده یا مشکوک)",
+    "aliases": [
+      "مسمومیت",
+      "خوردن سم",
+      "مصرف مشکوک دارو"
+    ]
   },
   "container_available": {
-    "label": "ظرف/باقی‌مانده ماده در دسترس است"
+    "label": "ظرف/باقی‌مانده ماده در دسترس است",
+    "aliases": [
+      "ظرف سم موجود است",
+      "بسته دارو موجود است"
+    ]
   },
   "embedded_eye": {
-    "label": "جسم خارجی فرورفته در چشم"
+    "label": "جسم خارجی فرورفته در چشم",
+    "aliases": [
+      "جسم در چشم",
+      "چیزی داخل چشم رفته"
+    ]
   },
   "object_embedded": {
-    "label": "جسم خارجی فرورفته در بدن"
+    "label": "جسم خارجی فرورفته در بدن",
+    "aliases": [
+      "جسم داخل بدن",
+      "شیء فرورفته"
+    ]
   },
   "wound_deep": {
-    "label": "زخم عمیق یا طولانی"
+    "label": "زخم عمیق یا طولانی",
+    "aliases": [
+      "بریدگی عمیق",
+      "زخم عمیق"
+    ]
   },
   "seizure_long": {
-    "label": "تشنج بیش از ۵ دقیقه طول کشیده"
+    "label": "تشنج بیش از ۵ دقیقه طول کشیده",
+    "aliases": [
+      "تشنج طولانی",
+      "تشنج بیشتر از پنج دقیقه"
+    ]
   },
   "first_seizure": {
-    "label": "تشنج اولین بار است"
+    "label": "تشنج اولین بار است",
+    "aliases": [
+      "اولین تشنج",
+      "سابقه تشنج ندارد"
+    ]
   },
   "pregnant": {
-    "label": "مصدوم باردار است"
+    "label": "مصدوم باردار است",
+    "aliases": [
+      "بارداری",
+      "حامله"
+    ]
   },
   "child_victim": {
     "label": "مصدوم کودک است",
     "exclusiveWith": [
       "elderly_victim"
+    ],
+    "aliases": [
+      "بچه",
+      "کودک"
     ]
   },
   "elderly_victim": {
-    "label": "مصدوم مسن است"
+    "label": "مصدوم مسن است",
+    "aliases": [
+      "سالمند",
+      "پیر"
+    ]
   },
   "heart_known": {
-    "label": "سابقه بیماری قلبی"
+    "label": "سابقه بیماری قلبی",
+    "aliases": [
+      "بیماری قلبی",
+      "سابقه قلبی"
+    ]
   },
   "time_onset": {
-    "label": "زمان شروع علائم یا آخرین زمان سلامت معلوم است"
+    "label": "زمان شروع علائم یا آخرین زمان سلامت معلوم است",
+    "aliases": [
+      "زمان شروع",
+      "آخرین زمان سلامت"
+    ]
   },
   "shivering_stopped": {
-    "label": "در سرمای شدید، لرز متوقف شده است"
+    "label": "در سرمای شدید، لرز متوقف شده است",
+    "aliases": [
+      "قطع لرز در سرما",
+      "دیگر نمی‌لرزد"
+    ]
   },
   "severe_headache": {
     "label": "سردرد شدید یا رو به بدترشدن پس از ضربه",
     "requiresResponsive": true,
-    "canBeHistorical": true
+    "canBeHistorical": true,
+    "aliases": [
+      "سردرد شدید",
+      "سردرد بعد از ضربه"
+    ],
+    "displayPriority": 78
   },
   "unequal_pupils": {
-    "label": "مردمک‌های دو چشم هم‌اندازه نیستند"
+    "label": "مردمک‌های دو چشم هم‌اندازه نیستند",
+    "aliases": [
+      "مردمک نابرابر",
+      "اندازه مردمک متفاوت"
+    ],
+    "displayPriority": 78
   },
   "blood_thinner": {
-    "label": "داروی رقیق‌کنندهٔ خون مصرف می‌کند یا اختلال خونریزی دارد"
+    "label": "داروی رقیق‌کنندهٔ خون مصرف می‌کند یا اختلال خونریزی دارد",
+    "aliases": [
+      "رقیق‌کننده خون",
+      "وارفارین",
+      "داروی ضد انعقاد"
+    ]
   },
   "neck_pain": {
     "label": "درد یا حساسیت گردن پس از ضربه",
     "requiresResponsive": true,
-    "canBeHistorical": true
+    "canBeHistorical": true,
+    "aliases": [
+      "گردن درد",
+      "درد گردن"
+    ]
   },
   "nosebleed": {
-    "label": "خونریزی از بینی"
+    "label": "خونریزی از بینی",
+    "aliases": [
+      "خون‌دماغ",
+      "خونریزی بینی"
+    ],
+    "displayPriority": 60,
+    "quickAccess": true
   },
   "bleeding_persistent": {
-    "label": "خونریزی با فشار پیوسته متوقف نمی‌شود"
+    "label": "خونریزی با فشار پیوسته متوقف نمی‌شود",
+    "aliases": [
+      "خون بند نمی‌آید",
+      "خونریزی قطع نمی‌شود"
+    ],
+    "displayPriority": 60
   }
 }
