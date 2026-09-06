@@ -181,6 +181,40 @@ h1[tabindex="-1"]:focus { outline: none; }
 .secondary-action small { color: var(--muted); }
 .primary-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: rgb(255 255 255 / 16%); font-size: 1.45rem; }
 
+.install-card {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #9ecfb7;
+  border-radius: var(--radius);
+  background: var(--success-soft);
+}
+.install-card-heading { display: flex; align-items: flex-start; gap: 12px; }
+.install-card-heading > div { flex: 1; min-width: 0; }
+.install-card h2 { margin: 0 0 6px; color: var(--success); font-size: 1rem; }
+.install-card p { margin: 0 0 12px; color: #345346; font-size: .86rem; line-height: 1.7; }
+.install-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  color: #fff;
+  background: var(--success);
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+.install-instructions {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--surface);
+}
+.install-instructions ol { margin: 0; padding-right: 22px; }
+.install-instructions li { margin: 6px 0; line-height: 1.75; }
+.install-status { min-height: 0; margin: 10px 0 0 !important; font-weight: 700; }
+.install-status:empty { display: none; }
+
 .disclaimer, .triage-note, .tip, .national-note, .monitor-note {
   padding: 14px 15px;
   border-radius: 14px;
