@@ -69,7 +69,8 @@
       "difficulty_breathing",
       "muscle_tremor",
       "ptosis",
-      "fainting"
+      "fainting",
+      "jellyfish_sting"
     ]
   },
   "reaction": {
@@ -113,7 +114,10 @@
       "joint_swelling",
       "fall_from_height",
       "car_accident",
-      "head_impact"
+      "head_impact",
+      "tooth_knocked_out",
+      "open_chest_wound",
+      "amputated_part"
     ]
   },
   "illness": {
@@ -138,7 +142,9 @@
       "known_diabetic",
       "substance_access",
       "difficulty_breathing",
-      "shivering_stopped"
+      "shivering_stopped",
+      "shock_signs",
+      "frostbitten_skin"
     ]
   }
 }
