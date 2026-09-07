@@ -2,17 +2,19 @@
   "id": "unresponsive-breathing",
   "icon": "🛌",
   "category": "consciousness",
-  "version": 3,
-  "updatedAt": "2026-09-07",
+  "version": 4,
+  "updatedAt": "2026-09-08",
   "match": {
     "unresponsive": 4,
-    "breathing_normal": 3
+    "breathing_normal": 3,
+    "neck_pain": 2
   },
   "riskQuestions": [
     "head_impact",
     "car_accident",
     "known_diabetic",
-    "seizure_activity"
+    "seizure_activity",
+    "neck_pain"
   ],
   "title": "Unresponsive but breathing normally",
   "summary": "Call emergency services, maintain an open airway, and monitor continuously.",

@@ -3,8 +3,8 @@
   "title": "بی‌هوش ولی دارای تنفس طبیعی",
   "icon": "🛌",
   "category": "consciousness",
-  "version": 4,
-  "updatedAt": "2026-09-07",
+  "version": 5,
+  "updatedAt": "2026-09-08",
   "summary": "تماس با اورژانس، باز نگه‌داشتن راه هوایی و پایش پیوستهٔ تنفس",
   "sources": [
     "AHA 2025 Guidelines for CPR and ECC — Recovery Position",
@@ -12,13 +12,15 @@
   ],
   "match": {
     "unresponsive": 4,
-    "breathing_normal": 3
+    "breathing_normal": 3,
+    "neck_pain": 2
   },
   "riskQuestions": [
     "head_impact",
     "car_accident",
     "known_diabetic",
-    "seizure_activity"
+    "seizure_activity",
+    "neck_pain"
   ],
   "actions": [
     "فوراً با اورژانس تماس بگیرید و تنفس طبیعی را پیوسته بازبینی کنید.",

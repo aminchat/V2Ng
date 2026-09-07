@@ -2,7 +2,7 @@
   "id": "scorpion-sting",
   "icon": "🦂",
   "category": "bite",
-  "version": 4,
+  "version": 5,
   "updatedAt": "2026-09-08",
   "match": {
     "scorpion_seen": 6,
@@ -10,7 +10,8 @@
     "local_swelling": 2,
     "bruising": 2,
     "muscle_tremor": 2,
-    "child_victim": 2
+    "child_victim": 2,
+    "ptosis": 2
   },
   "riskQuestions": [
     "difficulty_breathing",
@@ -21,7 +22,8 @@
     "bruising",
     "child_victim",
     "elderly_victim",
-    "fainting"
+    "fainting",
+    "ptosis"
   ],
   "title": "Scorpion sting",
   "summary": "Obtain urgent advice and watch for breathing, neurological, cardiovascular, or delayed systemic effects.",
@@ -54,7 +56,8 @@
         "sweating_cold",
         "bruising",
         "child_victim",
-        "fainting"
+        "fainting",
+        "ptosis"
       ],
       "text": "Emergency warning signs selected—contact emergency services now."
     }

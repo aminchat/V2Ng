@@ -2,14 +2,15 @@
   "id": "poisoning",
   "icon": "☠️",
   "category": "illness",
-  "version": 4,
+  "version": 5,
   "updatedAt": "2026-09-08",
   "match": {
     "substance_access": 4,
     "confusion": 1,
     "drowsiness": 1,
     "nausea_vomiting": 1,
-    "container_available": 1
+    "container_available": 1,
+    "chemical_contact": 2
   },
   "riskQuestions": [
     "container_available",
@@ -17,7 +18,8 @@
     "confusion",
     "drowsiness",
     "seizure_activity",
-    "difficulty_breathing"
+    "difficulty_breathing",
+    "chemical_contact"
   ],
   "title": "Suspected poisoning or chemical exposure",
   "summary": "Protect the rescuer, call the poison centre or emergency services, and avoid unadvised remedies.",
@@ -41,12 +43,13 @@
   ],
   "emergencyCall": {
     "always": false,
-    "text": "Call emergency services for reduced consciousness, seizure, breathing difficulty, severe burns, or a large exposure.",
+    "text": "Call emergency services for a large/eye/airway chemical exposure, severe burns, or severe illness.",
     "when": [
       "confusion",
       "drowsiness",
       "seizure_activity",
-      "difficulty_breathing"
+      "difficulty_breathing",
+      "chemical_contact"
     ]
   }
 }

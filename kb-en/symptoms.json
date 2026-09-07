@@ -257,10 +257,12 @@
     ]
   },
   "ptosis": {
-    "label": "Drooping eyelids or difficulty opening the eyes",
+    "label": "Drooping eyelid or difficulty opening one or both eyes",
     "aliases": [
       "drooping eyelid",
-      "ptosis"
+      "droopy eyelid",
+      "ptosis",
+      "cannot open the eye"
     ],
     "evidenceTypes": [
       "observed"

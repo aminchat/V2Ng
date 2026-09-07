@@ -3,7 +3,7 @@
   "title": "ضربهٔ سر / آسیب احتمالی مغزی",
   "icon": "🤕",
   "category": "consciousness",
-  "version": 6,
+  "version": 8,
   "updatedAt": "2026-09-08",
   "summary": "بررسی نشانه‌های خطر، جلوگیری از حرکت و پایش توسط یک بزرگسال مسئول",
   "sources": [
@@ -16,7 +16,11 @@
     "vomiting_repeated": 3,
     "severe_headache": 3,
     "unequal_pupils": 3,
-    "neck_pain": 1
+    "neck_pain": 1,
+    "ptosis": 2,
+    "facial_droop": 2,
+    "arm_weakness": 2,
+    "speech_difficulty": 2
   },
   "riskQuestions": [
     "vomiting_repeated",
@@ -28,7 +32,11 @@
     "blood_thinner",
     "neck_pain",
     "car_accident",
-    "fall_from_height"
+    "fall_from_height",
+    "ptosis",
+    "facial_droop",
+    "arm_weakness",
+    "speech_difficulty"
   ],
   "actions": [
     "فرد را از فعالیت بازدارید و آرام نگه دارید. پس از تصادف، سقوط یا درد گردن، سر و گردن را در وضعیت موجود ثابت نگه دارید و جز برای ایمنی، بازکردن راه هوایی یا CPR جابه‌جا نکنید.",
@@ -46,7 +54,11 @@
         "drowsiness",
         "seizure_activity",
         "severe_headache",
-        "unequal_pupils"
+        "unequal_pupils",
+        "ptosis",
+        "facial_droop",
+        "arm_weakness",
+        "speech_difficulty"
       ],
       "text": "نشانهٔ خطر آسیب مغزی؛ تماس فوری با اورژانس"
     }
@@ -69,8 +81,12 @@
       "blood_thinner",
       "neck_pain",
       "car_accident",
-      "fall_from_height"
+      "fall_from_height",
+      "ptosis",
+      "facial_droop",
+      "arm_weakness",
+      "speech_difficulty"
     ],
-    "text": "کاهش هوشیاری، تشنج، استفراغ مکرر، سردرد رو به بدترشدن یا ضربهٔ پرانرژی نیازمند ارزیابی فوری است"
+    "text": "کاهش هوشیاری، تشنج، استفراغ مکرر، سردرد رو به بدترشدن، ضعف/افتادگی صورت/اختلال گفتار یا ضربهٔ پرانرژی نیازمند ارزیابی فوری است"
   }
 }

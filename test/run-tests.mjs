@@ -208,7 +208,7 @@ test('FAST signs rank stroke first', ranked[0]?.case.id === 'stroke');
 ranked = rankCases(['nosebleed'], kb.cases);
 test('nosebleed participates in related-topic ranking', ranked[0]?.case.id === 'nosebleed');
 ranked = rankCases(['ptosis'], kb.cases);
-test('drooping eyelids rank snake-bite as a related topic', ranked[0]?.case.id === 'snake-bite');
+test('drooping eyelids surface neurotoxin and neuro-trauma related topics', ranked.some((entry) => entry.case.id === 'snake-bite') && ranked.some((entry) => entry.case.id === 'stroke') && ranked.some((entry) => entry.case.id === 'head-injury'));
 const unlinkedSymptoms = Object.keys(kb.symptoms).filter((id) => rankCases([id], kb.cases).length === 0);
 test('every selectable symptom surfaces at least one related topic (except the pure assessment marker)', JSON.stringify(unlinkedSymptoms) === JSON.stringify(['conscious']));
 test('critical symptom detection includes gasping', hasCriticalSymptoms(['gasping']));
@@ -251,7 +251,7 @@ test('reviewed poison contacts are not invented for countries without one', coun
 /* ---------- Manifest integrity ---------- */
 const manifest = JSON.parse(readFileSync(join(kbDir, 'manifest.json'), 'utf8'));
 test('Persian manifest passes the browser-shared schema', validateManifest(manifest, 'kb').length === 0);
-test('updated Persian knowledge base publishes as KB v19', manifest.kbVersion === 19);
+test('updated Persian knowledge base publishes as KB v21', manifest.kbVersion === 21);
 test('manifest covers every case exactly once', Object.keys(manifest.cases).length === Object.keys(kb.cases).length);
 let hashesMatch = true;
 for (const [id, entry] of Object.entries(manifest.cases)) {
@@ -264,7 +264,7 @@ test('all manifest hashes match source bytes', hashesMatch);
 test('manifest URLs are relative and constrained to kb/', [...Object.values(manifest.entries), ...Object.values(manifest.cases)].every((entry) => entry.url.startsWith('kb/') && !entry.url.startsWith('/')));
 const enManifest = JSON.parse(readFileSync(join(enKbDir, 'manifest.json'), 'utf8'));
 test('English manifest passes schema under its independent root', validateManifest(enManifest, 'kb-en').length === 0);
-test('updated English knowledge base publishes as KB v7', enManifest.kbVersion === 7);
+test('updated English knowledge base publishes as KB v9', enManifest.kbVersion === 9);
 test('English manifest covers all 35 shared case IDs', Object.keys(enManifest.cases).length === 35 && Object.keys(enManifest.cases).every((id) => kb.cases[id]));
 test('English manifest URLs stay inside the on-demand kb-en root', [...Object.values(enManifest.entries), ...Object.values(enManifest.cases)].every((entry) => entry.url.startsWith('kb-en/') && !entry.url.startsWith('/')));
 const badManifest = clone(manifest);
