@@ -1,21 +1,26 @@
 const CACHE_PREFIX = 'emdadgar-';
-const SHELL_CACHE = `${CACHE_PREFIX}shell-v9`;
-const RECOVERY_WORKER_VERSIONS = new Set([null, '5', '6', '7', '8']);
+const SHELL_CACHE = `${CACHE_PREFIX}shell-v10`;
+const RECOVERY_WORKER_VERSIONS = new Set([null, '5', '6', '7', '8', '9']);
 const RECOVERY_SHELL_CACHES = new Set([
   `${CACHE_PREFIX}shell-v5`,
   `${CACHE_PREFIX}shell-v6`,
   `${CACHE_PREFIX}shell-v7`,
   `${CACHE_PREFIX}shell-v8`,
+  `${CACHE_PREFIX}shell-v9`,
 ]);
 const SHELL_FILES = [
   './',
   './index.html',
-  './css/app.css?v=9',
-  './js/app.js?v=9',
-  './js/engine.js?v=9',
-  './js/kb.js?v=9',
-  './js/schema.js?v=9',
-  './manifest.webmanifest?v=9',
+  './css/app.css?v=10',
+  './js/app.js?v=10',
+  './js/engine.js?v=10',
+  './js/kb.js?v=10',
+  './js/schema.js?v=10',
+  './js/i18n.js?v=10',
+  './js/preferences.js?v=10',
+  './locales/fa.js?v=10',
+  './data/countries.json?v=10',
+  './manifest.webmanifest?v=10',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/maskable-192.png',
@@ -37,7 +42,7 @@ self.addEventListener('install', (event) => {
     const cache = await caches.open(SHELL_CACHE);
     await cache.addAll(SHELL_FILES.map((url) => new Request(url, { cache: 'reload' })));
 
-    // v5–v8 can strand the page before app.js can display the normal update action.
+    // v5–v9 can strand the page before app.js can display the normal update action.
     // Taking control does not reload an open emergency flow; it only repairs later requests.
     if (needsRecovery) await self.skipWaiting();
   })());
@@ -78,10 +83,10 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   if (!isWithinScope(url)) return;
 
-  // KB snapshots deliberately bypass HTTP caching; the app validates and commits them
-  // atomically to IndexedDB before use.
+  // Both language KB snapshots deliberately bypass HTTP caching; the app validates and
+  // commits them atomically to separate IndexedDB stores. English is therefore on-demand.
   const scopePath = new URL(self.registration.scope).pathname;
-  if (url.pathname.startsWith(`${scopePath}kb/`)) return;
+  if (url.pathname.startsWith(`${scopePath}kb/`) || url.pathname.startsWith(`${scopePath}kb-en/`)) return;
 
   if (event.request.mode === 'navigate') {
     event.respondWith(networkFirst(event.request, './index.html'));
