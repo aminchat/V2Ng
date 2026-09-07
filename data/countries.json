@@ -1,0 +1,2031 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-07",
+  "countries": [
+    {
+      "code": "AF",
+      "name": "Afghanistan"
+    },
+    {
+      "code": "AL",
+      "name": "Albania"
+    },
+    {
+      "code": "DZ",
+      "name": "Algeria"
+    },
+    {
+      "code": "AD",
+      "name": "Andorra"
+    },
+    {
+      "code": "AO",
+      "name": "Angola"
+    },
+    {
+      "code": "AI",
+      "name": "Anguilla"
+    },
+    {
+      "code": "AQ",
+      "name": "Antarctica"
+    },
+    {
+      "code": "AG",
+      "name": "Antigua & Barbuda"
+    },
+    {
+      "code": "AR",
+      "name": "Argentina"
+    },
+    {
+      "code": "AM",
+      "name": "Armenia"
+    },
+    {
+      "code": "AW",
+      "name": "Aruba"
+    },
+    {
+      "code": "AU",
+      "name": "Australia"
+    },
+    {
+      "code": "AT",
+      "name": "Austria"
+    },
+    {
+      "code": "AZ",
+      "name": "Azerbaijan"
+    },
+    {
+      "code": "BS",
+      "name": "Bahamas"
+    },
+    {
+      "code": "BH",
+      "name": "Bahrain"
+    },
+    {
+      "code": "BD",
+      "name": "Bangladesh"
+    },
+    {
+      "code": "BB",
+      "name": "Barbados"
+    },
+    {
+      "code": "BY",
+      "name": "Belarus"
+    },
+    {
+      "code": "BE",
+      "name": "Belgium"
+    },
+    {
+      "code": "BZ",
+      "name": "Belize"
+    },
+    {
+      "code": "BJ",
+      "name": "Benin"
+    },
+    {
+      "code": "BM",
+      "name": "Bermuda"
+    },
+    {
+      "code": "BT",
+      "name": "Bhutan"
+    },
+    {
+      "code": "BO",
+      "name": "Bolivia"
+    },
+    {
+      "code": "BA",
+      "name": "Bosnia & Herzegovina"
+    },
+    {
+      "code": "BW",
+      "name": "Botswana"
+    },
+    {
+      "code": "BV",
+      "name": "Bouvet Island"
+    },
+    {
+      "code": "BR",
+      "name": "Brazil"
+    },
+    {
+      "code": "GB",
+      "name": "Britain (UK)"
+    },
+    {
+      "code": "IO",
+      "name": "British Indian Ocean Territory"
+    },
+    {
+      "code": "BN",
+      "name": "Brunei"
+    },
+    {
+      "code": "BG",
+      "name": "Bulgaria"
+    },
+    {
+      "code": "BF",
+      "name": "Burkina Faso"
+    },
+    {
+      "code": "BI",
+      "name": "Burundi"
+    },
+    {
+      "code": "KH",
+      "name": "Cambodia"
+    },
+    {
+      "code": "CM",
+      "name": "Cameroon"
+    },
+    {
+      "code": "CA",
+      "name": "Canada"
+    },
+    {
+      "code": "CV",
+      "name": "Cape Verde"
+    },
+    {
+      "code": "BQ",
+      "name": "Caribbean NL"
+    },
+    {
+      "code": "KY",
+      "name": "Cayman Islands"
+    },
+    {
+      "code": "CF",
+      "name": "Central African Rep."
+    },
+    {
+      "code": "TD",
+      "name": "Chad"
+    },
+    {
+      "code": "CL",
+      "name": "Chile"
+    },
+    {
+      "code": "CN",
+      "name": "China"
+    },
+    {
+      "code": "CX",
+      "name": "Christmas Island"
+    },
+    {
+      "code": "CC",
+      "name": "Cocos (Keeling) Islands"
+    },
+    {
+      "code": "CO",
+      "name": "Colombia"
+    },
+    {
+      "code": "KM",
+      "name": "Comoros"
+    },
+    {
+      "code": "CD",
+      "name": "Congo (Dem. Rep.)"
+    },
+    {
+      "code": "CG",
+      "name": "Congo (Rep.)"
+    },
+    {
+      "code": "CK",
+      "name": "Cook Islands"
+    },
+    {
+      "code": "CR",
+      "name": "Costa Rica"
+    },
+    {
+      "code": "HR",
+      "name": "Croatia"
+    },
+    {
+      "code": "CU",
+      "name": "Cuba"
+    },
+    {
+      "code": "CW",
+      "name": "Curaçao"
+    },
+    {
+      "code": "CY",
+      "name": "Cyprus"
+    },
+    {
+      "code": "CZ",
+      "name": "Czech Republic"
+    },
+    {
+      "code": "CI",
+      "name": "Côte d’Ivoire"
+    },
+    {
+      "code": "DK",
+      "name": "Denmark"
+    },
+    {
+      "code": "DJ",
+      "name": "Djibouti"
+    },
+    {
+      "code": "DM",
+      "name": "Dominica"
+    },
+    {
+      "code": "DO",
+      "name": "Dominican Republic"
+    },
+    {
+      "code": "TL",
+      "name": "East Timor"
+    },
+    {
+      "code": "EC",
+      "name": "Ecuador"
+    },
+    {
+      "code": "EG",
+      "name": "Egypt"
+    },
+    {
+      "code": "SV",
+      "name": "El Salvador"
+    },
+    {
+      "code": "GQ",
+      "name": "Equatorial Guinea"
+    },
+    {
+      "code": "ER",
+      "name": "Eritrea"
+    },
+    {
+      "code": "EE",
+      "name": "Estonia"
+    },
+    {
+      "code": "SZ",
+      "name": "Eswatini (Swaziland)"
+    },
+    {
+      "code": "ET",
+      "name": "Ethiopia"
+    },
+    {
+      "code": "FK",
+      "name": "Falkland Islands"
+    },
+    {
+      "code": "FO",
+      "name": "Faroe Islands"
+    },
+    {
+      "code": "FJ",
+      "name": "Fiji"
+    },
+    {
+      "code": "FI",
+      "name": "Finland"
+    },
+    {
+      "code": "FR",
+      "name": "France"
+    },
+    {
+      "code": "GF",
+      "name": "French Guiana"
+    },
+    {
+      "code": "PF",
+      "name": "French Polynesia"
+    },
+    {
+      "code": "TF",
+      "name": "French S. Terr."
+    },
+    {
+      "code": "GA",
+      "name": "Gabon"
+    },
+    {
+      "code": "GM",
+      "name": "Gambia"
+    },
+    {
+      "code": "GE",
+      "name": "Georgia"
+    },
+    {
+      "code": "DE",
+      "name": "Germany"
+    },
+    {
+      "code": "GH",
+      "name": "Ghana"
+    },
+    {
+      "code": "GI",
+      "name": "Gibraltar"
+    },
+    {
+      "code": "GR",
+      "name": "Greece"
+    },
+    {
+      "code": "GL",
+      "name": "Greenland"
+    },
+    {
+      "code": "GD",
+      "name": "Grenada"
+    },
+    {
+      "code": "GP",
+      "name": "Guadeloupe"
+    },
+    {
+      "code": "GU",
+      "name": "Guam"
+    },
+    {
+      "code": "GT",
+      "name": "Guatemala"
+    },
+    {
+      "code": "GG",
+      "name": "Guernsey"
+    },
+    {
+      "code": "GN",
+      "name": "Guinea"
+    },
+    {
+      "code": "GW",
+      "name": "Guinea-Bissau"
+    },
+    {
+      "code": "GY",
+      "name": "Guyana"
+    },
+    {
+      "code": "HT",
+      "name": "Haiti"
+    },
+    {
+      "code": "HM",
+      "name": "Heard Island & McDonald Islands"
+    },
+    {
+      "code": "HN",
+      "name": "Honduras"
+    },
+    {
+      "code": "HK",
+      "name": "Hong Kong"
+    },
+    {
+      "code": "HU",
+      "name": "Hungary"
+    },
+    {
+      "code": "IS",
+      "name": "Iceland"
+    },
+    {
+      "code": "IN",
+      "name": "India"
+    },
+    {
+      "code": "ID",
+      "name": "Indonesia"
+    },
+    {
+      "code": "IR",
+      "name": "Iran"
+    },
+    {
+      "code": "IQ",
+      "name": "Iraq"
+    },
+    {
+      "code": "IE",
+      "name": "Ireland"
+    },
+    {
+      "code": "IM",
+      "name": "Isle of Man"
+    },
+    {
+      "code": "IL",
+      "name": "Israel"
+    },
+    {
+      "code": "IT",
+      "name": "Italy"
+    },
+    {
+      "code": "JM",
+      "name": "Jamaica"
+    },
+    {
+      "code": "JP",
+      "name": "Japan"
+    },
+    {
+      "code": "JE",
+      "name": "Jersey"
+    },
+    {
+      "code": "JO",
+      "name": "Jordan"
+    },
+    {
+      "code": "KZ",
+      "name": "Kazakhstan"
+    },
+    {
+      "code": "KE",
+      "name": "Kenya"
+    },
+    {
+      "code": "KI",
+      "name": "Kiribati"
+    },
+    {
+      "code": "KP",
+      "name": "Korea (North)"
+    },
+    {
+      "code": "KR",
+      "name": "Korea (South)"
+    },
+    {
+      "code": "KW",
+      "name": "Kuwait"
+    },
+    {
+      "code": "KG",
+      "name": "Kyrgyzstan"
+    },
+    {
+      "code": "LA",
+      "name": "Laos"
+    },
+    {
+      "code": "LV",
+      "name": "Latvia"
+    },
+    {
+      "code": "LB",
+      "name": "Lebanon"
+    },
+    {
+      "code": "LS",
+      "name": "Lesotho"
+    },
+    {
+      "code": "LR",
+      "name": "Liberia"
+    },
+    {
+      "code": "LY",
+      "name": "Libya"
+    },
+    {
+      "code": "LI",
+      "name": "Liechtenstein"
+    },
+    {
+      "code": "LT",
+      "name": "Lithuania"
+    },
+    {
+      "code": "LU",
+      "name": "Luxembourg"
+    },
+    {
+      "code": "MO",
+      "name": "Macau"
+    },
+    {
+      "code": "MG",
+      "name": "Madagascar"
+    },
+    {
+      "code": "MW",
+      "name": "Malawi"
+    },
+    {
+      "code": "MY",
+      "name": "Malaysia"
+    },
+    {
+      "code": "MV",
+      "name": "Maldives"
+    },
+    {
+      "code": "ML",
+      "name": "Mali"
+    },
+    {
+      "code": "MT",
+      "name": "Malta"
+    },
+    {
+      "code": "MH",
+      "name": "Marshall Islands"
+    },
+    {
+      "code": "MQ",
+      "name": "Martinique"
+    },
+    {
+      "code": "MR",
+      "name": "Mauritania"
+    },
+    {
+      "code": "MU",
+      "name": "Mauritius"
+    },
+    {
+      "code": "YT",
+      "name": "Mayotte"
+    },
+    {
+      "code": "MX",
+      "name": "Mexico"
+    },
+    {
+      "code": "FM",
+      "name": "Micronesia"
+    },
+    {
+      "code": "MD",
+      "name": "Moldova"
+    },
+    {
+      "code": "MC",
+      "name": "Monaco"
+    },
+    {
+      "code": "MN",
+      "name": "Mongolia"
+    },
+    {
+      "code": "ME",
+      "name": "Montenegro"
+    },
+    {
+      "code": "MS",
+      "name": "Montserrat"
+    },
+    {
+      "code": "MA",
+      "name": "Morocco"
+    },
+    {
+      "code": "MZ",
+      "name": "Mozambique"
+    },
+    {
+      "code": "MM",
+      "name": "Myanmar (Burma)"
+    },
+    {
+      "code": "NA",
+      "name": "Namibia"
+    },
+    {
+      "code": "NR",
+      "name": "Nauru"
+    },
+    {
+      "code": "NP",
+      "name": "Nepal"
+    },
+    {
+      "code": "NL",
+      "name": "Netherlands"
+    },
+    {
+      "code": "NC",
+      "name": "New Caledonia"
+    },
+    {
+      "code": "NZ",
+      "name": "New Zealand"
+    },
+    {
+      "code": "NI",
+      "name": "Nicaragua"
+    },
+    {
+      "code": "NE",
+      "name": "Niger"
+    },
+    {
+      "code": "NG",
+      "name": "Nigeria"
+    },
+    {
+      "code": "NU",
+      "name": "Niue"
+    },
+    {
+      "code": "NF",
+      "name": "Norfolk Island"
+    },
+    {
+      "code": "MK",
+      "name": "North Macedonia"
+    },
+    {
+      "code": "MP",
+      "name": "Northern Mariana Islands"
+    },
+    {
+      "code": "NO",
+      "name": "Norway"
+    },
+    {
+      "code": "OM",
+      "name": "Oman"
+    },
+    {
+      "code": "PK",
+      "name": "Pakistan"
+    },
+    {
+      "code": "PW",
+      "name": "Palau"
+    },
+    {
+      "code": "PS",
+      "name": "Palestine"
+    },
+    {
+      "code": "PA",
+      "name": "Panama"
+    },
+    {
+      "code": "PG",
+      "name": "Papua New Guinea"
+    },
+    {
+      "code": "PY",
+      "name": "Paraguay"
+    },
+    {
+      "code": "PE",
+      "name": "Peru"
+    },
+    {
+      "code": "PH",
+      "name": "Philippines"
+    },
+    {
+      "code": "PN",
+      "name": "Pitcairn"
+    },
+    {
+      "code": "PL",
+      "name": "Poland"
+    },
+    {
+      "code": "PT",
+      "name": "Portugal"
+    },
+    {
+      "code": "PR",
+      "name": "Puerto Rico"
+    },
+    {
+      "code": "QA",
+      "name": "Qatar"
+    },
+    {
+      "code": "RO",
+      "name": "Romania"
+    },
+    {
+      "code": "RU",
+      "name": "Russia"
+    },
+    {
+      "code": "RW",
+      "name": "Rwanda"
+    },
+    {
+      "code": "RE",
+      "name": "Réunion"
+    },
+    {
+      "code": "AS",
+      "name": "Samoa (American)"
+    },
+    {
+      "code": "WS",
+      "name": "Samoa (western)"
+    },
+    {
+      "code": "SM",
+      "name": "San Marino"
+    },
+    {
+      "code": "ST",
+      "name": "Sao Tome & Principe"
+    },
+    {
+      "code": "SA",
+      "name": "Saudi Arabia"
+    },
+    {
+      "code": "SN",
+      "name": "Senegal"
+    },
+    {
+      "code": "RS",
+      "name": "Serbia"
+    },
+    {
+      "code": "SC",
+      "name": "Seychelles"
+    },
+    {
+      "code": "SL",
+      "name": "Sierra Leone"
+    },
+    {
+      "code": "SG",
+      "name": "Singapore"
+    },
+    {
+      "code": "SK",
+      "name": "Slovakia"
+    },
+    {
+      "code": "SI",
+      "name": "Slovenia"
+    },
+    {
+      "code": "SB",
+      "name": "Solomon Islands"
+    },
+    {
+      "code": "SO",
+      "name": "Somalia"
+    },
+    {
+      "code": "ZA",
+      "name": "South Africa"
+    },
+    {
+      "code": "GS",
+      "name": "South Georgia & the South Sandwich Islands"
+    },
+    {
+      "code": "SS",
+      "name": "South Sudan"
+    },
+    {
+      "code": "ES",
+      "name": "Spain"
+    },
+    {
+      "code": "LK",
+      "name": "Sri Lanka"
+    },
+    {
+      "code": "BL",
+      "name": "St Barthelemy"
+    },
+    {
+      "code": "SH",
+      "name": "St Helena"
+    },
+    {
+      "code": "KN",
+      "name": "St Kitts & Nevis"
+    },
+    {
+      "code": "LC",
+      "name": "St Lucia"
+    },
+    {
+      "code": "SX",
+      "name": "St Maarten (Dutch)"
+    },
+    {
+      "code": "MF",
+      "name": "St Martin (French)"
+    },
+    {
+      "code": "PM",
+      "name": "St Pierre & Miquelon"
+    },
+    {
+      "code": "VC",
+      "name": "St Vincent"
+    },
+    {
+      "code": "SD",
+      "name": "Sudan"
+    },
+    {
+      "code": "SR",
+      "name": "Suriname"
+    },
+    {
+      "code": "SJ",
+      "name": "Svalbard & Jan Mayen"
+    },
+    {
+      "code": "SE",
+      "name": "Sweden"
+    },
+    {
+      "code": "CH",
+      "name": "Switzerland"
+    },
+    {
+      "code": "SY",
+      "name": "Syria"
+    },
+    {
+      "code": "TW",
+      "name": "Taiwan"
+    },
+    {
+      "code": "TJ",
+      "name": "Tajikistan"
+    },
+    {
+      "code": "TZ",
+      "name": "Tanzania"
+    },
+    {
+      "code": "TH",
+      "name": "Thailand"
+    },
+    {
+      "code": "TG",
+      "name": "Togo"
+    },
+    {
+      "code": "TK",
+      "name": "Tokelau"
+    },
+    {
+      "code": "TO",
+      "name": "Tonga"
+    },
+    {
+      "code": "TT",
+      "name": "Trinidad & Tobago"
+    },
+    {
+      "code": "TN",
+      "name": "Tunisia"
+    },
+    {
+      "code": "TR",
+      "name": "Turkey"
+    },
+    {
+      "code": "TM",
+      "name": "Turkmenistan"
+    },
+    {
+      "code": "TC",
+      "name": "Turks & Caicos Is"
+    },
+    {
+      "code": "TV",
+      "name": "Tuvalu"
+    },
+    {
+      "code": "UM",
+      "name": "US minor outlying islands"
+    },
+    {
+      "code": "UG",
+      "name": "Uganda"
+    },
+    {
+      "code": "UA",
+      "name": "Ukraine"
+    },
+    {
+      "code": "AE",
+      "name": "United Arab Emirates"
+    },
+    {
+      "code": "US",
+      "name": "United States"
+    },
+    {
+      "code": "UY",
+      "name": "Uruguay"
+    },
+    {
+      "code": "UZ",
+      "name": "Uzbekistan"
+    },
+    {
+      "code": "VU",
+      "name": "Vanuatu"
+    },
+    {
+      "code": "VA",
+      "name": "Vatican City"
+    },
+    {
+      "code": "VE",
+      "name": "Venezuela"
+    },
+    {
+      "code": "VN",
+      "name": "Vietnam"
+    },
+    {
+      "code": "VG",
+      "name": "Virgin Islands (UK)"
+    },
+    {
+      "code": "VI",
+      "name": "Virgin Islands (US)"
+    },
+    {
+      "code": "WF",
+      "name": "Wallis & Futuna"
+    },
+    {
+      "code": "EH",
+      "name": "Western Sahara"
+    },
+    {
+      "code": "YE",
+      "name": "Yemen"
+    },
+    {
+      "code": "ZM",
+      "name": "Zambia"
+    },
+    {
+      "code": "ZW",
+      "name": "Zimbabwe"
+    },
+    {
+      "code": "AX",
+      "name": "Åland Islands"
+    }
+  ],
+  "profiles": {
+    "AT": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "BE": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "BG": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "HR": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "CY": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "CZ": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "DK": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "EE": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "FI": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "FR": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "DE": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "GR": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "HU": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "IE": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "IT": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "LV": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "LT": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "LU": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "MT": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "NL": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "PL": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "PT": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "RO": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "SK": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "SI": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "ES": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "SE": {
+      "dialingNote": {
+        "en": "112 is free from fixed and mobile phones throughout the European Union.",
+        "fa": "شمارهٔ ۱۱۲ در سراسر اتحادیهٔ اروپا از تلفن ثابت و همراه رایگان است."
+      },
+      "sources": [
+        {
+          "title": "Your Europe — Single European emergency number 112",
+          "url": "https://europa.eu/youreurope/citizens/travel/security-and-emergencies/emergency/index_en.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "GB": {
+      "dialingNote": {
+        "en": "Call 999 or 112 and ask for an ambulance.",
+        "fa": "با ۹۹۹ یا ۱۱۲ تماس بگیرید و آمبولانس بخواهید."
+      },
+      "sources": [
+        {
+          "title": "GOV.UK — Emergency services",
+          "url": "https://www.gov.uk/contact-police"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "999",
+        "usableForAmbulance": true
+      }
+    },
+    "IS": {
+      "dialingNote": {
+        "en": "112 is the single emergency number in Iceland.",
+        "fa": "۱۱۲ شمارهٔ واحد اضطراری در ایسلند است."
+      },
+      "sources": [
+        {
+          "title": "112 Iceland — Emergency number",
+          "url": "https://www.112.is/en"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "NO": {
+      "dialingNote": {
+        "en": "Use 113 for a medical emergency. Police is 112 and fire is 110.",
+        "fa": "برای فوریت پزشکی با ۱۱۳ تماس بگیرید. پلیس ۱۱۲ و آتش‌نشانی ۱۱۰ است."
+      },
+      "sources": [
+        {
+          "title": "Helsenorge — Emergency numbers",
+          "url": "https://www.helsenorge.no/en/help-services-in-the-municipalities/out-of-hours-medical-service/"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "ems": {
+        "number": "113"
+      }
+    },
+    "CH": {
+      "dialingNote": {
+        "en": "144 reaches ambulance services. 112 is the European emergency number.",
+        "fa": "۱۴۴ آمبولانس را خبر می‌کند. ۱۱۲ شمارهٔ اضطراری اروپایی است."
+      },
+      "sources": [
+        {
+          "title": "Swiss Confederation — Emergencies and danger",
+          "url": "https://www.ch.ch/en/safety-and-justice/emergencies-and-danger/"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "ems": {
+        "number": "144"
+      },
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "TR": {
+      "dialingNote": {
+        "en": "112 is the unified emergency call number.",
+        "fa": "۱۱۲ شمارهٔ یکپارچهٔ تماس اضطراری است."
+      },
+      "sources": [
+        {
+          "title": "Republic of Türkiye — 112 Emergency Call Center",
+          "url": "https://www.112.gov.tr/"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "GE": {
+      "dialingNote": {
+        "en": "112 is the unified emergency number.",
+        "fa": "۱۱۲ شمارهٔ یکپارچهٔ اضطراری است."
+      },
+      "sources": [
+        {
+          "title": "Georgia 112 — Emergency response center",
+          "url": "https://112.gov.ge/?lang=en"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "RS": {
+      "dialingNote": {
+        "en": "194 reaches emergency medical services. 112 is also the European emergency number.",
+        "fa": "۱۹۴ برای فوریت پزشکی است. ۱۱۲ نیز شمارهٔ اضطراری اروپایی است."
+      },
+      "sources": [
+        {
+          "title": "Government of Serbia — Important telephone numbers",
+          "url": "https://www.srbija.gov.rs/tekst/en/130042/important-phone-numbers.php"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "ems": {
+        "number": "194"
+      }
+    },
+    "MD": {
+      "dialingNote": {
+        "en": "112 is the national single emergency number.",
+        "fa": "۱۱۲ شمارهٔ واحد اضطراری کشور است."
+      },
+      "sources": [
+        {
+          "title": "Republic of Moldova 112 Service",
+          "url": "https://112.md/"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "US": {
+      "dialingNote": {
+        "en": "Call 911 for an ambulance, police, or fire emergency.",
+        "fa": "برای آمبولانس، پلیس یا آتش‌نشانی با ۹۱۱ تماس بگیرید."
+      },
+      "sources": [
+        {
+          "title": "National 911 Program",
+          "url": "https://www.911.gov/"
+        },
+        {
+          "title": "US Health Resources and Services Administration — Poison Help",
+          "url": "https://poisonhelp.hrsa.gov/"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "911",
+        "usableForAmbulance": true
+      },
+      "poison": {
+        "number": "1-800-222-1222",
+        "note": {
+          "en": "Poison Help connects to a local poison centre, 24 hours a day.",
+          "fa": "خط Poison Help شبانه‌روزی شما را به مرکز سموم محلی وصل می‌کند."
+        }
+      }
+    },
+    "CA": {
+      "dialingNote": {
+        "en": "Call 911 for an emergency.",
+        "fa": "برای وضعیت اضطراری با ۹۱۱ تماس بگیرید."
+      },
+      "sources": [
+        {
+          "title": "Canadian Radio-television and Telecommunications Commission — 9-1-1 services",
+          "url": "https://crtc.gc.ca/eng/phone/911/"
+        },
+        {
+          "title": "Infopoison — Canadian poison centres",
+          "url": "https://infopoison.ca/"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "911",
+        "usableForAmbulance": true
+      },
+      "poison": {
+        "number": "1-844-764-7669",
+        "note": {
+          "en": "Available in most provinces and territories. In Québec call 1-800-463-5060.",
+          "fa": "در بیشتر استان‌ها و قلمروها قابل استفاده است. در کبک با 1-800-463-5060 تماس بگیرید."
+        }
+      }
+    },
+    "MX": {
+      "dialingNote": {
+        "en": "911 is the unified national emergency number.",
+        "fa": "۹۱۱ شمارهٔ یکپارچهٔ اضطراری کشور است."
+      },
+      "sources": [
+        {
+          "title": "Government of Mexico — 911 emergency number",
+          "url": "https://www.gob.mx/911"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "911",
+        "usableForAmbulance": true
+      }
+    },
+    "BR": {
+      "dialingNote": {
+        "en": "192 reaches SAMU emergency medical services.",
+        "fa": "۱۹۲ با خدمات فوریت پزشکی SAMU تماس می‌گیرد."
+      },
+      "sources": [
+        {
+          "title": "Ministry of Health of Brazil — SAMU 192",
+          "url": "https://www.gov.br/saude/pt-br/composicao/saes/samu-192"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "ems": {
+        "number": "192"
+      }
+    },
+    "CO": {
+      "dialingNote": {
+        "en": "123 is the unified emergency line and can dispatch an ambulance.",
+        "fa": "۱۲۳ خط یکپارچهٔ اضطراری است و می‌تواند آمبولانس اعزام کند."
+      },
+      "sources": [
+        {
+          "title": "Government of Colombia — National emergency line 123",
+          "url": "https://www.gov.co/ficha-tramites-y-servicios/T1349"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "123",
+        "usableForAmbulance": true
+      }
+    },
+    "AU": {
+      "dialingNote": {
+        "en": "000 is the main emergency number. 112 works only from mobile phones.",
+        "fa": "۰۰۰ شمارهٔ اصلی اضطراری است. ۱۱۲ فقط از تلفن همراه کار می‌کند."
+      },
+      "sources": [
+        {
+          "title": "Australian Government — Triple Zero",
+          "url": "https://www.infrastructure.gov.au/media-communications/phone/triple-zero"
+        },
+        {
+          "title": "Healthdirect Australia — Poisoning",
+          "url": "https://www.healthdirect.gov.au/poisoning"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "ems": {
+        "number": "000"
+      },
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      },
+      "poison": {
+        "number": "13 11 26",
+        "note": {
+          "en": "Poisons Information Centre, 24 hours a day.",
+          "fa": "مرکز اطلاعات سموم، شبانه‌روزی."
+        }
+      }
+    },
+    "NZ": {
+      "dialingNote": {
+        "en": "111 is for ambulance, police, and fire emergencies.",
+        "fa": "۱۱۱ برای فوریت آمبولانس، پلیس و آتش‌نشانی است."
+      },
+      "sources": [
+        {
+          "title": "New Zealand Government — Emergencies",
+          "url": "https://www.govt.nz/browse/law-crime-and-justice/emergencies/"
+        },
+        {
+          "title": "New Zealand National Poisons Centre",
+          "url": "https://poisons.co.nz/contact/"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "111",
+        "usableForAmbulance": true
+      },
+      "poison": {
+        "number": "0800 764 766",
+        "note": {
+          "en": "National Poisons Centre; free, 24 hours a day.",
+          "fa": "مرکز ملی سموم؛ رایگان و شبانه‌روزی."
+        }
+      }
+    },
+    "JP": {
+      "dialingNote": {
+        "en": "119 reaches ambulance and fire services.",
+        "fa": "۱۱۹ برای آمبولانس و آتش‌نشانی است."
+      },
+      "sources": [
+        {
+          "title": "Fire and Disaster Management Agency of Japan — 119",
+          "url": "https://www.fdma.go.jp/en/post1.html"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "ems": {
+        "number": "119"
+      }
+    },
+    "SG": {
+      "dialingNote": {
+        "en": "995 reaches SCDF emergency ambulance and fire services.",
+        "fa": "۹۹۵ برای آمبولانس اضطراری و آتش‌نشانی SCDF است."
+      },
+      "sources": [
+        {
+          "title": "Singapore Civil Defence Force — Emergency medical services",
+          "url": "https://www.scdf.gov.sg/home/about-us/information-on-ems"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "ems": {
+        "number": "995"
+      }
+    },
+    "MY": {
+      "dialingNote": {
+        "en": "999 is the national emergency response number.",
+        "fa": "۹۹۹ شمارهٔ ملی پاسخ اضطراری است."
+      },
+      "sources": [
+        {
+          "title": "Government of Malaysia — Malaysia Emergency Response Services 999",
+          "url": "https://www.malaysia.gov.my/portal/content/30646"
+        },
+        {
+          "title": "National Poison Centre, Universiti Sains Malaysia",
+          "url": "https://prn.usm.my/"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "999",
+        "usableForAmbulance": true
+      },
+      "poison": {
+        "number": "04 6536 999",
+        "note": {
+          "en": "National Poison Centre. Published operating hours are limited; use 999 for severe symptoms or when it is closed.",
+          "fa": "مرکز ملی سموم ساعات کاری محدود اعلام کرده است؛ در علائم شدید یا زمان تعطیلی با ۹۹۹ تماس بگیرید."
+        }
+      }
+    },
+    "IN": {
+      "dialingNote": {
+        "en": "112 is the pan-India single emergency response number.",
+        "fa": "۱۱۲ شمارهٔ واحد پاسخ اضطراری در سراسر هند است."
+      },
+      "sources": [
+        {
+          "title": "Government of India — Emergency Response Support System 112",
+          "url": "https://112.gov.in/"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      }
+    },
+    "BD": {
+      "dialingNote": {
+        "en": "999 is the national emergency service for ambulance, police, and fire.",
+        "fa": "۹۹۹ خدمت ملی اضطراری برای آمبولانس، پلیس و آتش‌نشانی است."
+      },
+      "sources": [
+        {
+          "title": "Bangladesh Police — National Emergency Service 999",
+          "url": "https://www.police.gov.bd/en/hot_line_number"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "999",
+        "usableForAmbulance": true
+      }
+    },
+    "LK": {
+      "dialingNote": {
+        "en": "1990 reaches the Suwa Seriya island-wide emergency ambulance service.",
+        "fa": "۱۹۹۰ با آمبولانس اضطراری سراسری Suwa Seriya تماس می‌گیرد."
+      },
+      "sources": [
+        {
+          "title": "1990 Suwa Seriya Foundation — Emergency ambulance service",
+          "url": "https://www.1990.lk/"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "ems": {
+        "number": "1990"
+      }
+    },
+    "TH": {
+      "dialingNote": {
+        "en": "1669 reaches emergency medical services.",
+        "fa": "۱۶۶۹ برای خدمات فوریت پزشکی است."
+      },
+      "sources": [
+        {
+          "title": "National Institute for Emergency Medicine Thailand",
+          "url": "https://www.niems.go.th/1/?redirect=True&lang=EN"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "ems": {
+        "number": "1669"
+      }
+    },
+    "PH": {
+      "dialingNote": {
+        "en": "911 is the national emergency hotline and can dispatch medical help.",
+        "fa": "۹۱۱ خط ملی اضطراری است و می‌تواند کمک پزشکی اعزام کند."
+      },
+      "sources": [
+        {
+          "title": "Philippine Emergency 911 National Office",
+          "url": "https://e911.gov.ph/"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "911",
+        "usableForAmbulance": true
+      }
+    },
+    "HK": {
+      "dialingNote": {
+        "en": "999 reaches police, fire, and ambulance emergency services.",
+        "fa": "۹۹۹ برای فوریت پلیس، آتش‌نشانی و آمبولانس است."
+      },
+      "sources": [
+        {
+          "title": "GovHK — Assistance outside Hong Kong and emergency help",
+          "url": "https://www.gov.hk/en/residents/communication/outsidehk/assistance.htm"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "general": {
+        "number": "999",
+        "usableForAmbulance": true
+      }
+    },
+    "AE": {
+      "dialingNote": {
+        "en": "998 reaches ambulance services. Police is 999 and fire is 997.",
+        "fa": "۹۹۸ برای آمبولانس است. پلیس ۹۹۹ و آتش‌نشانی ۹۹۷ است."
+      },
+      "sources": [
+        {
+          "title": "United Arab Emirates Government — Handling emergencies",
+          "url": "https://u.ae/en/information-and-services/justice-safety-and-the-law/handling-emergencies"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "ems": {
+        "number": "998"
+      }
+    },
+    "SA": {
+      "dialingNote": {
+        "en": "997 reaches ambulance services.",
+        "fa": "۹۹۷ برای آمبولانس است."
+      },
+      "sources": [
+        {
+          "title": "Saudi Arabia Ministry of Health — Emergency numbers",
+          "url": "https://www.moh.gov.sa/en/Support/Pages/Emergency-Numbers.aspx"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "ems": {
+        "number": "997"
+      }
+    },
+    "IL": {
+      "dialingNote": {
+        "en": "101 reaches Magen David Adom emergency medical services.",
+        "fa": "۱۰۱ برای خدمات فوریت پزشکی ماگن داوید ادوم است."
+      },
+      "sources": [
+        {
+          "title": "Government of Israel — Emergency telephone numbers",
+          "url": "https://www.gov.il/en/departments/general/emergency_phone_numbers"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "ems": {
+        "number": "101"
+      }
+    },
+    "ZA": {
+      "dialingNote": {
+        "en": "10177 reaches ambulance services. 112 is available from mobile phones.",
+        "fa": "۱۰۱۷۷ برای آمبولانس است. ۱۱۲ از تلفن همراه قابل استفاده است."
+      },
+      "sources": [
+        {
+          "title": "Government of South Africa — Emergency services",
+          "url": "https://www.gov.za/about-government/contact-directory/emergency-services"
+        },
+        {
+          "title": "National Department of Health South Africa — Poisoning guidance",
+          "url": "https://knowledgehub.health.gov.za/elibrary"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "ems": {
+        "number": "10177"
+      },
+      "general": {
+        "number": "112",
+        "usableForAmbulance": true
+      },
+      "poison": {
+        "number": "0861 555 777",
+        "note": {
+          "en": "Poisons Information Helpline, 24 hours a day.",
+          "fa": "خط اطلاعات سموم، شبانه‌روزی."
+        }
+      }
+    },
+    "IR": {
+      "dialingNote": {
+        "en": "115 reaches emergency medical services.",
+        "fa": "۱۱۵ برای فوریت‌های پزشکی و آمبولانس است."
+      },
+      "sources": [
+        {
+          "title": "Iran Ministry of Health and Medical Education",
+          "url": "https://behdasht.gov.ir/"
+        },
+        {
+          "title": "Iran Food and Drug Administration — Drug and Poison Information Centre",
+          "url": "https://www.fda.gov.ir/"
+        }
+      ],
+      "reviewedAt": "2026-09-07",
+      "ems": {
+        "number": "115"
+      },
+      "poison": {
+        "number": "190",
+        "note": {
+          "en": "Drug and Poison Information Centre: call 190, then choose extension 3 and code 2.",
+          "fa": "مرکز اطلاع‌رسانی داروها و سموم: با ۱۹۰ تماس بگیرید، سپس داخلی ۳ و کد ۲ را انتخاب کنید."
+        }
+      }
+    }
+  }
+}
