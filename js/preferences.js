@@ -1,4 +1,4 @@
-import { validateCountryData } from './schema.js?v=10';
+import { validateCountryData } from './schema.js?v=11';
 
 const STORAGE_KEY = 'emdadgar.preferences.v1';
 const SUPPORTED_LOCALES = new Set(['fa', 'en']);
@@ -25,7 +25,7 @@ export function savePreferences({ locale, country }) {
 }
 
 export async function loadCountryData() {
-  const response = await fetch('./data/countries.json?v=10', { cache: 'no-cache' });
+  const response = await fetch('./data/countries.json?v=11', { cache: 'no-cache' });
   if (!response.ok) throw new Error(`Country data HTTP ${response.status}`);
   const data = await response.json();
   const errors = validateCountryData(data);

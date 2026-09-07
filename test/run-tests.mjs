@@ -105,6 +105,12 @@ test('schema requires historical symptoms to have an assessability constraint', 
 const invalidAliasSymptoms = clone(kb.symptoms);
 invalidAliasSymptoms.dizziness.aliases = [''];
 test('schema rejects empty search aliases', validateKnowledgeBase(invalidAliasSymptoms, kb.categories, kb.cases).some((error) => error.includes('aliases must contain')));
+const invalidEvidenceSymptoms = clone(kb.symptoms);
+invalidEvidenceSymptoms.dizziness.evidenceTypes = ['diagnosis'];
+test('schema rejects unknown or missing evidence-source types', validateKnowledgeBase(invalidEvidenceSymptoms, kb.categories, kb.cases).some((error) => error.includes('evidenceTypes')));
+const invalidReportedHistory = clone(kb.symptoms);
+invalidReportedHistory.cyanosis.reportedCanBeHistorical = true;
+test('schema restricts source-specific history to person-reported evidence', validateKnowledgeBase(invalidReportedHistory, kb.categories, kb.cases).some((error) => error.includes('reportedCanBeHistorical requires reported evidence')));
 const invalidDisplayPrioritySymptoms = clone(kb.symptoms);
 invalidDisplayPrioritySymptoms.dizziness.displayPriority = 101;
 test('schema bounds symptom display priority', validateKnowledgeBase(invalidDisplayPrioritySymptoms, kb.categories, kb.cases).some((error) => error.includes('displayPriority')));
@@ -113,20 +119,27 @@ Object.values(excessiveQuickSymptoms).slice(0, 11).forEach((symptom) => { sympto
 test('schema limits the quick-access list', validateKnowledgeBase(excessiveQuickSymptoms, kb.categories, kb.cases).some((error) => error.includes('quickAccess must be limited')));
 
 /* ---------- Triage integration ---------- */
-test('triage starts with consciousness', nextTriageQuestion({}) === 'conscious');
-test('a conscious person is still checked for severe choking', nextTriageQuestion({ conscious: 'y' }) === 'choking');
-test('after no choking, severe breathing difficulty is checked', nextTriageQuestion({ conscious: 'y', choking: 'n' }) === 'breathingDifficulty');
-test('after normal airway/breathing, severe bleeding is checked', nextTriageQuestion({ conscious: 'y', choking: 'n', breathingDifficulty: 'n' }) === 'bleeding');
-test('an unresponsive breathing person is still checked for bleeding', nextTriageQuestion({ conscious: 'n', breathing: 'y' }) === 'bleeding');
-test('unresponsive + no normal breathing routes to cardiac arrest', triageRoute({ conscious: 'n', breathing: 'n' }) === 'cardiac-arrest');
-test('unresponsive + breathing + severe bleeding routes to bleeding control', triageRoute({ conscious: 'n', breathing: 'y', bleeding: 'y' }) === 'severe-bleeding');
-test('unresponsive + breathing + no severe bleeding routes to recovery-position guidance', triageRoute({ conscious: 'n', breathing: 'y', bleeding: 'n' }) === 'unresponsive-breathing');
-test('severe choking routes immediately', triageRoute({ conscious: 'y', choking: 'y' }) === 'choking');
-test('severe breathing difficulty routes immediately', triageRoute({ conscious: 'y', choking: 'n', breathingDifficulty: 'y' }) === 'breathing-difficulty');
-test('all immediate checks negative routes to symptom browser', triageRoute({ conscious: 'y', choking: 'n', breathingDifficulty: 'n', bleeding: 'n' }) === 'symptoms');
-test('triage answers map to real KB symptom IDs', triageSymptoms({ conscious: 'y', choking: 'y' }).every((id) => kb.symptoms[id]));
+test('urgent triage starts with explicit scene safety', nextTriageQuestion({}) === 'sceneSafe');
+test('unsafe or uncertain scene routes to stand-back guidance', triageRoute({ sceneSafe: 'n' }) === 'scene-unsafe' && triageRoute({ sceneSafe: 'u' }) === 'scene-unsafe');
+test('safe scene proceeds to responsiveness', nextTriageQuestion({ sceneSafe: 'y' }) === 'conscious');
+test('a responsive person is still checked for severe choking', nextTriageQuestion({ sceneSafe: 'y', conscious: 'y' }) === 'choking');
+test('after no choking, severe breathing difficulty is checked', nextTriageQuestion({ sceneSafe: 'y', conscious: 'y', choking: 'n' }) === 'breathingDifficulty');
+test('after normal airway and breathing, severe bleeding is checked', nextTriageQuestion({ sceneSafe: 'y', conscious: 'y', choking: 'n', breathingDifficulty: 'n' }) === 'bleeding');
+test('after immediate dangers are negative, answer reliability is checked', nextTriageQuestion({ sceneSafe: 'y', conscious: 'y', choking: 'n', breathingDifficulty: 'n', bleeding: 'n' }) === 'communication');
+test('an unresponsive breathing person is still checked for bleeding', nextTriageQuestion({ sceneSafe: 'y', conscious: 'n', breathing: 'y' }) === 'bleeding');
+test('unresponsive plus no normal breathing routes to cardiac arrest', triageRoute({ sceneSafe: 'y', conscious: 'n', breathing: 'n' }) === 'cardiac-arrest');
+test('unresponsive plus breathing and severe bleeding routes to bleeding control', triageRoute({ sceneSafe: 'y', conscious: 'n', breathing: 'y', bleeding: 'y' }) === 'severe-bleeding');
+test('unresponsive plus breathing and no severe bleeding routes to recovery-position guidance', triageRoute({ sceneSafe: 'y', conscious: 'n', breathing: 'y', bleeding: 'n' }) === 'unresponsive-breathing');
+test('severe choking routes immediately', triageRoute({ sceneSafe: 'y', conscious: 'y', choking: 'y' }) === 'choking');
+test('severe breathing difficulty routes immediately', triageRoute({ sceneSafe: 'y', conscious: 'y', choking: 'n', breathingDifficulty: 'y' }) === 'breathing-difficulty');
+test('all immediate checks negative route to observation flow only after communication is recorded', triageRoute({ sceneSafe: 'y', conscious: 'y', choking: 'n', breathingDifficulty: 'n', bleeding: 'n', communication: 'n' }) === 'symptoms');
+test('triage answers map to real KB symptom IDs', triageSymptoms({ sceneSafe: 'y', conscious: 'y', choking: 'y' }).every((id) => kb.symptoms[id]));
 
-const models = symptomModels(kb.categories.bite.diffSymptoms, kb.symptoms);
+test('every symptom has at least one reviewed evidence source', Object.values(kb.symptoms).every((symptom) => symptom.evidenceTypes?.length));
+test('both languages use the same evidence-source model', Object.keys(kb.symptoms).every((id) => JSON.stringify(kb.symptoms[id].evidenceTypes) === JSON.stringify(enKb.symptoms[id].evidenceTypes)));
+test('subjective chest pain is reported evidence while cyanosis is observed evidence', kb.symptoms.chest_pain.evidenceTypes.includes('reported') && !kb.symptoms.chest_pain.evidenceTypes.includes('observed') && kb.symptoms.cyanosis.evidenceTypes.includes('observed'));
+test('known events and patient background are separated from observations', kb.symptoms.electrical_contact.evidenceTypes.includes('scene') && kb.symptoms.known_diabetic.evidenceTypes.includes('background'));
+const models = symptomModels(Object.keys(kb.symptoms).filter((id) => kb.symptoms[id].evidenceTypes.includes('observed')), kb.symptoms);
 test('UI symptom models preserve each symptom ID', models.length > 0 && models.every((model) => model.id && model.label));
 test('UI symptom models never produce undefined IDs', models.every((model) => model.id !== 'undefined'));
 
@@ -160,11 +173,17 @@ test('selecting severe choking replaces effective cough', compatibility.removed.
 let historical = toggleHistoricalSymptom([], 'chest_pain', kb.symptoms);
 historical = toggleHistoricalSymptom(historical, 'chest_pain', kb.symptoms);
 test('historical symptom chips toggle deterministically', historical.length === 0);
+test('source-specific earlier nausea can be recorded as history', toggleHistoricalSymptom([], 'nausea_vomiting', kb.symptoms).includes('nausea_vomiting'));
 
 /* ---------- Fast symptom discovery ---------- */
 test('every symptom provides reviewed Persian search aliases', Object.values(kb.symptoms).every((symptom) => symptom.aliases?.length));
 test('Persian search normalizes Arabic letters and zero-width separators', normalizePersianSearch('  نفس‌تنگي و كاهش  ') === 'نفس تنگی و کاهش');
 test('search finds nosebleed by its common Persian alias', searchSymptoms('خون دماغ', kb.symptoms)[0] === 'nosebleed');
+test('short temperature query returns hot and cold observations but never nosebleed', ['hot_dry_skin', 'hot_flushed', 'cold_skin'].every((id) => searchSymptoms('دما', kb.symptoms).includes(id)) && !searchSymptoms('دما', kb.symptoms).includes('nosebleed'));
+test('Persian high and low temperature phrases route separately', searchSymptoms('افزایش دما', kb.symptoms).includes('hot_dry_skin') && !searchSymptoms('افزایش دما', kb.symptoms).includes('cold_skin') && searchSymptoms('کاهش دما', kb.symptoms).includes('cold_skin'));
+test('fever search returns only reviewed hot-body choices and no cross-word false match', ['hot_dry_skin', 'hot_flushed'].every((id) => searchSymptoms('تب', kb.symptoms).includes(id)) && !searchSymptoms('تب', kb.symptoms).includes('drowsiness'));
+test('English temperature vocabulary finds both directions and clinical aliases', ['hot_dry_skin', 'hot_flushed', 'cold_skin'].every((id) => searchSymptoms('temperature', enKb.symptoms).includes(id)) && searchSymptoms('high temperature', enKb.symptoms).includes('hot_dry_skin') && searchSymptoms('low temperature', enKb.symptoms).includes('cold_skin') && searchSymptoms('hypothermia', enKb.symptoms).includes('cold_skin') && searchSymptoms('fever', enKb.symptoms).includes('hot_flushed'));
+test('source-specific observation and report wording is searchable', searchSymptoms('همراه تقلا', kb.symptoms).includes('difficulty_breathing') && searchSymptoms('feel nauseated', enKb.symptoms).includes('nausea_vomiting'));
 test('search finds electrical contact despite half-space differences', searchSymptoms('برق گرفتگی', kb.symptoms).includes('electrical_contact'));
 test('search tolerates omitted Persian half-spaces', searchSymptoms('جواب نمیدهد', kb.symptoms).includes('unresponsive'));
 test('one-letter queries deliberately return no noisy results', searchSymptoms('د', kb.symptoms).length === 0);
@@ -228,7 +247,7 @@ test('reviewed poison contacts are not invented for countries without one', coun
 /* ---------- Manifest integrity ---------- */
 const manifest = JSON.parse(readFileSync(join(kbDir, 'manifest.json'), 'utf8'));
 test('Persian manifest passes the browser-shared schema', validateManifest(manifest, 'kb').length === 0);
-test('expanded Persian knowledge base publishes as KB v14', manifest.kbVersion === 14);
+test('updated Persian knowledge base publishes as KB v18', manifest.kbVersion === 18);
 test('manifest covers every case exactly once', Object.keys(manifest.cases).length === Object.keys(kb.cases).length);
 let hashesMatch = true;
 for (const [id, entry] of Object.entries(manifest.cases)) {
@@ -241,6 +260,7 @@ test('all manifest hashes match source bytes', hashesMatch);
 test('manifest URLs are relative and constrained to kb/', [...Object.values(manifest.entries), ...Object.values(manifest.cases)].every((entry) => entry.url.startsWith('kb/') && !entry.url.startsWith('/')));
 const enManifest = JSON.parse(readFileSync(join(enKbDir, 'manifest.json'), 'utf8'));
 test('English manifest passes schema under its independent root', validateManifest(enManifest, 'kb-en').length === 0);
+test('updated English knowledge base publishes as KB v6', enManifest.kbVersion === 6);
 test('English manifest covers all 35 shared case IDs', Object.keys(enManifest.cases).length === 35 && Object.keys(enManifest.cases).every((id) => kb.cases[id]));
 test('English manifest URLs stay inside the on-demand kb-en root', [...Object.values(enManifest.entries), ...Object.values(enManifest.cases)].every((entry) => entry.url.startsWith('kb-en/') && !entry.url.startsWith('/')));
 const badManifest = clone(manifest);
@@ -269,14 +289,14 @@ test('PWA manifest supplies 192 and 512 PNG icons', ['192x192', '512x512'].every
 test('PWA manifest supplies maskable 192 and 512 icons', ['192x192', '512x512'].every((size) => maskableIconSizes.has(size)));
 const serviceWorker = readFileSync(join(root, 'sw.js'), 'utf8');
 test('service worker precaches the schema module and shell', serviceWorker.includes('./js/schema.js') && serviceWorker.includes('./index.html'));
-test('service worker precaches the versioned install manifest and every app icon', serviceWorker.includes('./manifest.webmanifest?v=10') && webManifest.icons.every((icon) => serviceWorker.includes(`./${icon.src}`)) && serviceWorker.includes('./icons/apple-touch-icon.png'));
+test('service worker precaches the versioned install manifest and every app icon', serviceWorker.includes('./manifest.webmanifest?v=11') && webManifest.icons.every((icon) => serviceWorker.includes(`./${icon.src}`)) && serviceWorker.includes('./icons/apple-touch-icon.png'));
 test('service worker derives subpath boundaries from registration scope', serviceWorker.includes('self.registration.scope'));
 test('service worker deliberately bypasses HTTP caching for both KB languages', serviceWorker.includes('`${scopePath}kb/`') && serviceWorker.includes('`${scopePath}kb-en/`'));
 test('service worker only deletes its own cache namespace', serviceWorker.includes('key.startsWith(CACHE_PREFIX)'));
 const installSection = serviceWorker.slice(serviceWorker.indexOf("self.addEventListener('install'"), serviceWorker.indexOf("self.addEventListener('message'"));
-test('v10 only bypasses waiting to recover incompatible older workers and v5-v9 shell caches', installSection.includes('RECOVERY_WORKER_VERSIONS.has(activeVersion)') && installSection.includes('RECOVERY_SHELL_CACHES.has(key)') && installSection.includes('if (needsRecovery) await self.skipWaiting()') && serviceWorker.includes("new Set([null, '5', '6', '7', '8', '9'])") && ['shell-v5', 'shell-v6', 'shell-v7', 'shell-v8', 'shell-v9'].every((name) => serviceWorker.includes(name)));
+test('v11 only bypasses waiting to recover incompatible older workers and v5-v9 shell caches', installSection.includes('RECOVERY_WORKER_VERSIONS.has(activeVersion)') && installSection.includes('RECOVERY_SHELL_CACHES.has(key)') && installSection.includes('if (needsRecovery) await self.skipWaiting()') && serviceWorker.includes("new Set([null, '5', '6', '7', '8', '9'])") && ['shell-v5', 'shell-v6', 'shell-v7', 'shell-v8', 'shell-v9'].every((name) => serviceWorker.includes(name)));
 test('normal future updates still accept explicit SKIP_WAITING activation messages', serviceWorker.includes("event.data?.type === 'SKIP_WAITING'") && serviceWorker.includes('self.skipWaiting()'));
-test('service worker shell cache is v10', serviceWorker.includes("const SHELL_CACHE = `${CACHE_PREFIX}shell-v10`"));
+test('service worker shell cache is v11', serviceWorker.includes("const SHELL_CACHE = `${CACHE_PREFIX}shell-v11`"));
 test('service worker uses network-first shell delivery with an offline cache fallback', serviceWorker.includes('async function networkFirst') && serviceWorker.includes("cache: 'no-cache'") && serviceWorker.includes('cache.match(fallbackKey)'));
 
 const html = readFileSync(join(root, 'index.html'), 'utf8');
@@ -287,73 +307,77 @@ const bootstrapSource = html.match(/<script>([\s\S]*?)<\/script>/)?.[1] || '';
 const bootstrapHash = createHash('sha256').update(bootstrapSource).digest('base64');
 test('app shell has CSP and polite live regions', html.includes('Content-Security-Policy') && html.includes('route-announcer') && html.includes('sync-announcer'));
 test('CSP authorizes exactly the inline recovery bootstrap by hash', bootstrapSource.length > 0 && html.includes(`script-src 'self' 'sha256-${bootstrapHash}'`));
-test('HTML links the versioned manifest and explicit Apple touch icon', html.includes('rel="manifest" href="manifest.webmanifest?v=10"') && html.includes('rel="apple-touch-icon"') && html.includes('sizes="180x180"'));
+test('HTML links the versioned manifest and explicit Apple touch icon', html.includes('rel="manifest" href="manifest.webmanifest?v=11"') && html.includes('rel="apple-touch-icon"') && html.includes('sizes="180x180"'));
 test('HTML enables standalone-capable iOS presentation', html.includes('name="apple-mobile-web-app-capable" content="yes"') && html.includes('name="apple-mobile-web-app-title" content="Emdadgar"'));
 test('both locale dictionaries pass the shared locale schema', validateLocaleDictionary(faLocale).length === 0 && validateLocaleDictionary(enLocale).length === 0);
 test('Persian and English locale dictionaries have exact key parity', JSON.stringify(Object.keys(faLocale.messages).sort()) === JSON.stringify(Object.keys(enLocale.messages).sort()));
 test('application logic contains no embedded Persian UI prose', !/[\u0600-\u06ff]/u.test(appSource));
-test('English UI dictionary is loaded dynamically on demand', i18nSource.includes("import('../locales/en.js?v=10')") && !serviceWorker.includes('./locales/en.js?v=10'));
-test('Persian UI, country data, and preference modules are available in the offline shell', ['./locales/fa.js?v=10', './data/countries.json?v=10', './js/preferences.js?v=10'].every((asset) => serviceWorker.includes(asset)));
+test('English UI dictionary is loaded dynamically on demand', i18nSource.includes("import('../locales/en.js?v=11')") && !serviceWorker.includes('./locales/en.js?v=11'));
+test('Persian UI, country data, and preference modules are available in the offline shell', ['./locales/fa.js?v=11', './data/countries.json?v=11', './js/preferences.js?v=11'].every((asset) => serviceWorker.includes(asset)));
 test('first-run settings store independent language and country choices locally', preferencesSource.includes('emdadgar.preferences.v1') && preferencesSource.includes('locale') && preferencesSource.includes('country') && appSource.includes('renderOnboarding'));
 test('first-run onboarding exposes a no-save urgent path', appSource.includes('id="onboarding-urgent"') && appSource.includes("persist: false, route: '#/triage'"));
 test('settings can change language while retaining shared in-memory symptom IDs', appSource.includes('async function activatePreferences') && appSource.includes("state.diffQuery = ''") && !appSource.includes('state.diffSelected = []', appSource.indexOf('async function activatePreferences')));
 test('regional notes render only for the selected country code', appSource.includes('item.regionalNotes?.[preferences.country]'));
 test('both interfaces disclose that qualified human review is still pending', faLocale.messages.humanReviewPending.includes('هنوز') && enLocale.messages.humanReviewPending.includes('no review by a medically qualified person'));
 test('unverified countries produce generic emergency guidance instead of a guessed phone number', appSource.includes("t('contactsNoProfile')") && appSource.includes("t('emergencyGenericCall')"));
-const homeSource = appSource.slice(appSource.indexOf('function renderHome()'), appSource.indexOf('function renderTriage()'));
-const installSetupSource = appSource.slice(appSource.indexOf('function setupInstallCard()'), appSource.indexOf('function renderHome()'));
-test('install UI appears only on the non-emergency home screen', homeSource.includes('id="install-card"') && homeSource.includes('setupInstallCard()') && appSource.match(/id="install-card"/g)?.length === 1);
+const homeSource = appSource.slice(appSource.indexOf('function renderHome()'), appSource.indexOf('function renderMore()'));
+const moreSource = appSource.slice(appSource.indexOf('function renderMore()'), appSource.indexOf('function unsafeSceneMarkup()'));
+const assessmentSource = appSource.slice(appSource.indexOf('function renderAssessment()'), appSource.indexOf('function renderTriage()'));
+const symptomFinderSource = appSource.slice(appSource.indexOf('function symptomChips('), appSource.indexOf('function renderDifferentialResults()'));
+const installSetupSource = appSource.slice(appSource.indexOf('function setupInstallCard()'), appSource.indexOf('function resetFinder()'));
+test('home exposes only urgent action, condition assessment, emergency call, and the quiet secondary link', homeSource.includes('id="start-triage"') && homeSource.includes('id="start-assessment"') && homeSource.includes('home-call-action') && homeSource.includes('home-more-link') && !homeSource.includes('id="install-card"') && !homeSource.includes('id="open-kb"') && !homeSource.includes('contactsMarkup'));
+test('library, settings, contacts, installation, and limitations moved to the secondary page', moreSource.includes('id="open-kb"') && moreSource.includes('id="open-settings"') && moreSource.includes('contactsMarkup()') && moreSource.includes('id="install-card"') && moreSource.includes("t('limitationText'"));
+test('condition assessment requires a safe-scene choice before response capability', assessmentSource.includes("state.assessmentStep === 'scene'") && assessmentSource.includes("state.assessmentStep = button.dataset.scene === 'y' ? 'response' : 'unsafe'"));
+test('unsafe or uncertain scene choices never continue to casualty assessment', assessmentSource.includes("data-scene=\"n\"") && assessmentSource.includes("data-scene=\"u\"") && assessmentSource.includes('unsafeSceneMarkup()'));
+test('clear, limited, absent, and uncertain response choices are explicit', ['clear', 'limited', 'none', 'unknown'].every((choice) => assessmentSource.includes(`data-response="${choice}"`)));
+test('an absent or uncertain response is handed to urgent triage as unresponsive', assessmentSource.includes("state.triageAnswers = { sceneSafe: 'y', conscious: 'n' }"));
 test('Chromium install prompt is deferred until the install button is clicked', appSource.includes("window.addEventListener('beforeinstallprompt'") && appSource.includes('event.preventDefault()') && appSource.includes('deferredInstallPrompt = event') && installSetupSource.includes('await prompt.prompt()') && installSetupSource.includes('await prompt.userChoice'));
 test('successful installation and standalone mode hide the install card', appSource.includes("window.addEventListener('appinstalled'") && appSource.includes("standaloneDisplay.matches || navigator.standalone === true") && appSource.includes("return 'installed'"));
 test('iPhone fallback gives Safari Add to Home Screen instructions', appSource.includes('isIosDevice') && enLocale.messages.installIos3.includes('Add to Home Screen') && enLocale.messages.installIos4.includes('Open as Web App'));
 test('symptom chips expose aria-pressed', appSource.includes('aria-pressed="${active}"'));
 test('symptom UI filters incompatible current options', appSource.includes('isCurrentSymptomVisible(id, state.diffSelected, kb.symptoms)'));
-test('symptom UI separates historical observations', appSource.includes("t('historicalHeading')") && appSource.includes('data-history-sym'));
+test('symptom UI separates earlier reports from current observations', symptomFinderSource.includes("t('historicalHeading')") && symptomFinderSource.includes('data-history-sym'));
 test('related-topic ranking includes current and historical selections', appSource.includes('[...state.diffSelected, ...state.diffHistorical]'));
 test('router guards malformed URI decoding', appSource.includes('decodeURIComponent') && appSource.includes('} catch {'));
 test('background KB synchronization is started after cached load', appSource.includes('if (loadResult?.fromCache) backgroundSync()'));
-test('a newly synced symptom index refreshes the open symptom finder', appSource.includes("['home', 'kb', 'symptoms'].includes(route.name)"));
+test('a newly synced symptom index refreshes the open symptom finder', appSource.includes("['home', 'more', 'kb', 'symptoms'].includes(route.name)"));
 test('rendered KB values pass through HTML escaping', appSource.includes('${e(item.title)}') && appSource.includes('${em(action)}'));
 
 const cssSource = readFileSync(join(root, 'css/app.css'), 'utf8');
-test('install card has bounded responsive styling and touch-sized action', cssSource.includes('.install-card {') && cssSource.includes('.install-card-heading > div { flex: 1; min-width: 0; }') && homeSource.includes('class="btn outline full"'));
+test('install card remains bounded and touch-sized on the secondary page', cssSource.includes('.install-card {') && cssSource.includes('.install-card-heading > div { flex: 1; min-width: 0; }') && moreSource.includes('class="btn outline full"'));
 
-/* ---------- Responsive symptom categories ---------- */
-test('desktop category buttons are an accessible labelled group', appSource.includes('id="category-tabs"') && appSource.includes('role="group"') && appSource.includes("t('categoryAria')"));
-test('desktop category buttons expose their pressed state', appSource.includes('data-cat="${e(id)}"') && appSource.includes('aria-pressed="${active}"'));
-test('mobile category select has a visible associated label', appSource.includes('for="category-select"') && appSource.includes('id="category-select"') && appSource.includes("t('categorySelect')"));
-test('category options are generated from the same data as desktop controls', appSource.includes('const categoryItems = [') && appSource.includes('...categoryIds.map') && appSource.includes('const categoryOptions = categoryItems.map'));
-test('quick and selected virtual categories are available in both responsive controls', appSource.includes("{ id: QUICK_CATEGORY, label: t('categoryQuick') }") && appSource.includes("{ id: SELECTED_CATEGORY, label: t('categorySelected'"));
-test('both category controls update the shared category state', appSource.includes('selectSymptomCategory(button.dataset.cat)') && appSource.includes("select.addEventListener('change', () => selectSymptomCategory(select.value))"));
-test('category selection preserves symptom selections', !appSource.slice(appSource.indexOf('function selectSymptomCategory'), appSource.indexOf('function setupCategoryControls')).includes('diffSelected'));
-test('desktop categories wrap instead of scrolling horizontally', cssSource.includes('.category-tabs') && cssSource.includes('flex-wrap: wrap'));
-test('mobile switches from wrapped buttons to a full-width select', cssSource.includes('@media (max-width: 600px)') && cssSource.includes('.category-tabs { display: none; }') && cssSource.includes('.category-select-label, .category-select { display: block; }'));
-test('category fieldset cannot widen the page', cssSource.includes('min-inline-size: 0') && cssSource.includes('.category-fieldset'));
-test('obsolete RTL category scroll code is gone', !appSource.includes('scrollLeft') && !appSource.includes('scrollIntoView') && !appSource.includes("addEventListener('wheel'") && !appSource.includes('category-prev'));
-
-/* ---------- Fast symptom-finder UI ---------- */
-test('global offline symptom search is labelled and has a clear action', appSource.includes('id="symptom-search"') && appSource.includes('id="clear-search"') && appSource.includes("t('symptomsSearchHelp')"));
-test('typing updates search results without rerendering the input', appSource.includes("input.addEventListener('input', update)") && appSource.includes('searchPanel.innerHTML = searchResultsMarkup(input.value)'));
-test('search results still pass through compatibility visibility rules', appSource.includes("searchSymptoms(query, kb.symptoms)\n    .filter((id) => isCurrentSymptomVisible(id, state.diffSelected, kb.symptoms))"));
-test('selected current and historical symptoms stay in a removable tray', appSource.includes('class="selected-tray"') && appSource.includes('id="clear-symptoms"') && appSource.includes("'data-history-sym'"));
-test('related suggestions are explicitly not presented as diagnosis', appSource.includes("t('suggestedTitle')") && appSource.includes("t('suggestedHelp')"));
-test('long category lists use progressive disclosure', appSource.includes('INITIAL_SYMPTOM_LIMIT = 12') && appSource.includes('id="show-more-symptoms"') && appSource.includes('id="show-less-symptoms"'));
+/* ---------- Observation-first symptom finder ---------- */
+test('medical topic category controls are absent from the scene workflow', !symptomFinderSource.includes('category-tabs') && !symptomFinderSource.includes('category-select') && !symptomFinderSource.includes('kb.categories'));
+test('finder renders observation, person-report, scene-clue, and background sections from evidence metadata', ['observed', 'reported', 'scene', 'background'].every((type) => symptomFinderSource.includes(`evidenceSection('${type}'`)) && symptomFinderSource.includes('symptomHasEvidence'));
+test('known scene events are offered before the longer observation and interview lists', symptomFinderSource.indexOf("evidenceSection('scene'") < symptomFinderSource.indexOf("evidenceSection('observed'") && symptomFinderSource.indexOf("evidenceSection('observed'") < symptomFinderSource.indexOf("evidenceSection('reported'"));
+test('person-reported questions render only when clear answers are possible', symptomFinderSource.includes("responseClear ? evidenceSection('reported'") && symptomFinderSource.includes("state.responseMode === 'limited'"));
+test('changing to limited response moves person-reported selections into history when allowed', appSource.includes("if (mode === 'limited')") && appSource.includes("state.diffSources[id] === 'reported'") && appSource.includes('canBeHistoricalReport(id)') && appSource.includes('state.diffHistorical.push(id)'));
+test('a dual-source nausea report can be retained as history without treating observed vomiting as subjective', kb.symptoms.nausea_vomiting.reportedCanBeHistorical === true && appSource.includes("state.diffSources[id] === 'reported'"));
+test('selecting unresponsiveness immediately switches off current person-report questions', appSource.includes("symptomId === 'unresponsive'") && appSource.includes("applyResponseMode('limited', { preserve: true })"));
+test('each evidence section uses progressive disclosure without horizontal category navigation', symptomFinderSource.includes('EVIDENCE_LIMITS') && symptomFinderSource.includes('data-expand') && symptomFinderSource.includes('data-collapse') && !appSource.includes('scrollLeft'));
+test('global offline search is labelled and has a clear action', symptomFinderSource.includes('id="symptom-search"') && symptomFinderSource.includes('id="clear-search"') && symptomFinderSource.includes("t('symptomsSearchHelp')"));
+test('typing updates search results without rerendering the input', symptomFinderSource.includes("input.addEventListener('input', update)") && symptomFinderSource.includes('searchPanel.innerHTML = searchResultsMarkup(input.value)'));
+test('search results pass through response-source and compatibility rules', symptomFinderSource.includes('currentEvidenceAvailable(id)') && symptomFinderSource.includes('isCurrentSymptomVisible(id, state.diffSelected, kb.symptoms)'));
+test('search results are grouped by responder observation, person report, scene, and background source', ['sourceScene', 'sourceObserved', 'sourceReported', 'sourceBackground'].every((key) => symptomFinderSource.includes(key)) && symptomFinderSource.includes("symptomChips(ids, state.diffSelected, 'data-sym', source)"));
+test('limited-response search offers report-only matches as earlier history', symptomFinderSource.includes("searchHistoricalResults") && symptomFinderSource.includes("symptomHasEvidence(id, 'reported')") && symptomFinderSource.includes('canBeHistorical'));
+test('selected current and historical evidence stays in a removable tray', symptomFinderSource.includes('class="selected-tray"') && symptomFinderSource.includes('id="clear-symptoms"') && symptomFinderSource.includes("'data-history-sym'"));
+test('related suggestions are explicitly not presented as diagnosis', symptomFinderSource.includes("t('suggestedTitle')") && symptomFinderSource.includes("t('suggestedHelp')"));
 test('mobile result action remains reachable without horizontal movement', cssSource.includes('.symptom-result-bar') && cssSource.includes('position: sticky'));
-test('search, selected tray, suggestions and show-more controls have responsive styling', ['.symptom-search-card', '.selected-tray', '.suggested-symptoms', '.show-more-symptoms'].every((selector) => cssSource.includes(selector)));
+test('source cards, search, selection tray, and suggestions have responsive styling', ['.evidence-section', '.response-mode-card', '.symptom-search-card', '.selected-tray', '.suggested-symptoms'].every((selector) => cssSource.includes(selector)));
 
 /* ---------- User-controlled app updates ---------- */
-test('versioned v10 shell assets bypass an older cache during this upgrade', html.includes('css/app.css?v=10') && html.includes('js/app.js?v=10') && serviceWorker.includes('./css/app.css?v=10') && serviceWorker.includes('./js/app.js?v=10'));
-test('every browser module dependency is versioned together', appSource.includes("'./kb.js?v=10'") && appSource.includes("'./engine.js?v=10'") && kbSource.includes("'./schema.js?v=10'") && serviceWorker.includes('./js/kb.js?v=10') && serviceWorker.includes('./js/engine.js?v=10') && serviceWorker.includes('./js/schema.js?v=10'));
+test('versioned v11 shell assets bypass an older cache during this upgrade', html.includes('css/app.css?v=11') && html.includes('js/app.js?v=11') && serviceWorker.includes('./css/app.css?v=11') && serviceWorker.includes('./js/app.js?v=11'));
+test('every browser module dependency is versioned together', appSource.includes("'./kb.js?v=11'") && appSource.includes("'./engine.js?v=11'") && kbSource.includes("'./schema.js?v=11'") && serviceWorker.includes('./js/kb.js?v=11') && serviceWorker.includes('./js/engine.js?v=11') && serviceWorker.includes('./js/schema.js?v=11'));
 test('independent inline bootstrap replaces an indefinitely stuck loader', bootstrapSource.includes('setTimeout(showLoadFailure, 20000)') && bootstrapSource.includes('boot-retry') && bootstrapSource.includes('location.reload()') && appSource.includes("'emdadgar:boot-complete'"));
 test('the update banner is outside the rerendered app shell', html.indexOf('id="app-update"') < html.indexOf('id="app"'));
 test('the update banner offers now and later actions', html.includes('id="app-update-now"') && html.includes('id="app-update-later"'));
-test('registration bypasses HTTP cache when checking the worker', appSource.includes("updateViaCache: 'none'") && appSource.includes("register('./sw.js?v=10'"));
+test('registration bypasses HTTP cache when checking the worker', appSource.includes("updateViaCache: 'none'") && appSource.includes("register('./sw.js?v=11'"));
 test('an already waiting worker is offered immediately', appSource.includes('if (registration.waiting) offerAppUpdate(registration.waiting)'));
 test('new worker installation is observed', appSource.includes("registration.addEventListener('updatefound'"));
 test('updates activate only after the user requests them', appSource.includes("worker.postMessage({ type: 'SKIP_WAITING' })") && appSource.includes("appUpdateNow?.addEventListener('click'"));
 test('later dismisses the same waiting worker for the remainder of the session', appSource.includes('const isNewWorker = waitingServiceWorker !== worker') && appSource.includes('if (isNewWorker) updateDismissed = false') && appSource.includes('updateDismissed = true'));
 test('controller change reload is guarded against loops and unsolicited activation', appSource.includes('if (!updateActivationRequested || reloadingForUpdate) return') && appSource.includes('reloadingForUpdate = true') && appSource.includes('location.reload()'));
-test('update banner is withheld from active emergency and symptom flows', appSource.includes("['home', 'kb', 'settings'].includes(currentRoute().name)"));
+test('update banner is withheld from active emergency and symptom flows', appSource.includes("['home', 'more', 'kb', 'settings'].includes(currentRoute().name)"));
 test('returning to the foreground checks for updates with throttling', appSource.includes("document.addEventListener('visibilitychange'") && appSource.includes('UPDATE_CHECK_INTERVAL'));
 
 /* ---------- Browser startup smoke tests ---------- */

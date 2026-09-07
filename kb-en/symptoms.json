@@ -8,6 +8,9 @@
     "aliases": [
       "awake",
       "responsive"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "unresponsive": {
@@ -18,6 +21,9 @@
       "unconscious",
       "not responding",
       "passed out"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "breathing_normal": {
@@ -33,6 +39,9 @@
     "label": "Breathing normally",
     "aliases": [
       "normal breathing"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "gasping": {
@@ -43,6 +52,9 @@
       "agonal gasps",
       "gasping",
       "abnormal breathing"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "not_breathing": {
@@ -55,6 +67,9 @@
     "aliases": [
       "no breathing",
       "stopped breathing"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "bleeding_heavy": {
@@ -64,6 +79,9 @@
       "heavy bleeding",
       "spurting blood",
       "life-threatening bleeding"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "fainting": {
@@ -72,6 +90,9 @@
       "fainted",
       "syncope",
       "passed out briefly"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "dizziness": {
@@ -83,6 +104,9 @@
     "aliases": [
       "dizzy",
       "lightheaded"
+    ],
+    "evidenceTypes": [
+      "reported"
     ]
   },
   "nausea_vomiting": {
@@ -93,7 +117,14 @@
       "feeling sick",
       "vomiting",
       "throwing up"
-    ]
+    ],
+    "evidenceTypes": [
+      "reported",
+      "observed"
+    ],
+    "observedLabel": "Vomiting or has vomited",
+    "reportedLabel": "Says they feel nauseated",
+    "reportedCanBeHistorical": true
   },
   "vomiting_repeated": {
     "displayPriority": 75,
@@ -101,6 +132,9 @@
     "aliases": [
       "keeps vomiting",
       "persistent vomiting"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "difficulty_breathing": {
@@ -113,7 +147,13 @@
       "breathless",
       "cannot breathe",
       "breathing difficulty"
-    ]
+    ],
+    "evidenceTypes": [
+      "reported",
+      "observed"
+    ],
+    "observedLabel": "Breathing looks hard, fast, or laboured",
+    "reportedLabel": "Says it is hard to breathe"
   },
   "chest_pain": {
     "requiresResponsive": true,
@@ -124,6 +164,9 @@
     "aliases": [
       "chest pressure",
       "tight chest"
+    ],
+    "evidenceTypes": [
+      "reported"
     ]
   },
   "confusion": {
@@ -134,6 +177,9 @@
     "aliases": [
       "confused",
       "disoriented"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "drowsiness": {
@@ -143,6 +189,9 @@
     "aliases": [
       "very sleepy",
       "hard to wake"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "sweating_cold": {
@@ -151,6 +200,9 @@
       "cold sweat",
       "clammy skin",
       "pale and sweaty"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "speech_difficulty": {
@@ -162,6 +214,9 @@
       "slurred speech",
       "speech trouble",
       "cannot speak clearly"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "facial_droop": {
@@ -170,6 +225,9 @@
     "aliases": [
       "face droop",
       "uneven smile"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "arm_weakness": {
@@ -181,6 +239,9 @@
       "arm weakness",
       "one-sided weakness",
       "leg weakness"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "seizure_activity": {
@@ -190,6 +251,9 @@
       "seizure",
       "fit",
       "convulsion"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "ptosis": {
@@ -197,6 +261,9 @@
     "aliases": [
       "drooping eyelid",
       "ptosis"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "muscle_tremor": {
@@ -205,6 +272,9 @@
       "muscle twitching",
       "spasm",
       "tremor"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "local_pain": {
@@ -216,6 +286,9 @@
     "aliases": [
       "site pain",
       "painful area"
+    ],
+    "evidenceTypes": [
+      "reported"
     ]
   },
   "local_swelling": {
@@ -225,6 +298,9 @@
     "aliases": [
       "local swelling",
       "swollen area"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "local_redness": {
@@ -232,6 +308,9 @@
     "aliases": [
       "red skin",
       "local redness"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "swelling_spreading": {
@@ -240,6 +319,9 @@
     "aliases": [
       "rapid swelling",
       "spreading swelling"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "bruising": {
@@ -247,6 +329,9 @@
     "aliases": [
       "bruises",
       "purple spots"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "bleeding_gums": {
@@ -254,6 +339,9 @@
     "aliases": [
       "gum bleeding",
       "unusual bleeding"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "hives_widespread": {
@@ -262,6 +350,9 @@
       "hives",
       "itchy welts",
       "widespread rash"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "lip_tongue_swelling": {
@@ -271,6 +362,9 @@
       "swollen lips",
       "swollen tongue",
       "facial swelling"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "throat_tightness": {
@@ -282,6 +376,9 @@
       "tight throat",
       "difficulty swallowing",
       "throat swelling"
+    ],
+    "evidenceTypes": [
+      "reported"
     ]
   },
   "wheezing": {
@@ -291,6 +388,9 @@
     "aliases": [
       "wheeze",
       "whistling breathing"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "cyanosis": {
@@ -300,6 +400,9 @@
       "blue lips",
       "grey lips",
       "cyanosis"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "saw_snake": {
@@ -307,6 +410,9 @@
     "aliases": [
       "snakebite",
       "bitten by snake"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "two_punctures": {
@@ -314,6 +420,9 @@
     "aliases": [
       "fang marks",
       "two punctures"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "scorpion_seen": {
@@ -321,6 +430,9 @@
     "aliases": [
       "scorpion sting",
       "stung by scorpion"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "stinger_visible": {
@@ -328,6 +440,9 @@
     "aliases": [
       "bee stinger",
       "stinger in skin"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "multiple_stings": {
@@ -335,6 +450,9 @@
     "aliases": [
       "many stings",
       "several stings"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "tick_attached": {
@@ -342,6 +460,9 @@
     "aliases": [
       "tick bite",
       "embedded tick"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "animal_bite": {
@@ -350,6 +471,9 @@
       "dog bite",
       "cat bite",
       "animal bite"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "burn_face_hands_feet": {
@@ -358,6 +482,9 @@
       "facial burn",
       "hand burn",
       "foot burn"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "burn_large": {
@@ -365,6 +492,9 @@
     "aliases": [
       "large burn",
       "extensive burn"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "burn_deep": {
@@ -374,6 +504,9 @@
       "deep burn",
       "charred burn",
       "white burn"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "soot_nose": {
@@ -382,12 +515,18 @@
       "smoke inhalation",
       "soot in nose",
       "hoarse after fire"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "stuck_clothing": {
     "label": "Clothing is stuck to the burn",
     "aliases": [
       "clothes stuck to burn"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "electrical_contact": {
@@ -395,6 +534,9 @@
     "aliases": [
       "electric shock",
       "electrocution"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "chemical_contact": {
@@ -402,6 +544,9 @@
     "aliases": [
       "chemical burn",
       "chemical exposure"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "deformation": {
@@ -409,6 +554,9 @@
     "aliases": [
       "deformed limb",
       "crooked joint"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "open_fracture": {
@@ -417,6 +565,9 @@
     "aliases": [
       "bone sticking out",
       "compound fracture"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "pain_on_movement": {
@@ -426,6 +577,9 @@
     "aliases": [
       "movement pain",
       "cannot move limb"
+    ],
+    "evidenceTypes": [
+      "reported"
     ]
   },
   "numbness": {
@@ -436,6 +590,9 @@
       "numb",
       "pins and needles",
       "tingling"
+    ],
+    "evidenceTypes": [
+      "reported"
     ]
   },
   "fall_from_height": {
@@ -443,6 +600,9 @@
     "aliases": [
       "high fall",
       "fell from height"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "car_accident": {
@@ -451,6 +611,9 @@
       "car crash",
       "road accident",
       "collision"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "joint_swelling": {
@@ -458,6 +621,9 @@
     "aliases": [
       "swollen joint",
       "joint injury"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "head_impact": {
@@ -467,6 +633,9 @@
     "aliases": [
       "head injury",
       "hit head"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "known_diabetic": {
@@ -474,6 +643,9 @@
     "aliases": [
       "diabetic",
       "diabetes"
+    ],
+    "evidenceTypes": [
+      "background"
     ]
   },
   "fruity_breath": {
@@ -481,6 +653,9 @@
     "aliases": [
       "fruity breath",
       "acetone breath"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "kussmaul": {
@@ -488,6 +663,9 @@
     "aliases": [
       "Kussmaul breathing",
       "deep fast breathing"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "shivering": {
@@ -495,13 +673,24 @@
     "aliases": [
       "shaking from cold",
       "shivering"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "cold_skin": {
     "label": "Cold, pale skin",
     "aliases": [
       "cold skin",
-      "pale skin"
+      "pale skin",
+      "temperature",
+      "low body temperature",
+      "reduced body temperature",
+      "body very cold",
+      "hypothermia"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "hot_dry_skin": {
@@ -511,14 +700,34 @@
     "label": "Very hot, dry skin",
     "aliases": [
       "hot dry skin",
-      "overheated"
+      "overheated",
+      "temperature",
+      "high body temperature",
+      "raised body temperature",
+      "body very hot",
+      "hyperthermia",
+      "heatstroke",
+      "fever"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "hot_flushed": {
     "label": "Very hot, flushed skin with heavy sweating",
     "aliases": [
       "hot sweaty skin",
-      "heavy sweating in heat"
+      "heavy sweating in heat",
+      "temperature",
+      "high body temperature",
+      "raised body temperature",
+      "body very hot",
+      "hyperthermia",
+      "heatstroke",
+      "fever"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "known_allergen_exposure": {
@@ -526,7 +735,13 @@
     "aliases": [
       "allergy",
       "allergen exposure"
-    ]
+    ],
+    "evidenceTypes": [
+      "background",
+      "scene"
+    ],
+    "backgroundLabel": "The person has a known allergy",
+    "sceneLabel": "Recent exposure to an allergen was seen or reliably reported"
   },
   "choking_signs": {
     "exclusiveWith": [
@@ -539,6 +754,9 @@
       "choking",
       "blocked airway",
       "silent cough"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "coughing_effort": {
@@ -548,6 +766,9 @@
     "aliases": [
       "effective cough",
       "strong cough"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "drowning_recent": {
@@ -556,6 +777,9 @@
       "drowning",
       "pulled from water",
       "submersion"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "substance_access": {
@@ -564,6 +788,9 @@
       "poisoning",
       "overdose",
       "chemical exposure"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "container_available": {
@@ -571,6 +798,9 @@
     "aliases": [
       "poison container",
       "medicine packet"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "embedded_eye": {
@@ -578,6 +808,9 @@
     "aliases": [
       "object in eye",
       "penetrating eye injury"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "object_embedded": {
@@ -585,6 +818,9 @@
     "aliases": [
       "impaled object",
       "object stuck in wound"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "wound_deep": {
@@ -592,6 +828,9 @@
     "aliases": [
       "deep cut",
       "gaping wound"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "seizure_long": {
@@ -599,6 +838,9 @@
     "aliases": [
       "long seizure",
       "seizure over five minutes"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "first_seizure": {
@@ -606,6 +848,9 @@
     "aliases": [
       "first fit",
       "no seizure history"
+    ],
+    "evidenceTypes": [
+      "background"
     ]
   },
   "pregnant": {
@@ -613,6 +858,9 @@
     "aliases": [
       "pregnancy",
       "pregnant person"
+    ],
+    "evidenceTypes": [
+      "background"
     ]
   },
   "child_victim": {
@@ -624,6 +872,9 @@
       "child",
       "baby",
       "infant"
+    ],
+    "evidenceTypes": [
+      "background"
     ]
   },
   "elderly_victim": {
@@ -631,6 +882,9 @@
     "aliases": [
       "elderly",
       "older person"
+    ],
+    "evidenceTypes": [
+      "background"
     ]
   },
   "heart_known": {
@@ -638,6 +892,9 @@
     "aliases": [
       "heart condition",
       "cardiac history"
+    ],
+    "evidenceTypes": [
+      "background"
     ]
   },
   "time_onset": {
@@ -645,6 +902,9 @@
     "aliases": [
       "time symptoms started",
       "last known well"
+    ],
+    "evidenceTypes": [
+      "background"
     ]
   },
   "shivering_stopped": {
@@ -652,6 +912,9 @@
     "aliases": [
       "stopped shivering",
       "no longer shivering"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "severe_headache": {
@@ -662,6 +925,9 @@
     "aliases": [
       "bad headache",
       "headache after injury"
+    ],
+    "evidenceTypes": [
+      "reported"
     ]
   },
   "unequal_pupils": {
@@ -670,6 +936,9 @@
     "aliases": [
       "unequal pupils",
       "different pupil size"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "blood_thinner": {
@@ -678,6 +947,9 @@
       "blood thinner",
       "warfarin",
       "anticoagulant"
+    ],
+    "evidenceTypes": [
+      "background"
     ]
   },
   "neck_pain": {
@@ -687,6 +959,9 @@
     "aliases": [
       "neck pain",
       "sore neck"
+    ],
+    "evidenceTypes": [
+      "reported"
     ]
   },
   "nosebleed": {
@@ -696,6 +971,9 @@
     "aliases": [
       "nosebleed",
       "bloody nose"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "bleeding_persistent": {
@@ -704,6 +982,9 @@
     "aliases": [
       "bleeding will not stop",
       "persistent bleeding"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "shock_signs": {
@@ -715,7 +996,11 @@
       "shock",
       "weak pulse",
       "pale and clammy"
-    ]
+    ],
+    "evidenceTypes": [
+      "observed"
+    ],
+    "observedLabel": "Pale, cool, clammy skin or a weak pulse is observed"
   },
   "frostbitten_skin": {
     "displayPriority": 70,
@@ -724,6 +1009,9 @@
       "frostbite",
       "frozen skin",
       "waxy skin"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "tooth_knocked_out": {
@@ -732,6 +1020,9 @@
     "aliases": [
       "knocked-out tooth",
       "avulsed tooth"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "open_chest_wound": {
@@ -740,6 +1031,9 @@
     "aliases": [
       "sucking chest wound",
       "penetrating chest injury"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "amputated_part": {
@@ -749,6 +1043,9 @@
       "amputation",
       "severed finger",
       "severed limb"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "jellyfish_sting": {
@@ -757,6 +1054,9 @@
     "aliases": [
       "jellyfish sting",
       "jellyfish tentacle"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   }
 }
