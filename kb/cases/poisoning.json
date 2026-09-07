@@ -3,8 +3,8 @@
   "title": "مسمومیت (خوراکی/تنفسی/پوستی)",
   "icon": "☠️",
   "category": "illness",
-  "version": 5,
-  "updatedAt": "2026-09-07",
+  "version": 6,
+  "updatedAt": "2026-09-08",
   "summary": "ایمنی نجاتگر، تماس با اورژانس/مرکز اطلاع‌رسانی سموم و پرهیز از درمان خودسرانه",
   "sources": [
     "WHO Basic Emergency Care — Poisoning",
@@ -15,7 +15,8 @@
     "substance_access": 4,
     "confusion": 1,
     "drowsiness": 1,
-    "nausea_vomiting": 1
+    "nausea_vomiting": 1,
+    "container_available": 1
   },
   "riskQuestions": [
     "container_available",

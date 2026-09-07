@@ -159,6 +159,7 @@ export default {
     showMore: 'Show {count} more symptoms',
     showLess: 'Show fewer',
     showRelated: 'Check related guides ({count})',
+    showRelatedNone: 'Check related guides',
     compatibilityThis: 'this symptom',
     compatibilityRemoved: '{count} incompatible symptom(s) removed',
     compatibilityMoved: '{count} symptom(s) moved to “Before unresponsiveness or breathing stopped”',

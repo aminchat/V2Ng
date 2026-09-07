@@ -3,8 +3,8 @@
   "title": "غش / سنکوپ",
   "icon": "😌",
   "category": "consciousness",
-  "version": 5,
-  "updatedAt": "2026-09-07",
+  "version": 6,
+  "updatedAt": "2026-09-08",
   "summary": "خواباندن ایمن، بررسی تنفس و جست‌وجوی علت‌های خطرناک",
   "sources": [
     "2024 American Heart Association and American Red Cross Guidelines for First Aid — Presyncope",
@@ -14,7 +14,9 @@
     "fainting": 4,
     "dizziness": 2,
     "sweating_cold": 1,
-    "nausea_vomiting": 1
+    "nausea_vomiting": 1,
+    "first_seizure": 1,
+    "pregnant": 1
   },
   "riskQuestions": [
     "chest_pain",

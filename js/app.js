@@ -1,6 +1,6 @@
-import { KnowledgeBase } from './kb.js?v=13';
-import { countryName, formatDateTime, formatNumber, localeCode, localizeField, setLocale, t } from './i18n.js?v=13';
-import { emergencyContact, loadCountryData, readPreferences, savePreferences, telephoneHref } from './preferences.js?v=13';
+import { KnowledgeBase } from './kb.js?v=14';
+import { countryName, formatDateTime, formatNumber, localeCode, localizeField, setLocale, t } from './i18n.js?v=14';
+import { emergencyContact, loadCountryData, readPreferences, savePreferences, telephoneHref } from './preferences.js?v=14';
 import {
   setEngineLocale,
   hasCriticalSymptoms,
@@ -17,7 +17,7 @@ import {
   triggeredFlags,
   triageRoute,
   triageSymptoms,
-} from './engine.js?v=13';
+} from './engine.js?v=14';
 
 let kb = null;
 let countryData = null;
@@ -857,6 +857,7 @@ function renderSymptoms() {
   if (state.diffStage === 'result') return renderDifferentialResults();
 
   const allEvidence = [...new Set([...state.diffSelected, ...state.diffHistorical])];
+  const relatedCount = rankCases(allEvidence, kb.cases).length;
   const suggestions = suggestSymptoms(allEvidence, kb.cases, kb.symptoms, 12)
     .filter((id) => (
       currentEvidenceAvailable(id)
@@ -910,7 +911,7 @@ function renderSymptoms() {
       </div>
 
       <div class="symptom-result-bar">
-        <button class="btn primary full" id="show-results" type="button" ${selectionCount ? '' : 'disabled'}>${e(t('showRelated', { count: formatNumber(selectionCount) }))}</button>
+        <button class="btn primary full" id="show-results" type="button" ${selectionCount ? '' : 'disabled'}>${e(relatedCount ? t('showRelated', { count: formatNumber(relatedCount) }) : t('showRelatedNone'))}</button>
       </div>
     </main>`;
 
@@ -1248,7 +1249,7 @@ async function checkForAppUpdate({ force = false } = {}) {
 async function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return;
   try {
-    const registration = await navigator.serviceWorker.register('./sw.js?v=13', {
+    const registration = await navigator.serviceWorker.register('./sw.js?v=14', {
       scope: './',
       updateViaCache: 'none',
     });

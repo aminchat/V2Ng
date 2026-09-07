@@ -159,6 +159,7 @@ export default {
     showMore: 'نمایش {count} نشانهٔ دیگر',
     showLess: 'نمایش کمتر',
     showRelated: 'بررسی مسیرهای مرتبط ({count})',
+    showRelatedNone: 'بررسی مسیرهای مرتبط',
     compatibilityThis: 'این نشانه',
     compatibilityRemoved: '{count} نشانهٔ ناسازگار حذف شد',
     compatibilityMoved: '{count} نشانه به بخش «پیش از بیهوشی یا توقف تنفس» منتقل شد',

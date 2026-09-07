@@ -2,13 +2,18 @@
   "id": "snake-bite",
   "icon": "🐍",
   "category": "bite",
-  "version": 3,
-  "updatedAt": "2026-09-07",
+  "version": 4,
+  "updatedAt": "2026-09-08",
   "match": {
     "saw_snake": 6,
     "two_punctures": 3,
     "local_pain": 1,
-    "local_swelling": 2
+    "local_swelling": 2,
+    "ptosis": 2,
+    "swelling_spreading": 2,
+    "bleeding_gums": 2,
+    "bruising": 2,
+    "muscle_tremor": 2
   },
   "riskQuestions": [
     "swelling_spreading",

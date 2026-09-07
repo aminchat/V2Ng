@@ -3,8 +3,8 @@
   "title": "ضربهٔ سر / آسیب احتمالی مغزی",
   "icon": "🤕",
   "category": "consciousness",
-  "version": 5,
-  "updatedAt": "2026-09-07",
+  "version": 6,
+  "updatedAt": "2026-09-08",
   "summary": "بررسی نشانه‌های خطر، جلوگیری از حرکت و پایش توسط یک بزرگسال مسئول",
   "sources": [
     "2024 American Heart Association and American Red Cross Guidelines for First Aid — Concussion",
@@ -15,7 +15,8 @@
     "confusion": 3,
     "vomiting_repeated": 3,
     "severe_headache": 3,
-    "unequal_pupils": 3
+    "unequal_pupils": 3,
+    "neck_pain": 1
   },
   "riskQuestions": [
     "vomiting_repeated",

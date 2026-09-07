@@ -207,6 +207,10 @@ ranked = rankCases(['facial_droop', 'speech_difficulty'], kb.cases);
 test('FAST signs rank stroke first', ranked[0]?.case.id === 'stroke');
 ranked = rankCases(['nosebleed'], kb.cases);
 test('nosebleed participates in related-topic ranking', ranked[0]?.case.id === 'nosebleed');
+ranked = rankCases(['ptosis'], kb.cases);
+test('drooping eyelids rank snake-bite as a related topic', ranked[0]?.case.id === 'snake-bite');
+const unlinkedSymptoms = Object.keys(kb.symptoms).filter((id) => rankCases([id], kb.cases).length === 0);
+test('every selectable symptom surfaces at least one related topic (except the pure assessment marker)', JSON.stringify(unlinkedSymptoms) === JSON.stringify(['conscious']));
 test('critical symptom detection includes gasping', hasCriticalSymptoms(['gasping']));
 test('a local-pain-only selection is not labelled critical', !hasCriticalSymptoms(['local_pain']));
 
@@ -247,7 +251,7 @@ test('reviewed poison contacts are not invented for countries without one', coun
 /* ---------- Manifest integrity ---------- */
 const manifest = JSON.parse(readFileSync(join(kbDir, 'manifest.json'), 'utf8'));
 test('Persian manifest passes the browser-shared schema', validateManifest(manifest, 'kb').length === 0);
-test('updated Persian knowledge base publishes as KB v18', manifest.kbVersion === 18);
+test('updated Persian knowledge base publishes as KB v19', manifest.kbVersion === 19);
 test('manifest covers every case exactly once', Object.keys(manifest.cases).length === Object.keys(kb.cases).length);
 let hashesMatch = true;
 for (const [id, entry] of Object.entries(manifest.cases)) {
@@ -260,7 +264,7 @@ test('all manifest hashes match source bytes', hashesMatch);
 test('manifest URLs are relative and constrained to kb/', [...Object.values(manifest.entries), ...Object.values(manifest.cases)].every((entry) => entry.url.startsWith('kb/') && !entry.url.startsWith('/')));
 const enManifest = JSON.parse(readFileSync(join(enKbDir, 'manifest.json'), 'utf8'));
 test('English manifest passes schema under its independent root', validateManifest(enManifest, 'kb-en').length === 0);
-test('updated English knowledge base publishes as KB v6', enManifest.kbVersion === 6);
+test('updated English knowledge base publishes as KB v7', enManifest.kbVersion === 7);
 test('English manifest covers all 35 shared case IDs', Object.keys(enManifest.cases).length === 35 && Object.keys(enManifest.cases).every((id) => kb.cases[id]));
 test('English manifest URLs stay inside the on-demand kb-en root', [...Object.values(enManifest.entries), ...Object.values(enManifest.cases)].every((entry) => entry.url.startsWith('kb-en/') && !entry.url.startsWith('/')));
 const badManifest = clone(manifest);
@@ -289,14 +293,14 @@ test('PWA manifest supplies 192 and 512 PNG icons', ['192x192', '512x512'].every
 test('PWA manifest supplies maskable 192 and 512 icons', ['192x192', '512x512'].every((size) => maskableIconSizes.has(size)));
 const serviceWorker = readFileSync(join(root, 'sw.js'), 'utf8');
 test('service worker precaches the schema module and shell', serviceWorker.includes('./js/schema.js') && serviceWorker.includes('./index.html'));
-test('service worker precaches the versioned install manifest and every app icon', serviceWorker.includes('./manifest.webmanifest?v=13') && webManifest.icons.every((icon) => serviceWorker.includes(`./${icon.src}`)) && serviceWorker.includes('./icons/apple-touch-icon.png'));
+test('service worker precaches the versioned install manifest and every app icon', serviceWorker.includes('./manifest.webmanifest?v=14') && webManifest.icons.every((icon) => serviceWorker.includes(`./${icon.src}`)) && serviceWorker.includes('./icons/apple-touch-icon.png'));
 test('service worker derives subpath boundaries from registration scope', serviceWorker.includes('self.registration.scope'));
 test('service worker deliberately bypasses HTTP caching for both KB languages', serviceWorker.includes('`${scopePath}kb/`') && serviceWorker.includes('`${scopePath}kb-en/`'));
 test('service worker only deletes its own cache namespace', serviceWorker.includes('key.startsWith(CACHE_PREFIX)'));
 const installSection = serviceWorker.slice(serviceWorker.indexOf("self.addEventListener('install'"), serviceWorker.indexOf("self.addEventListener('message'"));
 test('v11 only bypasses waiting to recover incompatible older workers and v5-v9 shell caches', installSection.includes('RECOVERY_WORKER_VERSIONS.has(activeVersion)') && installSection.includes('RECOVERY_SHELL_CACHES.has(key)') && installSection.includes('if (needsRecovery) await self.skipWaiting()') && serviceWorker.includes("new Set([null, '5', '6', '7', '8', '9'])") && ['shell-v5', 'shell-v6', 'shell-v7', 'shell-v8', 'shell-v9'].every((name) => serviceWorker.includes(name)));
 test('normal future updates still accept explicit SKIP_WAITING activation messages', serviceWorker.includes("event.data?.type === 'SKIP_WAITING'") && serviceWorker.includes('self.skipWaiting()'));
-test('service worker shell cache is v12', serviceWorker.includes("const SHELL_CACHE = `${CACHE_PREFIX}shell-v13`"));
+test('service worker shell cache is v12', serviceWorker.includes("const SHELL_CACHE = `${CACHE_PREFIX}shell-v14`"));
 test('service worker uses network-first shell delivery with an offline cache fallback', serviceWorker.includes('async function networkFirst') && serviceWorker.includes("cache: 'no-cache'") && serviceWorker.includes('cache.match(fallbackKey)'));
 
 const html = readFileSync(join(root, 'index.html'), 'utf8');
@@ -307,13 +311,13 @@ const bootstrapSource = html.match(/<script>([\s\S]*?)<\/script>/)?.[1] || '';
 const bootstrapHash = createHash('sha256').update(bootstrapSource).digest('base64');
 test('app shell has CSP and polite live regions', html.includes('Content-Security-Policy') && html.includes('route-announcer') && html.includes('sync-announcer'));
 test('CSP authorizes exactly the inline recovery bootstrap by hash', bootstrapSource.length > 0 && html.includes(`script-src 'self' 'sha256-${bootstrapHash}'`));
-test('HTML links the versioned manifest and explicit Apple touch icon', html.includes('rel="manifest" href="manifest.webmanifest?v=13"') && html.includes('rel="apple-touch-icon"') && html.includes('sizes="180x180"'));
+test('HTML links the versioned manifest and explicit Apple touch icon', html.includes('rel="manifest" href="manifest.webmanifest?v=14"') && html.includes('rel="apple-touch-icon"') && html.includes('sizes="180x180"'));
 test('HTML enables standalone-capable iOS presentation', html.includes('name="apple-mobile-web-app-capable" content="yes"') && html.includes('name="apple-mobile-web-app-title" content="Emdadgar"'));
 test('both locale dictionaries pass the shared locale schema', validateLocaleDictionary(faLocale).length === 0 && validateLocaleDictionary(enLocale).length === 0);
 test('Persian and English locale dictionaries have exact key parity', JSON.stringify(Object.keys(faLocale.messages).sort()) === JSON.stringify(Object.keys(enLocale.messages).sort()));
 test('application logic contains no embedded Persian UI prose', !/[\u0600-\u06ff]/u.test(appSource));
-test('English UI dictionary is loaded dynamically on demand', i18nSource.includes("import('../locales/en.js?v=13')") && !serviceWorker.includes('./locales/en.js?v=13'));
-test('Persian UI, country data, and preference modules are available in the offline shell', ['./locales/fa.js?v=13', './data/countries.json?v=13', './js/preferences.js?v=13'].every((asset) => serviceWorker.includes(asset)));
+test('English UI dictionary is loaded dynamically on demand', i18nSource.includes("import('../locales/en.js?v=14')") && !serviceWorker.includes('./locales/en.js?v=14'));
+test('Persian UI, country data, and preference modules are available in the offline shell', ['./locales/fa.js?v=14', './data/countries.json?v=14', './js/preferences.js?v=14'].every((asset) => serviceWorker.includes(asset)));
 test('first-run settings store independent language and country choices locally', preferencesSource.includes('emdadgar.preferences.v1') && preferencesSource.includes('locale') && preferencesSource.includes('country') && appSource.includes('renderOnboarding'));
 test('first-run onboarding exposes a no-save person check path', appSource.includes('id="onboarding-urgent"') && appSource.includes("persist: false, route: '#/assessment'"));
 test('settings can change language while retaining shared in-memory symptom IDs', appSource.includes('async function activatePreferences') && appSource.includes("state.diffQuery = ''") && !appSource.includes('state.diffSelected = []', appSource.indexOf('async function activatePreferences')));
@@ -371,12 +375,12 @@ test('mobile result action remains reachable without horizontal movement', cssSo
 test('source cards, search, selection tray, and suggestions have responsive styling', ['.evidence-section', '.response-mode-card', '.symptom-search-card', '.selected-tray', '.suggested-symptoms'].every((selector) => cssSource.includes(selector)));
 
 /* ---------- User-controlled app updates ---------- */
-test('versioned v11 shell assets bypass an older cache during this upgrade', html.includes('css/app.css?v=13') && html.includes('js/app.js?v=13') && serviceWorker.includes('./css/app.css?v=13') && serviceWorker.includes('./js/app.js?v=13'));
-test('every browser module dependency is versioned together', appSource.includes("'./kb.js?v=13'") && appSource.includes("'./engine.js?v=13'") && kbSource.includes("'./schema.js?v=13'") && serviceWorker.includes('./js/kb.js?v=13') && serviceWorker.includes('./js/engine.js?v=13') && serviceWorker.includes('./js/schema.js?v=13'));
+test('versioned v11 shell assets bypass an older cache during this upgrade', html.includes('css/app.css?v=14') && html.includes('js/app.js?v=14') && serviceWorker.includes('./css/app.css?v=14') && serviceWorker.includes('./js/app.js?v=14'));
+test('every browser module dependency is versioned together', appSource.includes("'./kb.js?v=14'") && appSource.includes("'./engine.js?v=14'") && kbSource.includes("'./schema.js?v=14'") && serviceWorker.includes('./js/kb.js?v=14') && serviceWorker.includes('./js/engine.js?v=14') && serviceWorker.includes('./js/schema.js?v=14'));
 test('independent inline bootstrap replaces an indefinitely stuck loader', bootstrapSource.includes('setTimeout(showLoadFailure, 20000)') && bootstrapSource.includes('boot-retry') && bootstrapSource.includes('location.reload()') && appSource.includes("'emdadgar:boot-complete'"));
 test('the update banner is outside the rerendered app shell', html.indexOf('id="app-update"') < html.indexOf('id="app"'));
 test('the update banner offers now and later actions', html.includes('id="app-update-now"') && html.includes('id="app-update-later"'));
-test('registration bypasses HTTP cache when checking the worker', appSource.includes("updateViaCache: 'none'") && appSource.includes("register('./sw.js?v=13'"));
+test('registration bypasses HTTP cache when checking the worker', appSource.includes("updateViaCache: 'none'") && appSource.includes("register('./sw.js?v=14'"));
 test('an already waiting worker is offered immediately', appSource.includes('if (registration.waiting) offerAppUpdate(registration.waiting)'));
 test('new worker installation is observed', appSource.includes("registration.addEventListener('updatefound'"));
 test('updates activate only after the user requests them', appSource.includes("worker.postMessage({ type: 'SKIP_WAITING' })") && appSource.includes("appUpdateNow?.addEventListener('click'"));

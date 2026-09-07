@@ -3,14 +3,15 @@
   "title": "جسم خارجی یا مادهٔ شیمیایی در چشم",
   "icon": "👁️",
   "category": "bleeding",
-  "version": 5,
-  "updatedAt": "2026-09-07",
+  "version": 6,
+  "updatedAt": "2026-09-08",
   "summary": "ذرهٔ سطحی را با آب بشویید؛ جسم فرورفته را دست‌کاری یا تحت فشار قرار ندهید",
   "sources": [
     "2024 American Heart Association and American Red Cross Guidelines for First Aid — Eye Injury"
   ],
   "match": {
-    "embedded_eye": 5
+    "embedded_eye": 5,
+    "chemical_contact": 2
   },
   "riskQuestions": [
     "embedded_eye",
