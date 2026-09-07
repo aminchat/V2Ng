@@ -1,6 +1,8 @@
 const ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const SYMPTOM_RE = /^[a-z][a-z0-9_]*$/;
 const HASH_RE = /^[a-f0-9]{64}$/;
+const COUNTRY_RE = /^[A-Z]{2}$/;
+const LOCALE_RE = /^[a-z]{2}(?:-[A-Z]{2})?$/;
 
 function plainObject(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -14,6 +16,11 @@ function validDate(value) {
 
 function nonEmptyStrings(value) {
   return Array.isArray(value) && value.length > 0 && value.every((item) => typeof item === 'string' && item.trim());
+}
+
+function localizedText(value) {
+  return (typeof value === 'string' && value.trim())
+    || (plainObject(value) && typeof value.fa === 'string' && value.fa.trim() && typeof value.en === 'string' && value.en.trim());
 }
 
 function checkSymptomList(caseId, field, value, symptoms, errors, { required = false } = {}) {
@@ -137,12 +144,12 @@ export function validateKnowledgeBase(symptoms, categories, cases) {
     checkSymptomList(id, 'riskQuestions', item.riskQuestions ?? [], symptoms, errors);
     const riskSet = new Set(item.riskQuestions || []);
 
-    if (!plainObject(item.call115) || typeof item.call115.always !== 'boolean' || typeof item.call115.text !== 'string' || !item.call115.text.trim()) {
-      errors.push(`${id}: call115 must contain boolean always and non-empty text`);
+    if (!plainObject(item.emergencyCall) || typeof item.emergencyCall.always !== 'boolean' || typeof item.emergencyCall.text !== 'string' || !item.emergencyCall.text.trim()) {
+      errors.push(`${id}: emergencyCall must contain boolean always and non-empty text`);
     } else {
-      checkSymptomList(id, 'call115.when', item.call115.when ?? [], symptoms, errors);
-      for (const symptomId of item.call115.when || []) {
-        if (!riskSet.has(symptomId)) errors.push(`${id}: call115 symptom "${symptomId}" is not selectable in riskQuestions`);
+      checkSymptomList(id, 'emergencyCall.when', item.emergencyCall.when ?? [], symptoms, errors);
+      for (const symptomId of item.emergencyCall.when || []) {
+        if (!riskSet.has(symptomId)) errors.push(`${id}: emergencyCall symptom "${symptomId}" is not selectable in riskQuestions`);
       }
     }
 
@@ -171,6 +178,17 @@ export function validateKnowledgeBase(symptoms, categories, cases) {
         errors.push(`${id}: ${field} must be a non-empty string when present`);
       }
     }
+    if (item.regionalNotes !== undefined) {
+      if (!plainObject(item.regionalNotes) || Object.keys(item.regionalNotes).length === 0) {
+        errors.push(`${id}: regionalNotes must be a non-empty country-code object when present`);
+      } else {
+        for (const [countryCode, note] of Object.entries(item.regionalNotes)) {
+          if (!COUNTRY_RE.test(countryCode) || typeof note !== 'string' || !note.trim()) {
+            errors.push(`${id}: regionalNotes entry "${countryCode}" is invalid`);
+          }
+        }
+      }
+    }
   }
 
   for (const id of ['cardiac-arrest', 'unresponsive-breathing', 'severe-bleeding', 'choking', 'breathing-difficulty']) {
@@ -180,8 +198,9 @@ export function validateKnowledgeBase(symptoms, categories, cases) {
   return errors;
 }
 
-export function validateManifest(manifest) {
+export function validateManifest(manifest, root = 'kb') {
   const errors = [];
+  if (!/^[a-z0-9-]+$/.test(root)) return ['manifest: invalid knowledge-base root'];
   if (!plainObject(manifest)) return ['manifest must be an object'];
   if (!Number.isInteger(manifest.kbVersion) || manifest.kbVersion < 1) errors.push('manifest: kbVersion must be an integer >= 1');
   if (!validDate(manifest.updatedAt)) errors.push('manifest: updatedAt must be a real YYYY-MM-DD date');
@@ -197,15 +216,96 @@ export function validateManifest(manifest) {
   };
 
   if (!plainObject(manifest.entries)) errors.push('manifest: entries must be an object');
-  checkEntry('__symptoms', manifest.entries?.__symptoms, 'kb/symptoms.json');
-  checkEntry('__categories', manifest.entries?.__categories, 'kb/categories.json');
+  checkEntry('__symptoms', manifest.entries?.__symptoms, `${root}/symptoms.json`);
+  checkEntry('__categories', manifest.entries?.__categories, `${root}/categories.json`);
 
   if (!plainObject(manifest.cases) || Object.keys(manifest.cases).length === 0) {
     errors.push('manifest: cases must be a non-empty object');
   } else {
     for (const [id, entry] of Object.entries(manifest.cases)) {
       if (!ID_RE.test(id)) errors.push(`manifest: invalid case id "${id}"`);
-      checkEntry(id, entry, `kb/cases/${id}.json`);
+      checkEntry(id, entry, `${root}/cases/${id}.json`);
+    }
+  }
+  return errors;
+}
+
+export function validateCountryData(data) {
+  const errors = [];
+  if (!plainObject(data)) return ['countries: root must be an object'];
+  if (!Number.isInteger(data.version) || data.version < 1) errors.push('countries: version must be an integer >= 1');
+  if (!validDate(data.updatedAt)) errors.push('countries: updatedAt must be a real YYYY-MM-DD date');
+  if (!Array.isArray(data.countries) || data.countries.length < 200) {
+    errors.push('countries: countries must include the complete ISO selector list');
+  } else {
+    const seen = new Set();
+    for (const [index, country] of data.countries.entries()) {
+      if (!plainObject(country) || !COUNTRY_RE.test(country.code) || typeof country.name !== 'string' || !country.name.trim()) {
+        errors.push(`countries: countries[${index}] is invalid`);
+        continue;
+      }
+      if (seen.has(country.code)) errors.push(`countries: duplicate country "${country.code}"`);
+      seen.add(country.code);
+    }
+  }
+  if (!plainObject(data.profiles)) {
+    errors.push('countries: profiles must be an object');
+    return errors;
+  }
+  for (const [code, profile] of Object.entries(data.profiles)) {
+    if (!COUNTRY_RE.test(code) || !plainObject(profile)) {
+      errors.push(`countries: invalid profile "${code}"`);
+      continue;
+    }
+    if (!profile.ems && !profile.general) errors.push(`countries: ${code} requires ems or general contact`);
+    for (const field of ['ems', 'general', 'poison']) {
+      const contact = profile[field];
+      if (contact === undefined) continue;
+      if (!plainObject(contact) || typeof contact.number !== 'string' || !/^[+0-9][0-9 +()-]*$/.test(contact.number)) {
+        errors.push(`countries: ${code}.${field} has an invalid number`);
+      }
+      if (contact?.note !== undefined && !localizedText(contact.note)) {
+        errors.push(`countries: ${code}.${field}.note must be localized text`);
+      }
+    }
+    if (profile.general && profile.general.usableForAmbulance !== true) {
+      errors.push(`countries: ${code}.general must explicitly be usable for ambulance dispatch`);
+    }
+    if (!localizedText(profile.dialingNote)) errors.push(`countries: ${code} requires localized dialingNote`);
+    if (!validDate(profile.reviewedAt)) errors.push(`countries: ${code} requires a valid reviewedAt date`);
+    if (!Array.isArray(profile.sources) || profile.sources.length === 0) {
+      errors.push(`countries: ${code} requires at least one source`);
+    } else {
+      for (const source of profile.sources) {
+        if (!plainObject(source) || typeof source.title !== 'string' || !source.title.trim() || typeof source.url !== 'string') {
+          errors.push(`countries: ${code} contains an invalid source`);
+          continue;
+        }
+        try {
+          const url = new URL(source.url);
+          if (url.protocol !== 'https:') errors.push(`countries: ${code} source URLs must use HTTPS`);
+        } catch {
+          errors.push(`countries: ${code} contains an invalid source URL`);
+        }
+      }
+    }
+  }
+  return errors;
+}
+
+export function validateLocaleDictionary(locale) {
+  const errors = [];
+  if (!plainObject(locale)) return ['locale: root must be an object'];
+  if (!LOCALE_RE.test(locale.code || '')) errors.push('locale: invalid code');
+  if (!['ltr', 'rtl'].includes(locale.dir)) errors.push('locale: dir must be ltr or rtl');
+  if (!Number.isInteger(locale.version) || locale.version < 1) errors.push('locale: version must be an integer >= 1');
+  if (!plainObject(locale.messages) || Object.keys(locale.messages).length === 0) {
+    errors.push('locale: messages must be a non-empty object');
+  } else {
+    for (const [key, value] of Object.entries(locale.messages)) {
+      if (!/^[a-z][a-zA-Z0-9.]*$/.test(key) || typeof value !== 'string' || !value.trim()) {
+        errors.push(`locale: invalid message "${key}"`);
+      }
     }
   }
   return errors;
