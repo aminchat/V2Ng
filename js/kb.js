@@ -1,6 +1,7 @@
-import { validateKnowledgeBase, validateManifest } from './schema.js?v=9';
+import { validateKnowledgeBase, validateManifest } from './schema.js?v=10';
 
-const DB_NAME = 'emdadgar-kb';
+const FA_DB_NAME = 'emdadgar-kb';
+const EN_DB_NAME = 'emdadgar-kb-en-v1';
 const DB_VERSION = 2;
 const SPECIAL_IDS = ['__symptoms', '__categories'];
 const META_KEY = 'snapshot';
@@ -29,8 +30,8 @@ function createSyncError(message, code, cause) {
   return error;
 }
 
-async function openDatabase() {
-  const request = indexedDB.open(DB_NAME, DB_VERSION);
+async function openDatabase(name) {
+  const request = indexedDB.open(name, DB_VERSION);
   request.onupgradeneeded = () => {
     const db = request.result;
     if (!db.objectStoreNames.contains('cases')) db.createObjectStore('cases', { keyPath: 'id' });
@@ -108,7 +109,10 @@ function parseJson(text, label) {
 }
 
 export class KnowledgeBase {
-  constructor() {
+  constructor({ locale = 'fa' } = {}) {
+    this.locale = locale === 'en' ? 'en' : 'fa';
+    this.root = this.locale === 'en' ? 'kb-en' : 'kb';
+    this.dbName = this.locale === 'en' ? EN_DB_NAME : FA_DB_NAME;
     this.db = null;
     this.symptoms = {};
     this.categories = {};
@@ -118,7 +122,7 @@ export class KnowledgeBase {
   }
 
   async load() {
-    this.db = await openDatabase();
+    this.db = await openDatabase(this.dbName);
     const local = await readLocalSnapshot(this.db);
     if (validStoredSnapshot(local.rows, local.metadata)) {
       this._hydrate(local.rows, local.metadata);
@@ -138,10 +142,10 @@ export class KnowledgeBase {
   }
 
   async _sync({ allowRollback = false } = {}) {
-    if (!this.db) this.db = await openDatabase();
-    const manifestText = await fetchText('kb/manifest.json');
+    if (!this.db) this.db = await openDatabase(this.dbName);
+    const manifestText = await fetchText(`${this.root}/manifest.json`);
     const manifest = parseJson(manifestText, 'manifest');
-    const manifestErrors = validateManifest(manifest);
+    const manifestErrors = validateManifest(manifest, this.root);
     if (manifestErrors.length) throw createSyncError(`manifest نامعتبر است: ${manifestErrors.join(' | ')}`, 'INVALID_MANIFEST');
     if (!allowRollback && this.metadata?.kbVersion && manifest.kbVersion < this.metadata.kbVersion) {
       throw createSyncError('نسخهٔ دریافتی پایگاه دانش قدیمی‌تر از نسخهٔ نصب‌شده است.', 'ROLLBACK_REJECTED');
@@ -209,6 +213,6 @@ export class KnowledgeBase {
   }
 
   listCases() {
-    return Object.values(this.cases).sort((a, b) => a.title.localeCompare(b.title, 'fa'));
+    return Object.values(this.cases).sort((a, b) => a.title.localeCompare(b.title, this.locale));
   }
 }
