@@ -1,0 +1,58 @@
+{
+  "id": "severe-bleeding",
+  "icon": "🩸",
+  "category": "bleeding",
+  "version": 3,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "bleeding_heavy": 6,
+    "object_embedded": 2,
+    "sweating_cold": 1
+  },
+  "riskQuestions": [
+    "bleeding_heavy",
+    "object_embedded",
+    "fall_from_height",
+    "car_accident",
+    "sweating_cold",
+    "dizziness"
+  ],
+  "title": "Severe bleeding",
+  "summary": "Apply firm direct pressure; use a tourniquet for life-threatening limb bleeding when available and trained.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Severe External Bleeding",
+    "2025 International Consensus on First Aid Science With Treatment Recommendations (ILCOR CoSTR) — Hemostatic Dressings"
+  ],
+  "actions": [
+    "Ensure scene safety, use gloves or a barrier if available, and call emergency services immediately.",
+    "Apply firm direct pressure with gauze or clean cloth. If blood soaks through, add material on top and keep pressing.",
+    "For life-threatening bleeding from an arm or leg, apply a commercial tourniquet if available and you are trained: place it 5 to 7 cm (2 to 3 in) above the wound, not over a joint, tighten until bleeding stops, and record the time.",
+    "If a tourniquet cannot be used, continue direct pressure. If trained, pack a deep wound with plain or hemostatic gauze and maintain pressure.",
+    "Do not remove an embedded object; press around it and stabilize it. Keep the person lying down, warm, and monitored."
+  ],
+  "prohibitions": [
+    "Do not repeatedly lift the dressing to inspect the wound.",
+    "Do not loosen or remove a tourniquet once effective.",
+    "Do not place a tourniquet on the neck, trunk, or a joint.",
+    "Do not remove an embedded object."
+  ],
+  "redFlags": [
+    {
+      "when": [
+        "object_embedded"
+      ],
+      "text": "Emergency warning signs selected—contact emergency services now."
+    },
+    {
+      "when": [
+        "sweating_cold",
+        "dizziness"
+      ],
+      "text": "Emergency warning signs selected—contact emergency services now."
+    }
+  ],
+  "emergencyCall": {
+    "always": true,
+    "text": "Severe or life-threatening bleeding always requires emergency services."
+  }
+}

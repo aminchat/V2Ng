@@ -3,11 +3,12 @@
   "title": "سوختگی حرارتی",
   "icon": "🔥",
   "category": "burn",
-  "version": 2,
-  "updatedAt": "2026-09-06",
+  "version": 5,
+  "updatedAt": "2026-09-07",
   "summary": "توقف سوختن و خنک‌کردن فوری با آب جاری خنک تا ۲۰ دقیقه",
   "sources": [
-    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Burns"
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Cooling and Care of Thermal Burns",
+    "2025 International Consensus on First Aid Science With Treatment Recommendations (ILCOR CoSTR) — Duration of Cooling for Burns"
   ],
   "match": {
     "burn_large": 2,
@@ -25,20 +26,9 @@
     "stuck_clothing",
     "child_victim"
   ],
-  "call115": {
-    "always": false,
-    "when": [
-      "burn_face_hands_feet",
-      "burn_large",
-      "burn_deep",
-      "soot_nose",
-      "child_victim"
-    ],
-    "text": "سوختگی گسترده/عمیق/حساس یا در کودک = ۱۱۵ فوری"
-  },
   "actions": [
     "پس از ایمن‌کردن صحنه، تماس با منبع گرما را قطع کنید. اگر لباس آتش گرفته است: توقف، خواباندن و غلتاندن.",
-    "هرچه زودتر سوختگی را با آب جاری خنک و تمیز خنک کنید؛ در مجموع تا ۲۰ دقیقه، بدون آنکه تماس با ۱۱۵ یا انتقال را عقب بیندازید.",
+    "هرچه زودتر سوختگی را با آب جاری خنک و تمیز خنک کنید؛ در مجموع تا ۲۰ دقیقه، بدون آنکه تماس با اورژانس یا انتقال را عقب بیندازید.",
     "زیورآلات، ساعت، کمربند و لباس آزاد نزدیک محل را پیش از افزایش تورم بردارید؛ لباس چسبیده را نکشید.",
     "پس از خنک‌سازی، محل را شل با پانسمان استریل غیرچسبنده یا پوشش تمیز بپوشانید و بقیهٔ بدن را گرم نگه دارید.",
     "سوختگی عمیق یا گسترده، سوختگی صورت/راه هوایی/دست/پا/اندام تناسلی/مفصل بزرگ، و سوختگی برقی یا شیمیایی نیازمند ارزیابی فوری است.",
@@ -53,7 +43,7 @@
         "soot_nose",
         "child_victim"
       ],
-      "text": "سوختگی جدی (حساس/بزرگ/عمیق/کودک/استنشاق دود) — ۱۱۵ فوری"
+      "text": "سوختگی جدی (حساس/بزرگ/عمیق/کودک/استنشاق دود) — اورژانس فوری"
     }
   ],
   "prohibitions": [
@@ -62,5 +52,16 @@
     "تاول‌ها را نترکانید",
     "لباس یا مادهٔ چسبیده را نکشید",
     "به فرد با سوختگی جدی، کاهش هوشیاری یا احتمال جراحی خوراکی ندهید مگر اپراتور اورژانس توصیه کند"
-  ]
+  ],
+  "emergencyCall": {
+    "always": false,
+    "when": [
+      "burn_face_hands_feet",
+      "burn_large",
+      "burn_deep",
+      "soot_nose",
+      "child_victim"
+    ],
+    "text": "سوختگی گسترده/عمیق/حساس یا در کودک = اورژانس فوری"
+  }
 }

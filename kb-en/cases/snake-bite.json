@@ -1,0 +1,67 @@
+{
+  "id": "snake-bite",
+  "icon": "🐍",
+  "category": "bite",
+  "version": 3,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "saw_snake": 6,
+    "two_punctures": 3,
+    "local_pain": 1,
+    "local_swelling": 2
+  },
+  "riskQuestions": [
+    "swelling_spreading",
+    "bruising",
+    "bleeding_gums",
+    "ptosis",
+    "difficulty_breathing",
+    "muscle_tremor",
+    "dizziness",
+    "nausea_vomiting",
+    "fainting"
+  ],
+  "title": "Snakebite",
+  "summary": "Treat as a medical emergency: keep the person completely still and transport without walking.",
+  "sources": [
+    "World Health Organization — Snakebite envenoming and Guidelines for the Management of Snakebites",
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Snakebite"
+  ],
+  "actions": [
+    "Move to a safe distance from the snake and call emergency services. Do not approach, catch, or kill it.",
+    "Reassure the person and keep the whole body still. Do not allow walking. Remove rings, watches, tight footwear, and tight clothing before swelling.",
+    "Immobilize the bitten limb in a comfortable position with a simple splint that does not impair circulation. Arrange carried transport.",
+    "Record the time and progression of swelling. Describe the snake only if it was seen safely.",
+    "Monitor breathing, alertness, unusual bleeding, drooping eyelids, weakness, vomiting, and spreading swelling. Start CPR if normal breathing stops.",
+    "Pressure-immobilization bandaging is species- and region-specific; use it only when a local protocol or emergency dispatcher directs it."
+  ],
+  "prohibitions": [
+    "Do not cut, puncture, burn, or suck the wound.",
+    "Do not apply a tight tourniquet or constricting band.",
+    "Do not apply ice, electric shock, herbs, or chemicals.",
+    "Do not give alcohol or make the person walk."
+  ],
+  "regionalNotes": {
+    "IR": "In Iran, medically important vipers include Echis carinatus and Macrovipera lebetina. Razi polyvalent antivenom is used in clinical settings. Species identification and antivenom selection are not first-aid tasks; emergency services should direct transport."
+  },
+  "redFlags": [
+    {
+      "when": [
+        "swelling_spreading",
+        "bruising",
+        "bleeding_gums",
+        "ptosis",
+        "difficulty_breathing",
+        "muscle_tremor",
+        "dizziness",
+        "nausea_vomiting",
+        "fainting"
+      ],
+      "text": "Emergency warning signs selected—contact emergency services now."
+    }
+  ],
+  "emergencyCall": {
+    "always": true,
+    "text": "Any known or suspected venomous snakebite requires immediate emergency assessment; do not wait for symptoms."
+  }
+}

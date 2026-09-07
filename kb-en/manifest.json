@@ -1,0 +1,194 @@
+{
+  "kbVersion": 2,
+  "updatedAt": "2026-09-07",
+  "generator": "tools/build-manifest.mjs",
+  "entries": {
+    "__symptoms": {
+      "version": 1,
+      "hash": "d58ee9dec982d07aac4c1cd4090b71a20f0599cb87b51fb2a5d011cc52c639b7",
+      "url": "kb-en/symptoms.json"
+    },
+    "__categories": {
+      "version": 1,
+      "hash": "806c50bb5af3f238be8a309627035d6d3fc74c15b7626decfca2010e28eb8285",
+      "url": "kb-en/categories.json"
+    }
+  },
+  "cases": {
+    "anaphylaxis": {
+      "version": 3,
+      "hash": "1302a5f8b817dc7a723acd3b970e00e9f2c711c8435b48fe91da250d348474a0",
+      "url": "kb-en/cases/anaphylaxis.json"
+    },
+    "animal-bite": {
+      "version": 3,
+      "hash": "366aae48b76131666a17b6beaf30ef2d35b7411805222f0c6f5188cb863dd57b",
+      "url": "kb-en/cases/animal-bite.json"
+    },
+    "bee-wasp-sting": {
+      "version": 3,
+      "hash": "eb44e65de0043f3b1cd02be795d3ce47431df9ba9da7f20348506b30d3f99c70",
+      "url": "kb-en/cases/bee-wasp-sting.json"
+    },
+    "breathing-difficulty": {
+      "version": 3,
+      "hash": "c9b3761579e76d239bb9e1fd1835c6b359fe7f82bab34cf8e4010dec1548bbe4",
+      "url": "kb-en/cases/breathing-difficulty.json"
+    },
+    "cardiac-arrest": {
+      "version": 4,
+      "hash": "a1dc01d6f10522f12edbc4295191653dbec5c1ed1ee27cfae1d85bf8d5243ede",
+      "url": "kb-en/cases/cardiac-arrest.json"
+    },
+    "choking": {
+      "version": 3,
+      "hash": "0c6f59b3e94647a95465b598918d77f1cd6e0cdf05d046aa233d9278f573505e",
+      "url": "kb-en/cases/choking.json"
+    },
+    "dental-avulsion": {
+      "version": 2,
+      "hash": "ef2716085dbbe207ed64a703c29a0b2fdbe59d8d60159d6b48c4174ae6b6b0ee",
+      "url": "kb-en/cases/dental-avulsion.json"
+    },
+    "diabetic-emergency": {
+      "version": 3,
+      "hash": "14e107fc20b50dd8cfa46cfda2ea68f4d55437f4d1d8a6053db239634f491a71",
+      "url": "kb-en/cases/diabetic-emergency.json"
+    },
+    "dislocation-sprain": {
+      "version": 3,
+      "hash": "df8aaa92f08c542186f759e01fe0bc5fd319c1c0d0c38908d8da6641f34fe553",
+      "url": "kb-en/cases/dislocation-sprain.json"
+    },
+    "drowning": {
+      "version": 3,
+      "hash": "bb56f5fc29aaa32b48090284dcb3ccaf57e5360a03ee440837f71d96177edc1a",
+      "url": "kb-en/cases/drowning.json"
+    },
+    "electric-shock": {
+      "version": 3,
+      "hash": "fbbb8dcaacc07f84966ea9348921d62e6d7737779784ae86ca56e4eadd5ddcc0",
+      "url": "kb-en/cases/electric-shock.json"
+    },
+    "eye-foreign": {
+      "version": 4,
+      "hash": "4ce10215c32a8192bb66e799be59e7af0c55e0261d8a79727f1a08aa6f7157fd",
+      "url": "kb-en/cases/eye-foreign.json"
+    },
+    "fainting": {
+      "version": 4,
+      "hash": "5552773592b7c13fef48c3919f6405e25b95ccdf9e5a8534225c05b9d5b886a2",
+      "url": "kb-en/cases/fainting.json"
+    },
+    "frostbite": {
+      "version": 2,
+      "hash": "0fd5c188916f6c66f478b8a329664a484fb181bc012412f2cba8ef7cb54c21c6",
+      "url": "kb-en/cases/frostbite.json"
+    },
+    "head-injury": {
+      "version": 3,
+      "hash": "c0af18e91772a0f90d534fc8e5b987dd91e5090f2fbe149f41a10d49ede12d22",
+      "url": "kb-en/cases/head-injury.json"
+    },
+    "heart-attack": {
+      "version": 4,
+      "hash": "678124c1c3c25b0660e7e823dd06991dac3dac1ea4ef3adfd1fe5e6c666d5ae6",
+      "url": "kb-en/cases/heart-attack.json"
+    },
+    "heat-illness": {
+      "version": 3,
+      "hash": "4e0fc1970f3587baf6f565e80260f63b9a011c2e16af5aadffe4444471d98bd4",
+      "url": "kb-en/cases/heat-illness.json"
+    },
+    "hypothermia": {
+      "version": 3,
+      "hash": "68e3204d07cde5d77d9043ab7f4b0b3d58dc531bd79aa46b21d7e4e4ac89bf1b",
+      "url": "kb-en/cases/hypothermia.json"
+    },
+    "jellyfish-sting": {
+      "version": 2,
+      "hash": "4cff712764c60026cf5a3b7748be527923a0c762a23d48c2e3ae505519deb662",
+      "url": "kb-en/cases/jellyfish-sting.json"
+    },
+    "laceration": {
+      "version": 4,
+      "hash": "95124ac0e6ba28d7e65b591d70f845ae0863823867b31961adf82d87c76edbac",
+      "url": "kb-en/cases/laceration.json"
+    },
+    "nosebleed": {
+      "version": 3,
+      "hash": "1e1d535c1c979aa8a8ccc0160607a3d99f12386040f2da24e8ef77a0379fcea4",
+      "url": "kb-en/cases/nosebleed.json"
+    },
+    "open-chest-wound": {
+      "version": 2,
+      "hash": "08f237cec7aadcd6290024fe6fe98bd912a100eb0874b79afb48803b8ff174d4",
+      "url": "kb-en/cases/open-chest-wound.json"
+    },
+    "opioid-overdose": {
+      "version": 3,
+      "hash": "23a1f71a5a1203c145ee63db922b849fb21d66615bb8e4946580b8fb5038ae64",
+      "url": "kb-en/cases/opioid-overdose.json"
+    },
+    "poisoning": {
+      "version": 3,
+      "hash": "11240783c5fa9480f65b855004a24b7ea7d7a01783a06a4f048df8dd794272ff",
+      "url": "kb-en/cases/poisoning.json"
+    },
+    "scorpion-sting": {
+      "version": 3,
+      "hash": "0b03afc4fc81b266596829838bf0b23e04e386a45fe8406a6c3e0efdddd112db",
+      "url": "kb-en/cases/scorpion-sting.json"
+    },
+    "seizure": {
+      "version": 3,
+      "hash": "db5ad95d973ef8def40e1c634df54c7e4ebef0e8951a6f44e63d3a8ffb471207",
+      "url": "kb-en/cases/seizure.json"
+    },
+    "severe-bleeding": {
+      "version": 3,
+      "hash": "d37e01f71fa8b1a7c48e8d1e1647e0237ea5e77b7a3f7bbd02915a65a0e14b6f",
+      "url": "kb-en/cases/severe-bleeding.json"
+    },
+    "shock": {
+      "version": 2,
+      "hash": "ecf7d6297aa4b11c58c697cf920972d7d1e5ba79bd2e0ddf7b35eeb213f44ce5",
+      "url": "kb-en/cases/shock.json"
+    },
+    "snake-bite": {
+      "version": 3,
+      "hash": "85862c51b84cbe5ed75536f30f38f1460b8734aa337e8a2baead28e73be59f80",
+      "url": "kb-en/cases/snake-bite.json"
+    },
+    "stroke": {
+      "version": 4,
+      "hash": "38c67642e421c7dc8ebdef7b505bd778c65c1e3c45c7449a28c51e1d51589a48",
+      "url": "kb-en/cases/stroke.json"
+    },
+    "suspected-fracture": {
+      "version": 4,
+      "hash": "360a31badf8078f644455ee775da9c4997711f0b2a56542052db938960a8fa68",
+      "url": "kb-en/cases/suspected-fracture.json"
+    },
+    "thermal-burn": {
+      "version": 3,
+      "hash": "6c9ea2c3191b1d95a43a98865edb0bfdf781dd6fdd92b6b068bd22d65238e5ba",
+      "url": "kb-en/cases/thermal-burn.json"
+    },
+    "tick-removal": {
+      "version": 4,
+      "hash": "531c8bad8217f442acf27bbd896aad9f2c3c1c571c44fcc684a980df7e38f149",
+      "url": "kb-en/cases/tick-removal.json"
+    },
+    "traumatic-amputation": {
+      "version": 2,
+      "hash": "c98ad9a15139144daa7e0265bfb1e198f6f9e60c62b7282e8d0effd5afc2092d",
+      "url": "kb-en/cases/traumatic-amputation.json"
+    },
+    "unresponsive-breathing": {
+      "version": 3,
+      "hash": "18b543807e6e1c73ff85702fe68b45e80b878566dc722d323dec0670fded36d5",
+      "url": "kb-en/cases/unresponsive-breathing.json"
+    }
+  }
+}

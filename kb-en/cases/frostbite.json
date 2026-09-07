@@ -1,0 +1,45 @@
+{
+  "id": "frostbite",
+  "icon": "❄️",
+  "category": "illness",
+  "version": 2,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "frostbitten_skin": 6,
+    "cold_skin": 2,
+    "numbness": 2,
+    "shivering": 1
+  },
+  "riskQuestions": [
+    "drowsiness",
+    "confusion",
+    "shivering_stopped",
+    "frostbitten_skin"
+  ],
+  "title": "Frostbite",
+  "summary": "Prevent refreezing, rewarm in controlled 37–40°C water when safe, and obtain prompt medical care.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Frostbite"
+  ],
+  "actions": [
+    "Move out of wind and cold, remove wet clothing and constricting items, and check first for hypothermia.",
+    "Do not thaw tissue if it may refreeze. Protect it and arrange urgent transport.",
+    "When refreezing is not possible, immerse the area in clean lukewarm water at 37 to 40°C (99 to 104°F).",
+    "If water immersion is not possible, allow gradual warming in warm room air or against the person’s warm skin.",
+    "After thawing, place clean dry gauze loosely between digits and apply a bulky loose dressing. Avoid walking on thawed feet and seek prompt medical care."
+  ],
+  "prohibitions": [
+    "Do not rub, massage, or apply snow.",
+    "Do not use fire, a heater, hair dryer, heating pad, or hot water.",
+    "Do not break blisters."
+  ],
+  "emergencyCall": {
+    "always": false,
+    "text": "Confusion, drowsiness, stopped shivering, or abnormal breathing suggests dangerous hypothermia and requires emergency services.",
+    "when": [
+      "drowsiness",
+      "confusion",
+      "shivering_stopped"
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "id": "hypothermia",
+  "icon": "🥶",
+  "category": "illness",
+  "version": 3,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "cold_skin": 3,
+    "shivering": 3,
+    "drowsiness": 2,
+    "confusion": 2,
+    "elderly_victim": 1
+  },
+  "riskQuestions": [
+    "shivering",
+    "shivering_stopped",
+    "cold_skin",
+    "confusion",
+    "drowsiness",
+    "not_breathing"
+  ],
+  "title": "Hypothermia",
+  "summary": "Handle gently, prevent further heat loss, warm the core gradually, and monitor breathing carefully.",
+  "sources": [
+    "2025 American Heart Association Guidelines for CPR and Emergency Cardiovascular Care — Hypothermia",
+    "European Resuscitation Council Guidelines 2025 — First Aid"
+  ],
+  "actions": [
+    "Move to shelter, remove wet clothing carefully, dry the person, and insulate from the ground and wind.",
+    "Handle gently and keep the person horizontal when possible. Warm the trunk with dry layers, blankets, and warm packs wrapped in cloth to the chest, armpits, and groin.",
+    "If fully alert and able to swallow, offer warm sweet non-alcoholic drinks.",
+    "Check breathing for up to 1 minute because severe hypothermia can cause very slow breathing. If no normal breathing, start CPR and use an AED.",
+    "Call emergency services for moderate or severe signs, injury, immersion, or failure to improve."
+  ],
+  "prohibitions": [
+    "Do not rub or massage cold limbs.",
+    "Do not use a hot bath, direct flame, or unwrapped heat source.",
+    "Do not give alcohol.",
+    "Do not assume a very cold unresponsive person is dead."
+  ],
+  "emergencyCall": {
+    "always": false,
+    "text": "Confusion, drowsiness, stopped shivering, abnormal breathing, or reduced responsiveness requires emergency services.",
+    "when": [
+      "shivering_stopped",
+      "drowsiness",
+      "confusion",
+      "not_breathing"
+    ]
+  }
+}

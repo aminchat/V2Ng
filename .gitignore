@@ -2,3 +2,6 @@ __pycache__/
 *.py[cod]
 .DS_Store
 Thumbs.db
+
+# Local validated build workspace
+.work-symptom-speed/

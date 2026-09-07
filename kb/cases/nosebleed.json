@@ -3,8 +3,8 @@
   "title": "خونریزی بینی (اپی‌تاکسی)",
   "icon": "👃",
   "category": "bleeding",
-  "version": 2,
-  "updatedAt": "2026-09-06",
+  "version": 4,
+  "updatedAt": "2026-09-07",
   "summary": "نشستن رو به جلو و فشار پیوستهٔ بخش نرم بینی",
   "sources": [
     "2024 American Heart Association and American Red Cross Guidelines for First Aid — Nosebleed"
@@ -20,15 +20,6 @@
     "bleeding_persistent",
     "blood_thinner"
   ],
-  "call115": {
-    "always": false,
-    "when": [
-      "head_impact",
-      "dizziness",
-      "bleeding_persistent"
-    ],
-    "text": "خونریزی شدید یا مداوم، سرگیجه یا خونریزی پس از ضربهٔ جدی نیازمند ارزیابی فوری است"
-  },
   "actions": [
     "فرد را بنشانید و سر را کمی رو به جلو نگه دارید؛ از دهان نفس بکشد و خون را قورت ندهد.",
     "قسمت نرم بینی، درست زیر بخش استخوانی، را از دو طرف ۱۰ تا ۱۵ دقیقه بدون رهاکردن فشار دهید.",
@@ -39,5 +30,14 @@
     "سر را به عقب نبرید و فرد را صاف نخوابانید",
     "فشار را برای بررسی زودهنگام مرتب رها نکنید",
     "پنبه یا دستمال را عمیق داخل بینی نکنید و بینی را فین نکنید"
-  ]
+  ],
+  "emergencyCall": {
+    "always": false,
+    "when": [
+      "head_impact",
+      "dizziness",
+      "bleeding_persistent"
+    ],
+    "text": "خونریزی شدید یا مداوم، سرگیجه یا خونریزی پس از ضربهٔ جدی نیازمند ارزیابی فوری است"
+  }
 }

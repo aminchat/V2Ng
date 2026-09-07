@@ -1,0 +1,44 @@
+{
+  "id": "dislocation-sprain",
+  "icon": "🦵",
+  "category": "trauma",
+  "version": 3,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "joint_swelling": 5,
+    "deformation": 4,
+    "pain_on_movement": 2
+  },
+  "riskQuestions": [
+    "deformation",
+    "joint_swelling",
+    "numbness",
+    "fall_from_height"
+  ],
+  "title": "Sprain, strain, or possible dislocation",
+  "summary": "Protect the joint, apply wrapped cold, and do not attempt to reduce a deformity.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Sprains and Strains",
+    "WHO Basic Emergency Care: Approach to the Acutely Ill and Injured"
+  ],
+  "actions": [
+    "Stop activity and support the injured joint in the position found.",
+    "Apply a cold pack wrapped in cloth for up to 20 minutes at a time. A light compression wrap may help an ankle injury if it does not increase pain or impair circulation.",
+    "Elevate the limb when comfortable and when fracture or major injury is not suspected.",
+    "For obvious deformity, inability to use the joint, numbness, a cold or blue limb, or severe pain, keep it still and obtain urgent medical care.",
+    "Check colour, warmth, and feeling beyond any wrap; loosen it if these worsen."
+  ],
+  "prohibitions": [
+    "Do not try to put a dislocated joint back in place.",
+    "Do not force movement to test the joint.",
+    "Do not wrap tightly enough to cause numbness, colour change, or more pain."
+  ],
+  "emergencyCall": {
+    "always": false,
+    "text": "Call emergency services for severe deformity, loss of feeling or circulation, or a high-energy injury.",
+    "when": [
+      "deformation",
+      "numbness"
+    ]
+  }
+}

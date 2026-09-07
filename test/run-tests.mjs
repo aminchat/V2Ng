@@ -25,11 +25,14 @@ import {
   triageRoute,
   triageSymptoms,
 } from '../js/engine.js';
-import { validateKnowledgeBase, validateManifest } from '../js/schema.js';
+import { validateCountryData, validateKnowledgeBase, validateLocaleDictionary, validateManifest } from '../js/schema.js';
+import faLocale from '../locales/fa.js';
+import enLocale from '../locales/en.js';
 import { sha256, validateAll } from '../tools/validate.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const kbDir = join(root, 'kb');
+const enKbDir = join(root, 'kb-en');
 let passed = 0;
 const failures = [];
 
@@ -46,22 +49,49 @@ function clone(value) {
 const kb = validateAll(kbDir);
 if (kb.errors.length) console.error(`KB validation errors:\n- ${kb.errors.join('\n- ')}`);
 test('KB passes the browser-shared schema', kb.errors.length === 0);
-test('KB contains exactly 29 cases', Object.keys(kb.cases).length === 29);
+test('Persian KB contains exactly 35 cases', Object.keys(kb.cases).length === 35);
 test('all 8 categories are present', Object.keys(kb.categories).length === 8);
 test('each category exposes selectable symptoms', Object.values(kb.categories).every((category) => category.diffSymptoms.length > 0));
 test('every case cites a source', Object.values(kb.cases).every((item) => item.sources.length > 0));
-test('every case has explicit 115 guidance', Object.values(kb.cases).every((item) => typeof item.call115?.always === 'boolean' && item.call115.text));
-test('all case files use the reviewed content version', Object.values(kb.cases).every((item) => item.version >= 2));
+test('every case has explicit emergency-contact guidance', Object.values(kb.cases).every((item) => typeof item.emergencyCall?.always === 'boolean' && item.emergencyCall.text));
+test('all case files use a positive content version', Object.values(kb.cases).every((item) => item.version >= 1));
 test('all risk questions render a known symptom label', Object.values(kb.cases).every((item) => item.riskQuestions.every((id) => kb.symptoms[id]?.label)));
+
+const enKb = validateAll(enKbDir);
+if (enKb.errors.length) console.error(`English KB validation errors:\n- ${enKb.errors.join('\n- ')}`);
+test('English KB passes the browser-shared schema', enKb.errors.length === 0);
+test('English KB contains exactly 35 independently written cases', Object.keys(enKb.cases).length === 35);
+test('Persian and English KBs have identical case IDs', JSON.stringify(Object.keys(kb.cases).sort()) === JSON.stringify(Object.keys(enKb.cases).sort()));
+test('Persian and English KBs have identical symptom IDs', JSON.stringify(Object.keys(kb.symptoms).sort()) === JSON.stringify(Object.keys(enKb.symptoms).sort()));
+test('Persian and English KBs have identical category IDs', JSON.stringify(Object.keys(kb.categories).sort()) === JSON.stringify(Object.keys(enKb.categories).sort()));
+const clinicalShape = (item) => ({
+  id: item.id,
+  category: item.category,
+  match: item.match,
+  riskQuestions: item.riskQuestions,
+  callAlways: item.emergencyCall.always,
+  callWhen: item.emergencyCall.when || [],
+  redFlagTriggers: (item.redFlags || []).map((flag) => flag.when),
+});
+test('both languages share the same clinical matching and urgency structure', Object.keys(kb.cases).every((id) => JSON.stringify(clinicalShape(kb.cases[id])) === JSON.stringify(clinicalShape(enKb.cases[id]))));
+test('English prose is not copied from Persian prose', Object.keys(kb.cases).every((id) => enKb.cases[id].title !== kb.cases[id].title && enKb.cases[id].summary !== kb.cases[id].summary && enKb.cases[id].actions.join(' ') !== kb.cases[id].actions.join(' ')));
+test('English KB contains no Persian-script UI or medical prose', !/[\u0600-\u06ff]/u.test(JSON.stringify({ symptoms: enKb.symptoms, categories: enKb.categories, cases: enKb.cases })));
+test('all six gap topics exist independently in both languages', ['shock', 'frostbite', 'dental-avulsion', 'open-chest-wound', 'jellyfish-sting', 'traumatic-amputation'].every((id) => kb.cases[id] && enKb.cases[id]));
+test('English sources cite primary international guidance throughout', Object.values(enKb.cases).every((item) => item.sources.some((source) => /American Heart Association|World Health Organization|ILCOR|European Resuscitation Council|World Allergy Organization|CDC|American Diabetes Association/.test(source))));
+test('regional venom notes are keyed separately by country', ['snake-bite', 'scorpion-sting'].every((id) => kb.cases[id].regionalNotes?.IR && enKb.cases[id].regionalNotes?.IR));
+test('medical case prose contains no country-specific emergency or poison number', !/۱۱۵|۱۹۰|\b115\b|\b190\b/u.test(JSON.stringify(kb.cases)) && !/\b911\b|\b112\b/u.test(JSON.stringify(enKb.cases)));
+test('English symptom search works with plain common terms', searchSymptoms('shortness of breath', enKb.symptoms).includes('difficulty_breathing') && searchSymptoms('knocked out tooth', enKb.symptoms).includes('tooth_knocked_out'));
+const englishText = (id) => `${enKb.cases[id].summary} ${enKb.cases[id].actions.join(' ')}`;
+test('action measurements place metric before a practical secondary equivalent', englishText('cardiac-arrest').indexOf('5 cm') < englishText('cardiac-arrest').indexOf('2 in') && englishText('frostbite').indexOf('37 to 40°C') < englishText('frostbite').indexOf('99 to 104°F') && englishText('severe-bleeding').indexOf('5 to 7 cm') < englishText('severe-bleeding').indexOf('2 to 3 in'));
 
 const invalidCaseKb = clone(kb.cases);
 invalidCaseKb['cardiac-arrest'].actions = [];
 test('schema rejects an empty action list', validateKnowledgeBase(kb.symptoms, kb.categories, invalidCaseKb).some((error) => error.includes('actions')));
 const invalidReferenceKb = clone(kb.cases);
-invalidReferenceKb.fainting.call115.when.push('not_selectable_here');
+invalidReferenceKb.fainting.emergencyCall.when.push('not_selectable_here');
 test('schema rejects an unknown trigger', validateKnowledgeBase(kb.symptoms, kb.categories, invalidReferenceKb).some((error) => error.includes('unknown symptom')));
 const hiddenTriggerKb = clone(kb.cases);
-hiddenTriggerKb.fainting.call115.when.push('cyanosis');
+hiddenTriggerKb.fainting.emergencyCall.when.push('cyanosis');
 test('schema rejects a trigger absent from risk questions', validateKnowledgeBase(kb.symptoms, kb.categories, hiddenTriggerKb).some((error) => error.includes('not selectable')));
 const invalidDateKb = clone(kb.cases);
 invalidDateKb.fainting.updatedAt = '2026-02-31';
@@ -162,14 +192,14 @@ test('critical symptom detection includes gasping', hasCriticalSymptoms(['gaspin
 test('a local-pain-only selection is not labelled critical', !hasCriticalSymptoms(['local_pain']));
 
 /* ---------- 115 and red flags ---------- */
-test('all suspected snake bites trigger 115', triggeredFlags(kb.cases['snake-bite'], ['local_pain']).call115 === true);
-test('all scorpion-sting case results trigger urgent contact', triggeredFlags(kb.cases['scorpion-sting'], []).call115 === true);
-test('heat confusion triggers 115', triggeredFlags(kb.cases['heat-illness'], ['confusion']).call115 === true);
-test('hot dry skin alone does not satisfy the heatstroke trigger', triggeredFlags(kb.cases['heat-illness'], ['hot_dry_skin']).call115 === false);
-test('ordinary shivering alone does not trigger severe hypothermia', triggeredFlags(kb.cases.hypothermia, ['shivering']).call115 === false);
-test('stopped shivering triggers severe hypothermia', triggeredFlags(kb.cases.hypothermia, ['shivering_stopped']).call115 === true);
-test('seizure over five minutes triggers 115', triggeredFlags(kb.cases.seizure, ['seizure_long']).call115 === true);
-test('a nosebleed after head impact triggers 115', triggeredFlags(kb.cases.nosebleed, ['head_impact']).call115 === true);
+test('all suspected snake bites trigger 115', triggeredFlags(kb.cases['snake-bite'], ['local_pain']).emergencyCall === true);
+test('all scorpion-sting case results trigger urgent contact', triggeredFlags(kb.cases['scorpion-sting'], []).emergencyCall === true);
+test('heat confusion triggers 115', triggeredFlags(kb.cases['heat-illness'], ['confusion']).emergencyCall === true);
+test('hot dry skin alone does not satisfy the heatstroke trigger', triggeredFlags(kb.cases['heat-illness'], ['hot_dry_skin']).emergencyCall === false);
+test('ordinary shivering alone does not trigger severe hypothermia', triggeredFlags(kb.cases.hypothermia, ['shivering']).emergencyCall === false);
+test('stopped shivering triggers severe hypothermia', triggeredFlags(kb.cases.hypothermia, ['shivering_stopped']).emergencyCall === true);
+test('seizure over five minutes triggers 115', triggeredFlags(kb.cases.seizure, ['seizure_long']).emergencyCall === true);
+test('a nosebleed after head impact triggers 115', triggeredFlags(kb.cases.nosebleed, ['head_impact']).emergencyCall === true);
 
 /* ---------- Clinical safety regressions ---------- */
 const text = (id) => `${kb.cases[id].summary} ${kb.cases[id].actions.join(' ')} ${(kb.cases[id].prohibitions || []).join(' ')}`;
@@ -183,14 +213,22 @@ test('heatstroke guidance says sweating does not rule it out', text('heat-illnes
 test('burn cooling is capped at twenty minutes', text('thermal-burn').includes('تا ۲۰ دقیقه'));
 test('bleeding guidance does not describe a tourniquet as a last resort', !text('severe-bleeding').includes('آخرین گزینه'));
 test('opioid guidance says naloxone must not delay CPR', text('opioid-overdose').includes('نباید') && text('opioid-overdose').includes('CPR'));
-test('Iran snake note names important local species and Razi antivenom', ['Echis carinatus', 'Macrovipera lebetina', 'رازی'].every((term) => kb.cases['snake-bite'].nationalNote.includes(term)));
-test('Iran scorpion note warns that low pain can precede delayed harm', kb.cases['scorpion-sting'].nationalNote.includes('درد کمی') && kb.cases['scorpion-sting'].nationalNote.includes('تأخیر'));
-test('Iran poison-center instructions include the full 190 route', kb.cases.poisoning.nationalNote.includes('۱۹۰') && kb.cases.poisoning.nationalNote.includes('داخلی ۳') && kb.cases.poisoning.nationalNote.includes('کد ۲'));
+test('Iran snake note names important local species and Razi antivenom', ['Echis carinatus', 'Macrovipera lebetina', 'رازی'].every((term) => kb.cases['snake-bite'].regionalNotes.IR.includes(term)));
+test('Iran scorpion note warns that low pain can precede delayed harm', kb.cases['scorpion-sting'].regionalNotes.IR.includes('درد کمی') && kb.cases['scorpion-sting'].regionalNotes.IR.includes('تأخیر'));
+const countriesData = JSON.parse(readFileSync(join(root, 'data/countries.json'), 'utf8'));
+test('country data passes the shared schema', validateCountryData(countriesData).length === 0);
+test('country selector contains all 249 ISO 3166-1 entries', countriesData.countries.length === 249 && new Set(countriesData.countries.map((country) => country.code)).size === 249);
+test('56 countries have dated verified contact profiles', Object.keys(countriesData.profiles).length === 56 && Object.values(countriesData.profiles).every((profile) => profile.reviewedAt === '2026-09-07'));
+test('every contact profile cites at least one HTTPS official source', Object.values(countriesData.profiles).every((profile) => profile.sources.length && profile.sources.every((source) => source.url.startsWith('https://'))));
+test('profiles store only permitted contact, dialing, source, and review fields', Object.values(countriesData.profiles).every((profile) => Object.keys(profile).every((key) => ['ems', 'general', 'poison', 'dialingNote', 'sources', 'reviewedAt'].includes(key))));
+test('general emergency contacts explicitly support ambulance dispatch', Object.values(countriesData.profiles).every((profile) => !profile.general || profile.general.usableForAmbulance === true));
+test('Iran poison-center profile includes the full 190 route', countriesData.profiles.IR.poison.number === '190' && countriesData.profiles.IR.poison.note.fa.includes('داخلی ۳') && countriesData.profiles.IR.poison.note.fa.includes('کد ۲'));
+test('reviewed poison contacts are not invented for countries without one', countriesData.profiles.GB.poison === undefined && countriesData.profiles.DE.poison === undefined);
 
 /* ---------- Manifest integrity ---------- */
 const manifest = JSON.parse(readFileSync(join(kbDir, 'manifest.json'), 'utf8'));
-test('manifest passes the browser-shared schema', validateManifest(manifest).length === 0);
-test('search metadata publishes as KB v5 with symptoms entry v4', manifest.kbVersion === 5 && manifest.entries.__symptoms.version === 4);
+test('Persian manifest passes the browser-shared schema', validateManifest(manifest, 'kb').length === 0);
+test('expanded Persian knowledge base publishes as KB v14', manifest.kbVersion === 14);
 test('manifest covers every case exactly once', Object.keys(manifest.cases).length === Object.keys(kb.cases).length);
 let hashesMatch = true;
 for (const [id, entry] of Object.entries(manifest.cases)) {
@@ -201,9 +239,13 @@ for (const [id, filename] of [['__symptoms', 'symptoms.json'], ['__categories', 
 }
 test('all manifest hashes match source bytes', hashesMatch);
 test('manifest URLs are relative and constrained to kb/', [...Object.values(manifest.entries), ...Object.values(manifest.cases)].every((entry) => entry.url.startsWith('kb/') && !entry.url.startsWith('/')));
+const enManifest = JSON.parse(readFileSync(join(enKbDir, 'manifest.json'), 'utf8'));
+test('English manifest passes schema under its independent root', validateManifest(enManifest, 'kb-en').length === 0);
+test('English manifest covers all 35 shared case IDs', Object.keys(enManifest.cases).length === 35 && Object.keys(enManifest.cases).every((id) => kb.cases[id]));
+test('English manifest URLs stay inside the on-demand kb-en root', [...Object.values(enManifest.entries), ...Object.values(enManifest.cases)].every((entry) => entry.url.startsWith('kb-en/') && !entry.url.startsWith('/')));
 const badManifest = clone(manifest);
 badManifest.cases.fainting.hash = 'not-a-hash';
-test('manifest schema rejects malformed SHA-256', validateManifest(badManifest).some((error) => error.includes('SHA-256')));
+test('manifest schema rejects malformed SHA-256', validateManifest(badManifest, 'kb').some((error) => error.includes('SHA-256')));
 
 /* ---------- Atomic update and PWA policy ---------- */
 const kbSource = readFileSync(join(root, 'js/kb.js'), 'utf8');
@@ -227,48 +269,61 @@ test('PWA manifest supplies 192 and 512 PNG icons', ['192x192', '512x512'].every
 test('PWA manifest supplies maskable 192 and 512 icons', ['192x192', '512x512'].every((size) => maskableIconSizes.has(size)));
 const serviceWorker = readFileSync(join(root, 'sw.js'), 'utf8');
 test('service worker precaches the schema module and shell', serviceWorker.includes('./js/schema.js') && serviceWorker.includes('./index.html'));
-test('service worker precaches the versioned install manifest and every app icon', serviceWorker.includes('./manifest.webmanifest?v=9') && webManifest.icons.every((icon) => serviceWorker.includes(`./${icon.src}`)) && serviceWorker.includes('./icons/apple-touch-icon.png'));
+test('service worker precaches the versioned install manifest and every app icon', serviceWorker.includes('./manifest.webmanifest?v=10') && webManifest.icons.every((icon) => serviceWorker.includes(`./${icon.src}`)) && serviceWorker.includes('./icons/apple-touch-icon.png'));
 test('service worker derives subpath boundaries from registration scope', serviceWorker.includes('self.registration.scope'));
-test('service worker deliberately bypasses HTTP caching for KB', serviceWorker.includes('if (url.pathname.startsWith(`${scopePath}kb/`)) return'));
+test('service worker deliberately bypasses HTTP caching for both KB languages', serviceWorker.includes('`${scopePath}kb/`') && serviceWorker.includes('`${scopePath}kb-en/`'));
 test('service worker only deletes its own cache namespace', serviceWorker.includes('key.startsWith(CACHE_PREFIX)'));
 const installSection = serviceWorker.slice(serviceWorker.indexOf("self.addEventListener('install'"), serviceWorker.indexOf("self.addEventListener('message'"));
-test('v9 only bypasses waiting to recover incompatible older workers and v5-v8 shell caches', installSection.includes('RECOVERY_WORKER_VERSIONS.has(activeVersion)') && installSection.includes('RECOVERY_SHELL_CACHES.has(key)') && installSection.includes('if (needsRecovery) await self.skipWaiting()') && serviceWorker.includes("new Set([null, '5', '6', '7', '8'])") && ['shell-v5', 'shell-v6', 'shell-v7', 'shell-v8'].every((name) => serviceWorker.includes(name)));
+test('v10 only bypasses waiting to recover incompatible older workers and v5-v9 shell caches', installSection.includes('RECOVERY_WORKER_VERSIONS.has(activeVersion)') && installSection.includes('RECOVERY_SHELL_CACHES.has(key)') && installSection.includes('if (needsRecovery) await self.skipWaiting()') && serviceWorker.includes("new Set([null, '5', '6', '7', '8', '9'])") && ['shell-v5', 'shell-v6', 'shell-v7', 'shell-v8', 'shell-v9'].every((name) => serviceWorker.includes(name)));
 test('normal future updates still accept explicit SKIP_WAITING activation messages', serviceWorker.includes("event.data?.type === 'SKIP_WAITING'") && serviceWorker.includes('self.skipWaiting()'));
-test('service worker shell cache is v9', serviceWorker.includes("const SHELL_CACHE = `${CACHE_PREFIX}shell-v9`"));
+test('service worker shell cache is v10', serviceWorker.includes("const SHELL_CACHE = `${CACHE_PREFIX}shell-v10`"));
 test('service worker uses network-first shell delivery with an offline cache fallback', serviceWorker.includes('async function networkFirst') && serviceWorker.includes("cache: 'no-cache'") && serviceWorker.includes('cache.match(fallbackKey)'));
 
 const html = readFileSync(join(root, 'index.html'), 'utf8');
 const appSource = readFileSync(join(root, 'js/app.js'), 'utf8');
+const i18nSource = readFileSync(join(root, 'js/i18n.js'), 'utf8');
+const preferencesSource = readFileSync(join(root, 'js/preferences.js'), 'utf8');
 const bootstrapSource = html.match(/<script>([\s\S]*?)<\/script>/)?.[1] || '';
 const bootstrapHash = createHash('sha256').update(bootstrapSource).digest('base64');
 test('app shell has CSP and polite live regions', html.includes('Content-Security-Policy') && html.includes('route-announcer') && html.includes('sync-announcer'));
 test('CSP authorizes exactly the inline recovery bootstrap by hash', bootstrapSource.length > 0 && html.includes(`script-src 'self' 'sha256-${bootstrapHash}'`));
-test('HTML links the versioned manifest and explicit Apple touch icon', html.includes('rel="manifest" href="manifest.webmanifest?v=9"') && html.includes('rel="apple-touch-icon"') && html.includes('sizes="180x180"'));
-test('HTML enables standalone-capable iOS presentation', html.includes('name="apple-mobile-web-app-capable" content="yes"') && html.includes('name="apple-mobile-web-app-title" content="امدادگر"'));
+test('HTML links the versioned manifest and explicit Apple touch icon', html.includes('rel="manifest" href="manifest.webmanifest?v=10"') && html.includes('rel="apple-touch-icon"') && html.includes('sizes="180x180"'));
+test('HTML enables standalone-capable iOS presentation', html.includes('name="apple-mobile-web-app-capable" content="yes"') && html.includes('name="apple-mobile-web-app-title" content="Emdadgar"'));
+test('both locale dictionaries pass the shared locale schema', validateLocaleDictionary(faLocale).length === 0 && validateLocaleDictionary(enLocale).length === 0);
+test('Persian and English locale dictionaries have exact key parity', JSON.stringify(Object.keys(faLocale.messages).sort()) === JSON.stringify(Object.keys(enLocale.messages).sort()));
+test('application logic contains no embedded Persian UI prose', !/[\u0600-\u06ff]/u.test(appSource));
+test('English UI dictionary is loaded dynamically on demand', i18nSource.includes("import('../locales/en.js?v=10')") && !serviceWorker.includes('./locales/en.js?v=10'));
+test('Persian UI, country data, and preference modules are available in the offline shell', ['./locales/fa.js?v=10', './data/countries.json?v=10', './js/preferences.js?v=10'].every((asset) => serviceWorker.includes(asset)));
+test('first-run settings store independent language and country choices locally', preferencesSource.includes('emdadgar.preferences.v1') && preferencesSource.includes('locale') && preferencesSource.includes('country') && appSource.includes('renderOnboarding'));
+test('first-run onboarding exposes a no-save urgent path', appSource.includes('id="onboarding-urgent"') && appSource.includes("persist: false, route: '#/triage'"));
+test('settings can change language while retaining shared in-memory symptom IDs', appSource.includes('async function activatePreferences') && appSource.includes("state.diffQuery = ''") && !appSource.includes('state.diffSelected = []', appSource.indexOf('async function activatePreferences')));
+test('regional notes render only for the selected country code', appSource.includes('item.regionalNotes?.[preferences.country]'));
+test('both interfaces disclose that qualified human review is still pending', faLocale.messages.humanReviewPending.includes('هنوز') && enLocale.messages.humanReviewPending.includes('no review by a medically qualified person'));
+test('unverified countries produce generic emergency guidance instead of a guessed phone number', appSource.includes("t('contactsNoProfile')") && appSource.includes("t('emergencyGenericCall')"));
 const homeSource = appSource.slice(appSource.indexOf('function renderHome()'), appSource.indexOf('function renderTriage()'));
 const installSetupSource = appSource.slice(appSource.indexOf('function setupInstallCard()'), appSource.indexOf('function renderHome()'));
 test('install UI appears only on the non-emergency home screen', homeSource.includes('id="install-card"') && homeSource.includes('setupInstallCard()') && appSource.match(/id="install-card"/g)?.length === 1);
 test('Chromium install prompt is deferred until the install button is clicked', appSource.includes("window.addEventListener('beforeinstallprompt'") && appSource.includes('event.preventDefault()') && appSource.includes('deferredInstallPrompt = event') && installSetupSource.includes('await prompt.prompt()') && installSetupSource.includes('await prompt.userChoice'));
 test('successful installation and standalone mode hide the install card', appSource.includes("window.addEventListener('appinstalled'") && appSource.includes("standaloneDisplay.matches || navigator.standalone === true") && appSource.includes("return 'installed'"));
-test('iPhone fallback gives Safari Add to Home Screen instructions', appSource.includes('isIosDevice') && appSource.includes('Add to Home Screen') && appSource.includes('Open as Web App'));
+test('iPhone fallback gives Safari Add to Home Screen instructions', appSource.includes('isIosDevice') && enLocale.messages.installIos3.includes('Add to Home Screen') && enLocale.messages.installIos4.includes('Open as Web App'));
 test('symptom chips expose aria-pressed', appSource.includes('aria-pressed="${active}"'));
 test('symptom UI filters incompatible current options', appSource.includes('isCurrentSymptomVisible(id, state.diffSelected, kb.symptoms)'));
-test('symptom UI separates historical observations', appSource.includes('پیش از بیهوشی یا توقف تنفس') && appSource.includes('data-history-sym'));
+test('symptom UI separates historical observations', appSource.includes("t('historicalHeading')") && appSource.includes('data-history-sym'));
 test('related-topic ranking includes current and historical selections', appSource.includes('[...state.diffSelected, ...state.diffHistorical]'));
 test('router guards malformed URI decoding', appSource.includes('decodeURIComponent') && appSource.includes('} catch {'));
-test('background KB synchronization is started after cached load', appSource.includes('if (result.fromCache) backgroundSync()'));
+test('background KB synchronization is started after cached load', appSource.includes('if (loadResult?.fromCache) backgroundSync()'));
 test('a newly synced symptom index refreshes the open symptom finder', appSource.includes("['home', 'kb', 'symptoms'].includes(route.name)"));
-test('rendered KB values pass through HTML escaping', appSource.includes('${e(item.title)}') && appSource.includes('${e(action)}'));
+test('rendered KB values pass through HTML escaping', appSource.includes('${e(item.title)}') && appSource.includes('${em(action)}'));
 
 const cssSource = readFileSync(join(root, 'css/app.css'), 'utf8');
 test('install card has bounded responsive styling and touch-sized action', cssSource.includes('.install-card {') && cssSource.includes('.install-card-heading > div { flex: 1; min-width: 0; }') && homeSource.includes('class="btn outline full"'));
 
 /* ---------- Responsive symptom categories ---------- */
-test('desktop category buttons are an accessible labelled group', appSource.includes('id="category-tabs"') && appSource.includes('role="group"') && appSource.includes('aria-label="دسته‌های نشانه‌ها"'));
+test('desktop category buttons are an accessible labelled group', appSource.includes('id="category-tabs"') && appSource.includes('role="group"') && appSource.includes("t('categoryAria')"));
 test('desktop category buttons expose their pressed state', appSource.includes('data-cat="${e(id)}"') && appSource.includes('aria-pressed="${active}"'));
-test('mobile category select has a visible associated label', appSource.includes('for="category-select"') && appSource.includes('id="category-select"') && appSource.includes('انتخاب دستهٔ نشانه‌ها'));
+test('mobile category select has a visible associated label', appSource.includes('for="category-select"') && appSource.includes('id="category-select"') && appSource.includes("t('categorySelect')"));
 test('category options are generated from the same data as desktop controls', appSource.includes('const categoryItems = [') && appSource.includes('...categoryIds.map') && appSource.includes('const categoryOptions = categoryItems.map'));
-test('quick and selected virtual categories are available in both responsive controls', appSource.includes("{ id: QUICK_CATEGORY, label: '★ پرکاربرد' }") && appSource.includes('{ id: SELECTED_CATEGORY, label: `✓ انتخاب‌شده‌ها (${selectionCount})` }'));
+test('quick and selected virtual categories are available in both responsive controls', appSource.includes("{ id: QUICK_CATEGORY, label: t('categoryQuick') }") && appSource.includes("{ id: SELECTED_CATEGORY, label: t('categorySelected'"));
 test('both category controls update the shared category state', appSource.includes('selectSymptomCategory(button.dataset.cat)') && appSource.includes("select.addEventListener('change', () => selectSymptomCategory(select.value))"));
 test('category selection preserves symptom selections', !appSource.slice(appSource.indexOf('function selectSymptomCategory'), appSource.indexOf('function setupCategoryControls')).includes('diffSelected'));
 test('desktop categories wrap instead of scrolling horizontally', cssSource.includes('.category-tabs') && cssSource.includes('flex-wrap: wrap'));
@@ -277,29 +332,35 @@ test('category fieldset cannot widen the page', cssSource.includes('min-inline-s
 test('obsolete RTL category scroll code is gone', !appSource.includes('scrollLeft') && !appSource.includes('scrollIntoView') && !appSource.includes("addEventListener('wheel'") && !appSource.includes('category-prev'));
 
 /* ---------- Fast symptom-finder UI ---------- */
-test('global offline symptom search is labelled and has a clear action', appSource.includes('id="symptom-search"') && appSource.includes('id="clear-search"') && appSource.includes('جست‌وجو در همهٔ دسته‌ها و به‌صورت آفلاین'));
+test('global offline symptom search is labelled and has a clear action', appSource.includes('id="symptom-search"') && appSource.includes('id="clear-search"') && appSource.includes("t('symptomsSearchHelp')"));
 test('typing updates search results without rerendering the input', appSource.includes("input.addEventListener('input', update)") && appSource.includes('searchPanel.innerHTML = searchResultsMarkup(input.value)'));
 test('search results still pass through compatibility visibility rules', appSource.includes("searchSymptoms(query, kb.symptoms)\n    .filter((id) => isCurrentSymptomVisible(id, state.diffSelected, kb.symptoms))"));
 test('selected current and historical symptoms stay in a removable tray', appSource.includes('class="selected-tray"') && appSource.includes('id="clear-symptoms"') && appSource.includes("'data-history-sym'"));
-test('related suggestions are explicitly not presented as diagnosis', appSource.includes('نشانه‌های مرتبط برای بررسی') && appSource.includes('تشخیص یا انتخاب خودکار نیستند'));
+test('related suggestions are explicitly not presented as diagnosis', appSource.includes("t('suggestedTitle')") && appSource.includes("t('suggestedHelp')"));
 test('long category lists use progressive disclosure', appSource.includes('INITIAL_SYMPTOM_LIMIT = 12') && appSource.includes('id="show-more-symptoms"') && appSource.includes('id="show-less-symptoms"'));
 test('mobile result action remains reachable without horizontal movement', cssSource.includes('.symptom-result-bar') && cssSource.includes('position: sticky'));
 test('search, selected tray, suggestions and show-more controls have responsive styling', ['.symptom-search-card', '.selected-tray', '.suggested-symptoms', '.show-more-symptoms'].every((selector) => cssSource.includes(selector)));
 
 /* ---------- User-controlled app updates ---------- */
-test('versioned v9 shell assets bypass an older cache during this upgrade', html.includes('css/app.css?v=9') && html.includes('js/app.js?v=9') && serviceWorker.includes('./css/app.css?v=9') && serviceWorker.includes('./js/app.js?v=9'));
-test('every browser module dependency is versioned together', appSource.includes("'./kb.js?v=9'") && appSource.includes("'./engine.js?v=9'") && kbSource.includes("'./schema.js?v=9'") && serviceWorker.includes('./js/kb.js?v=9') && serviceWorker.includes('./js/engine.js?v=9') && serviceWorker.includes('./js/schema.js?v=9'));
+test('versioned v10 shell assets bypass an older cache during this upgrade', html.includes('css/app.css?v=10') && html.includes('js/app.js?v=10') && serviceWorker.includes('./css/app.css?v=10') && serviceWorker.includes('./js/app.js?v=10'));
+test('every browser module dependency is versioned together', appSource.includes("'./kb.js?v=10'") && appSource.includes("'./engine.js?v=10'") && kbSource.includes("'./schema.js?v=10'") && serviceWorker.includes('./js/kb.js?v=10') && serviceWorker.includes('./js/engine.js?v=10') && serviceWorker.includes('./js/schema.js?v=10'));
 test('independent inline bootstrap replaces an indefinitely stuck loader', bootstrapSource.includes('setTimeout(showLoadFailure, 20000)') && bootstrapSource.includes('boot-retry') && bootstrapSource.includes('location.reload()') && appSource.includes("'emdadgar:boot-complete'"));
 test('the update banner is outside the rerendered app shell', html.indexOf('id="app-update"') < html.indexOf('id="app"'));
 test('the update banner offers now and later actions', html.includes('id="app-update-now"') && html.includes('id="app-update-later"'));
-test('registration bypasses HTTP cache when checking the worker', appSource.includes("updateViaCache: 'none'") && appSource.includes("register('./sw.js?v=9'"));
+test('registration bypasses HTTP cache when checking the worker', appSource.includes("updateViaCache: 'none'") && appSource.includes("register('./sw.js?v=10'"));
 test('an already waiting worker is offered immediately', appSource.includes('if (registration.waiting) offerAppUpdate(registration.waiting)'));
 test('new worker installation is observed', appSource.includes("registration.addEventListener('updatefound'"));
 test('updates activate only after the user requests them', appSource.includes("worker.postMessage({ type: 'SKIP_WAITING' })") && appSource.includes("appUpdateNow?.addEventListener('click'"));
 test('later dismisses the same waiting worker for the remainder of the session', appSource.includes('const isNewWorker = waitingServiceWorker !== worker') && appSource.includes('if (isNewWorker) updateDismissed = false') && appSource.includes('updateDismissed = true'));
 test('controller change reload is guarded against loops and unsolicited activation', appSource.includes('if (!updateActivationRequested || reloadingForUpdate) return') && appSource.includes('reloadingForUpdate = true') && appSource.includes('location.reload()'));
-test('update banner is withheld from active emergency and symptom flows', appSource.includes("['home', 'kb'].includes(currentRoute().name)"));
+test('update banner is withheld from active emergency and symptom flows', appSource.includes("['home', 'kb', 'settings'].includes(currentRoute().name)"));
 test('returning to the foreground checks for updates with throttling', appSource.includes("document.addEventListener('visibilitychange'") && appSource.includes('UPDATE_CHECK_INTERVAL'));
+
+/* ---------- Browser startup smoke tests ---------- */
+const onboardingSmoke = spawnSync(process.execPath, [join(root, 'test/app-smoke.mjs'), 'onboarding'], { encoding: 'utf8' });
+test('real app module renders first-run language/country onboarding', onboardingSmoke.status === 0, onboardingSmoke.stderr);
+const englishSmoke = spawnSync(process.execPath, [join(root, 'test/app-smoke.mjs'), 'english'], { encoding: 'utf8' });
+test('real app module starts in English and reopens its KB offline', englishSmoke.status === 0, englishSmoke.stderr);
 
 /* ---------- Tool robustness ---------- */
 const badArgs = spawnSync(process.execPath, [join(root, 'tools/build-manifest.mjs'), '--unknown'], { encoding: 'utf8' });

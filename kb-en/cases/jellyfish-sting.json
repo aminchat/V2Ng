@@ -1,0 +1,49 @@
+{
+  "id": "jellyfish-sting",
+  "icon": "🪼",
+  "category": "bite",
+  "version": 2,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "jellyfish_sting": 7,
+    "local_pain": 2,
+    "local_redness": 2,
+    "difficulty_breathing": 2
+  },
+  "riskQuestions": [
+    "difficulty_breathing",
+    "hives_widespread",
+    "lip_tongue_swelling",
+    "fainting",
+    "nausea_vomiting",
+    "child_victim"
+  ],
+  "title": "Jellyfish sting",
+  "summary": "Leave the water safely, remove tentacles without bare-hand contact, and use nonscalding heat for pain.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Jellyfish Stings"
+  ],
+  "actions": [
+    "Help the person out of the water without endangering the rescuer and prevent further contact.",
+    "Lift or pull off remaining tentacles with tweezers or another tool without bare-hand contact. If this is not possible, seawater may be used to help remove tentacles.",
+    "After tentacle removal, use nonscalding hot-water immersion or irrigation, or another safe heat source, to reduce pain.",
+    "Watch for breathing difficulty, widespread hives, facial swelling, vomiting, weakness, or fainting and treat possible anaphylaxis urgently.",
+    "Seek medical care for severe or persistent pain, a large affected area, eye involvement, or a child with significant symptoms."
+  ],
+  "prohibitions": [
+    "Do not rub the area or touch tentacles with bare hands.",
+    "Do not routinely rinse attached tentacles with fresh water.",
+    "Do not use vinegar, baking soda, urine, or another chemical unless a trusted local species-specific protocol recommends it.",
+    "Do not use a pressure-immobilization bandage."
+  ],
+  "emergencyCall": {
+    "always": false,
+    "text": "Call emergency services for breathing difficulty, shock, fainting, severe systemic symptoms, or severe pain.",
+    "when": [
+      "difficulty_breathing",
+      "hives_widespread",
+      "lip_tongue_swelling",
+      "fainting"
+    ]
+  }
+}

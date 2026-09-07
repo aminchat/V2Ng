@@ -1,0 +1,33 @@
+{
+  "id": "tick-removal",
+  "icon": "🕷️",
+  "category": "bite",
+  "version": 4,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "tick_attached": 6
+  },
+  "riskQuestions": [],
+  "title": "Attached tick",
+  "summary": "Remove promptly with fine-tipped tweezers using steady upward pressure.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Tick Bites",
+    "CDC — What to Do After a Tick Bite"
+  ],
+  "actions": [
+    "Use fine-tipped tweezers or a commercial tick-removal tool. Grasp the tick close to the skin at the mouthparts.",
+    "Pull upward with steady, even pressure. Do not twist or jerk.",
+    "If a small mouthpart remains and does not come out easily, do not dig into the skin; seek care if inflammation develops.",
+    "Clean hands and the bite area with soap and water or antiseptic. Record the date and likely exposure location.",
+    "Over the following weeks, seek medical advice for fever, rash, headache, weakness, or muscle or joint pain and mention the tick bite."
+  ],
+  "prohibitions": [
+    "Do not burn the tick or use a hot object.",
+    "Do not cover it with oil, petroleum jelly, nail polish, alcohol, or cream.",
+    "Do not crush the tick with bare fingers."
+  ],
+  "emergencyCall": {
+    "always": false,
+    "text": "Emergency services are not usually needed; seek medical advice for later fever, rash, headache, weakness, or joint pain."
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "id": "heart-attack",
+  "icon": "❤️",
+  "category": "illness",
+  "version": 4,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "chest_pain": 4,
+    "sweating_cold": 2,
+    "nausea_vomiting": 1,
+    "heart_known": 2,
+    "difficulty_breathing": 1,
+    "arm_weakness": 1
+  },
+  "riskQuestions": [
+    "chest_pain",
+    "sweating_cold",
+    "nausea_vomiting",
+    "difficulty_breathing",
+    "heart_known",
+    "arm_weakness"
+  ],
+  "title": "Possible heart attack or acute chest pain",
+  "summary": "Call emergency services immediately; consider chewable aspirin only when appropriate.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Chest Pain"
+  ],
+  "actions": [
+    "Stop activity, let the person rest in a comfortable position, and call emergency services immediately. Use speakerphone and follow the dispatcher.",
+    "For an alert adult with non-traumatic chest pain, it may be reasonable to chew and swallow aspirin 162 to 325 mg while waiting, unless allergic, actively bleeding, advised not to take it, or uncertain; ask the dispatcher if possible.",
+    "Help with the person’s own prescribed nitroglycerin according to their plan, but do not give another person’s medicine.",
+    "Monitor responsiveness and breathing. Start CPR and use an AED if breathing becomes absent or abnormal.",
+    "Atypical symptoms can include breathlessness, nausea, sweating, extreme weakness, back or jaw discomfort, especially in women, older adults, and people with diabetes."
+  ],
+  "prohibitions": [
+    "Do not drive the person to hospital when emergency transport is available.",
+    "Do not wait for pain to become severe or persistent.",
+    "Do not give aspirin when allergy, active bleeding, or a clinician’s warning is known."
+  ],
+  "related": [
+    {
+      "case": "stroke",
+      "text": "Related guide: Possible stroke"
+    },
+    {
+      "case": "cardiac-arrest",
+      "text": "Related guide: Cardiac arrest: CPR and AED"
+    }
+  ],
+  "emergencyCall": {
+    "always": true,
+    "text": "New non-traumatic chest pain, pressure, or related symptoms requires immediate emergency transport."
+  }
+}

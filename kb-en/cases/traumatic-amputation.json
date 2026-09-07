@@ -1,0 +1,41 @@
+{
+  "id": "traumatic-amputation",
+  "icon": "🩸",
+  "category": "trauma",
+  "version": 2,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "amputated_part": 8,
+    "bleeding_heavy": 5,
+    "shock_signs": 2
+  },
+  "riskQuestions": [
+    "bleeding_heavy",
+    "shock_signs",
+    "unresponsive",
+    "not_breathing"
+  ],
+  "title": "Traumatic amputation",
+  "summary": "Control life-threatening bleeding first, then wrap, seal, and cool the amputated part without freezing.",
+  "sources": [
+    "2025 International Consensus on First Aid Science With Treatment Recommendations (ILCOR CoSTR) — Preservation of Traumatic Amputated or Avulsed Body Parts",
+    "European Resuscitation Council Guidelines 2025 — First Aid"
+  ],
+  "actions": [
+    "Call emergency services. Apply firm direct pressure; for life-threatening limb bleeding use a commercial tourniquet if available and trained.",
+    "Only after lifesaving care is underway, retrieve the amputated part and wrap it in clean gauze or cloth that is slightly moist.",
+    "Seal the wrapped part in a watertight bag or container. Place that container inside a second container with ice and water or cold packs so the tissue cools but does not freeze.",
+    "Label it with the person’s name and time of injury and send it to the same hospital with the person.",
+    "Keep the person lying down, warm, and monitored. Start CPR if breathing becomes absent or abnormal."
+  ],
+  "prohibitions": [
+    "Do not interrupt bleeding control to search for the part.",
+    "Do not place tissue directly on ice, in ice, or in a freezer.",
+    "Do not immerse the part directly in water or another liquid.",
+    "Do not scrub or disinfect the part."
+  ],
+  "emergencyCall": {
+    "always": true,
+    "text": "Traumatic amputation can cause fatal bleeding; call emergency services and control bleeding immediately."
+  }
+}

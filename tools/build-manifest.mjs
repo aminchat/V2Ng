@@ -2,7 +2,7 @@
  * Usage: node tools/build-manifest.mjs [kbDir] [--version N] [--date YYYY-MM-DD]
  */
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { basename, join, resolve } from 'node:path';
 import { validateManifest } from '../js/schema.js';
 import { sha256, validateAll } from './validate.mjs';
 
@@ -43,6 +43,8 @@ function parseArgs(args) {
 }
 
 const { kbDir, version, date } = parseArgs(process.argv.slice(2));
+const kbRoot = basename(resolve(kbDir));
+if (!/^[a-z0-9-]+$/.test(kbRoot)) usage('kbDir must have a URL-safe directory name.');
 const { errors, cases, files } = validateAll(kbDir);
 if (errors.length) {
   console.error(`KB validation FAILED — manifest not written:\n- ${errors.join('\n- ')}`);
@@ -73,7 +75,7 @@ function entry(id, relativeFile, contentVersion = null) {
   return {
     version: contentVersion ?? derivedVersion,
     hash,
-    url: `kb/${relativeFile}`,
+    url: `${kbRoot}/${relativeFile}`,
   };
 }
 
@@ -93,7 +95,7 @@ for (const file of files) {
   manifest.cases[id] = entry(id, `cases/${file}`, cases[id].version);
 }
 
-const manifestErrors = validateManifest(manifest);
+const manifestErrors = validateManifest(manifest, kbRoot);
 if (manifestErrors.length) {
   console.error(`Generated manifest is invalid — file not written:\n- ${manifestErrors.join('\n- ')}`);
   process.exit(1);

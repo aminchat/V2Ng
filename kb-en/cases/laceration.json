@@ -1,0 +1,50 @@
+{
+  "id": "laceration",
+  "icon": "✂️",
+  "category": "bleeding",
+  "version": 4,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "wound_deep": 4,
+    "local_pain": 1,
+    "local_redness": 1
+  },
+  "riskQuestions": [
+    "wound_deep",
+    "object_embedded",
+    "car_accident",
+    "animal_bite"
+  ],
+  "title": "Cut or open wound",
+  "summary": "Control bleeding, rinse superficial wounds, cover cleanly, and assess deep or contaminated wounds.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Superficial Wounds",
+    "WHO Basic Emergency Care: Approach to the Acutely Ill and Injured"
+  ],
+  "actions": [
+    "For heavy bleeding, apply firm direct pressure and follow the severe-bleeding guidance.",
+    "For a superficial wound, rinse thoroughly with clean running water or saline until visible dirt is removed. Clean the surrounding skin.",
+    "Cover with a clean dressing. Change it if wet or dirty.",
+    "Seek prompt care for deep or gaping wounds, bites, embedded material, loss of feeling or movement, heavy contamination, or a wound over a joint, hand, face, or genitals. Tetanus protection may need review.",
+    "Watch for increasing redness, swelling, pain, drainage, or fever."
+  ],
+  "prohibitions": [
+    "Do not pour harsh chemicals into the wound.",
+    "Do not remove a deeply embedded object.",
+    "Do not close a deep, dirty, or bite wound yourself."
+  ],
+  "related": [
+    {
+      "case": "animal-bite",
+      "text": "Related guide: Animal bite"
+    }
+  ],
+  "emergencyCall": {
+    "always": false,
+    "text": "Call emergency services for life-threatening bleeding; deep, gaping, contaminated, numb, or function-limiting wounds need prompt care.",
+    "when": [
+      "object_embedded",
+      "car_accident"
+    ]
+  }
+}

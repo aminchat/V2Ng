@@ -1,0 +1,59 @@
+{
+  "id": "fainting",
+  "icon": "😌",
+  "category": "consciousness",
+  "version": 4,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "fainting": 4,
+    "dizziness": 2,
+    "sweating_cold": 1,
+    "nausea_vomiting": 1
+  },
+  "riskQuestions": [
+    "chest_pain",
+    "head_impact",
+    "car_accident",
+    "pregnant",
+    "first_seizure",
+    "confusion"
+  ],
+  "title": "Fainting or near-fainting",
+  "summary": "Prevent a fall, use a safe position, and look for heart, stroke, bleeding, or persistent warning signs.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Presyncope"
+  ],
+  "actions": [
+    "Help a light-headed person sit or lie down immediately to prevent a fall.",
+    "If alert and there are no signs of heart attack or stroke, leg-crossing with strong leg and abdominal muscle tensing may help prevent fainting.",
+    "If the person faints, check breathing. If breathing normally and no serious trauma is suspected, keep them lying down; use the recovery position if alertness remains reduced.",
+    "Call emergency services if the person does not improve within 1 to 2 minutes, faints during exercise, has chest pain, breathing difficulty, stroke signs, severe bleeding, significant injury, or repeated episodes.",
+    "Do not let the person stand suddenly after recovery."
+  ],
+  "prohibitions": [
+    "Do not sit or stand a faint person upright immediately.",
+    "Do not give food or drink until fully alert and able to swallow.",
+    "Do not use counterpressure manoeuvres when heart attack or stroke signs are present."
+  ],
+  "related": [
+    {
+      "case": "head-injury",
+      "text": "Related guide: Head injury or possible concussion"
+    },
+    {
+      "case": "heart-attack",
+      "text": "Related guide: Possible heart attack or acute chest pain"
+    }
+  ],
+  "emergencyCall": {
+    "always": false,
+    "text": "Call emergency services if recovery is not prompt, fainting recurs, or chest pain, stroke signs, injury, pregnancy, or breathing trouble is present.",
+    "when": [
+      "chest_pain",
+      "head_impact",
+      "car_accident",
+      "pregnant",
+      "confusion"
+    ]
+  }
+}
