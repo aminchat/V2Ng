@@ -1,11 +1,11 @@
 {
-  "kbVersion": 2,
-  "updatedAt": "2026-09-07",
+  "kbVersion": 7,
+  "updatedAt": "2026-09-08",
   "generator": "tools/build-manifest.mjs",
   "entries": {
     "__symptoms": {
-      "version": 1,
-      "hash": "d58ee9dec982d07aac4c1cd4090b71a20f0599cb87b51fb2a5d011cc52c639b7",
+      "version": 5,
+      "hash": "a3c797e2de591d2bc5915e7eabf7610803aecb9a4169fce8ead8036f6a79900a",
       "url": "kb-en/symptoms.json"
     },
     "__categories": {
@@ -71,23 +71,23 @@
       "url": "kb-en/cases/electric-shock.json"
     },
     "eye-foreign": {
-      "version": 4,
-      "hash": "4ce10215c32a8192bb66e799be59e7af0c55e0261d8a79727f1a08aa6f7157fd",
+      "version": 5,
+      "hash": "1d0c55edf177c4571b3289277a2fe575e1af636c73d9b9a37da38037e5195b14",
       "url": "kb-en/cases/eye-foreign.json"
     },
     "fainting": {
-      "version": 4,
-      "hash": "5552773592b7c13fef48c3919f6405e25b95ccdf9e5a8534225c05b9d5b886a2",
+      "version": 5,
+      "hash": "6549009859a257368ab57b25adf6c251fee09e8903fa9c30325052fc3ace8be9",
       "url": "kb-en/cases/fainting.json"
     },
     "frostbite": {
-      "version": 2,
-      "hash": "0fd5c188916f6c66f478b8a329664a484fb181bc012412f2cba8ef7cb54c21c6",
+      "version": 3,
+      "hash": "13348e074f2e2900c71ef1293e08aadfa7eddef45d4acaaeed21441989a4673b",
       "url": "kb-en/cases/frostbite.json"
     },
     "head-injury": {
-      "version": 3,
-      "hash": "c0af18e91772a0f90d534fc8e5b987dd91e5090f2fbe149f41a10d49ede12d22",
+      "version": 4,
+      "hash": "3ffd1375cca5641f241f942b4f365297dc6df1bfb85c81ede1f045f5c6690d72",
       "url": "kb-en/cases/head-injury.json"
     },
     "heart-attack": {
@@ -101,8 +101,8 @@
       "url": "kb-en/cases/heat-illness.json"
     },
     "hypothermia": {
-      "version": 3,
-      "hash": "68e3204d07cde5d77d9043ab7f4b0b3d58dc531bd79aa46b21d7e4e4ac89bf1b",
+      "version": 4,
+      "hash": "4c4b967fe4f1d6fa1dde38273fe4acd0d441f07d3038852cd386e1ed71139dcf",
       "url": "kb-en/cases/hypothermia.json"
     },
     "jellyfish-sting": {
@@ -131,18 +131,18 @@
       "url": "kb-en/cases/opioid-overdose.json"
     },
     "poisoning": {
-      "version": 3,
-      "hash": "11240783c5fa9480f65b855004a24b7ea7d7a01783a06a4f048df8dd794272ff",
+      "version": 4,
+      "hash": "4f72a083c46a57cff26fb3231632e1167b59d619df1f48c1221759712aab124f",
       "url": "kb-en/cases/poisoning.json"
     },
     "scorpion-sting": {
-      "version": 3,
-      "hash": "0b03afc4fc81b266596829838bf0b23e04e386a45fe8406a6c3e0efdddd112db",
+      "version": 4,
+      "hash": "059621f7177b5e0f3a3007aa8ba1a6ee9f093d1f66d5f910596be7e97ea70c3c",
       "url": "kb-en/cases/scorpion-sting.json"
     },
     "seizure": {
-      "version": 3,
-      "hash": "db5ad95d973ef8def40e1c634df54c7e4ebef0e8951a6f44e63d3a8ffb471207",
+      "version": 4,
+      "hash": "ea6244cf12347a072106e96b63616675b1ef5c3e94495f402dd9e56be8d24cf1",
       "url": "kb-en/cases/seizure.json"
     },
     "severe-bleeding": {
@@ -156,13 +156,13 @@
       "url": "kb-en/cases/shock.json"
     },
     "snake-bite": {
-      "version": 3,
-      "hash": "85862c51b84cbe5ed75536f30f38f1460b8734aa337e8a2baead28e73be59f80",
+      "version": 4,
+      "hash": "2ecbd9c668333ebbb9013b78e5221c58e08247282a4888c98de38f5f080caf04",
       "url": "kb-en/cases/snake-bite.json"
     },
     "stroke": {
-      "version": 4,
-      "hash": "38c67642e421c7dc8ebdef7b505bd778c65c1e3c45c7449a28c51e1d51589a48",
+      "version": 5,
+      "hash": "30ac4bcf1770496b5e209321eb7f87ce48484e18b73f3c6bd17d84a3e070eea7",
       "url": "kb-en/cases/stroke.json"
     },
     "suspected-fracture": {
@@ -171,8 +171,8 @@
       "url": "kb-en/cases/suspected-fracture.json"
     },
     "thermal-burn": {
-      "version": 3,
-      "hash": "6c9ea2c3191b1d95a43a98865edb0bfdf781dd6fdd92b6b068bd22d65238e5ba",
+      "version": 4,
+      "hash": "2b1ed15f6cdab3eb471176f466391e40cdad566658fa46f8acbf8648b73b6ff9",
       "url": "kb-en/cases/thermal-burn.json"
     },
     "tick-removal": {

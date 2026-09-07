@@ -2,13 +2,14 @@
   "id": "frostbite",
   "icon": "❄️",
   "category": "illness",
-  "version": 2,
-  "updatedAt": "2026-09-07",
+  "version": 3,
+  "updatedAt": "2026-09-08",
   "match": {
     "frostbitten_skin": 6,
     "cold_skin": 2,
     "numbness": 2,
-    "shivering": 1
+    "shivering": 1,
+    "shivering_stopped": 1
   },
   "riskQuestions": [
     "drowsiness",

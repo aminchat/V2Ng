@@ -10,6 +10,8 @@ export const CRITICAL_SYMPTOMS = new Set([
 ]);
 
 export function nextTriageQuestion(answers = {}) {
+  if (!('sceneSafe' in answers)) return 'sceneSafe';
+  if (answers.sceneSafe !== 'y') return null;
   if (!('conscious' in answers)) return 'conscious';
   if (answers.conscious === 'n') {
     if (!('breathing' in answers)) return 'breathing';
@@ -21,17 +23,20 @@ export function nextTriageQuestion(answers = {}) {
   if (!('breathingDifficulty' in answers)) return 'breathingDifficulty';
   if (answers.breathingDifficulty === 'y') return null;
   if (!('bleeding' in answers)) return 'bleeding';
+  if (answers.bleeding === 'n' && !('communication' in answers)) return 'communication';
   return null;
 }
 
 export function triageRoute(answers = {}) {
+  if (answers.sceneSafe === 'n' || answers.sceneSafe === 'u') return 'scene-unsafe';
+  if (answers.sceneSafe !== 'y') return null;
   if (answers.conscious === 'n' && answers.breathing === 'n') return 'cardiac-arrest';
   if (answers.conscious === 'n' && answers.breathing === 'y' && answers.bleeding === 'y') return 'severe-bleeding';
   if (answers.conscious === 'n' && answers.breathing === 'y' && answers.bleeding === 'n') return 'unresponsive-breathing';
   if (answers.conscious === 'y' && answers.choking === 'y') return 'choking';
   if (answers.conscious === 'y' && answers.choking === 'n' && answers.breathingDifficulty === 'y') return 'breathing-difficulty';
   if (answers.conscious === 'y' && answers.choking === 'n' && answers.breathingDifficulty === 'n' && answers.bleeding === 'y') return 'severe-bleeding';
-  if (answers.conscious === 'y' && answers.choking === 'n' && answers.breathingDifficulty === 'n' && answers.bleeding === 'n') return 'symptoms';
+  if (answers.conscious === 'y' && answers.choking === 'n' && answers.breathingDifficulty === 'n' && answers.bleeding === 'n' && ['y', 'n', 'u'].includes(answers.communication)) return 'symptoms';
   return null;
 }
 
@@ -144,7 +149,7 @@ export function toggleCurrentSymptom(selected, historical, symptomId, symptoms) 
 }
 
 export function toggleHistoricalSymptom(historical, symptomId, symptoms) {
-  if (!symptoms[symptomId]?.canBeHistorical) return historical;
+  if (!symptoms[symptomId]?.canBeHistorical && !symptoms[symptomId]?.reportedCanBeHistorical) return historical;
   return historical.includes(symptomId)
     ? historical.filter((id) => id !== symptomId)
     : [...historical, symptomId];
@@ -184,30 +189,55 @@ export function quickSymptomIds(symptoms) {
   );
 }
 
+function searchFieldScore(query, field, isLabel) {
+  if (!field) return 0;
+  const queryTokens = query.split(' ');
+  const fieldTokens = field.split(' ');
+  const compactQuery = queryTokens.join('');
+  const compactField = fieldTokens.join('');
+  const base = isLabel ? 20 : 0;
+
+  if (field === query) return 500 + base;
+  // This supports joined/half-spaced spelling only when the complete field matches.
+  // It must never turn a substring such as «دما» inside «دماغ» into a result.
+  if (compactField === compactQuery) return 480 + base;
+  if (field.startsWith(`${query} `)) return 430 + base;
+
+  let usedPrefix = false;
+  const allTermsMatch = queryTokens.every((queryToken) => fieldTokens.some((fieldToken) => {
+    if (fieldToken === queryToken) return true;
+    // Prefix matching keeps type-ahead useful while short words remain boundary-safe.
+    if (queryToken.length >= 4 && fieldToken.startsWith(queryToken)) {
+      usedPrefix = true;
+      return true;
+    }
+    return false;
+  }));
+  if (!allTermsMatch) return 0;
+  return (usedPrefix ? 300 : 360) + base;
+}
+
 export function searchSymptoms(query, symptoms, limit = 24) {
   const normalizedQuery = normalizePersianSearch(query);
   if (normalizedQuery.length < 2) return [];
-  const terms = normalizedQuery.split(' ');
-  const compactQuery = normalizedQuery.replace(/\s/g, '');
 
   return Object.entries(symptoms)
     .map(([id, symptom]) => {
-      const label = normalizePersianSearch(symptom.label);
-      const aliases = (symptom.aliases || []).map(normalizePersianSearch);
-      const fields = [label, ...aliases];
-      const corpus = fields.join(' ');
-      const compactFields = fields.map((field) => field.replace(/\s/g, ''));
-      const tokenMatch = terms.every((term) => corpus.includes(term));
-      const compactMatch = compactFields.some((field) => field.includes(compactQuery));
-      if (!tokenMatch && !compactMatch) return null;
-
-      let score = 100;
-      if (label === normalizedQuery || label.replace(/\s/g, '') === compactQuery) score = 500;
-      else if (label.startsWith(normalizedQuery)) score = 430;
-      else if (aliases.includes(normalizedQuery) || compactFields.slice(1).includes(compactQuery)) score = 400;
-      else if (aliases.some((alias) => alias.startsWith(normalizedQuery))) score = 350;
-      else if (label.includes(normalizedQuery)) score = 300;
-      else if (aliases.some((alias) => alias.includes(normalizedQuery)) || compactMatch) score = 250;
+      const fields = [
+        symptom.label,
+        symptom.observedLabel,
+        symptom.reportedLabel,
+        symptom.sceneLabel,
+        symptom.backgroundLabel,
+        ...(symptom.aliases || []),
+      ]
+        .filter(Boolean)
+        .map(normalizePersianSearch)
+        .filter(Boolean);
+      const score = fields.reduce((best, field, index) => (
+        Math.max(best, searchFieldScore(normalizedQuery, field, index === 0))
+      ), 0);
+      if (!score) return null;
       return { id, score: score + displayPriority(id, symptoms) / 100 };
     })
     .filter(Boolean)

@@ -2,13 +2,14 @@
   "id": "poisoning",
   "icon": "☠️",
   "category": "illness",
-  "version": 3,
-  "updatedAt": "2026-09-07",
+  "version": 4,
+  "updatedAt": "2026-09-08",
   "match": {
     "substance_access": 4,
     "confusion": 1,
     "drowsiness": 1,
-    "nausea_vomiting": 1
+    "nausea_vomiting": 1,
+    "container_available": 1
   },
   "riskQuestions": [
     "container_available",

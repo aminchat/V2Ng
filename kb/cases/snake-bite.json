@@ -3,8 +3,8 @@
   "title": "نیش مار",
   "icon": "🐍",
   "category": "bite",
-  "version": 6,
-  "updatedAt": "2026-09-07",
+  "version": 7,
+  "updatedAt": "2026-09-08",
   "summary": "تماس فوری با اورژانس، بی‌حرکت‌سازی کامل و انتقال بدون راه‌رفتن؛ برش، مکش و تورنیکه ممنوع",
   "sources": [
     "World Health Organization — Guidelines for the Management of Snakebites, 2nd edition",
@@ -15,7 +15,12 @@
     "saw_snake": 6,
     "two_punctures": 3,
     "local_pain": 1,
-    "local_swelling": 2
+    "local_swelling": 2,
+    "ptosis": 2,
+    "swelling_spreading": 2,
+    "bleeding_gums": 2,
+    "bruising": 2,
+    "muscle_tremor": 2
   },
   "riskQuestions": [
     "swelling_spreading",

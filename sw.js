@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'emdadgar-';
-const SHELL_CACHE = `${CACHE_PREFIX}shell-v10`;
+const SHELL_CACHE = `${CACHE_PREFIX}shell-v14`;
 const RECOVERY_WORKER_VERSIONS = new Set([null, '5', '6', '7', '8', '9']);
 const RECOVERY_SHELL_CACHES = new Set([
   `${CACHE_PREFIX}shell-v5`,
@@ -11,16 +11,16 @@ const RECOVERY_SHELL_CACHES = new Set([
 const SHELL_FILES = [
   './',
   './index.html',
-  './css/app.css?v=10',
-  './js/app.js?v=10',
-  './js/engine.js?v=10',
-  './js/kb.js?v=10',
-  './js/schema.js?v=10',
-  './js/i18n.js?v=10',
-  './js/preferences.js?v=10',
-  './locales/fa.js?v=10',
-  './data/countries.json?v=10',
-  './manifest.webmanifest?v=10',
+  './css/app.css?v=14',
+  './js/app.js?v=14',
+  './js/engine.js?v=14',
+  './js/kb.js?v=14',
+  './js/schema.js?v=14',
+  './js/i18n.js?v=14',
+  './js/preferences.js?v=14',
+  './locales/fa.js?v=14',
+  './data/countries.json?v=14',
+  './manifest.webmanifest?v=14',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/maskable-192.png',
@@ -93,6 +93,6 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Online loads receive fresh shell assets; offline loads fall back to shell-v9.
+  // Online loads receive fresh shell assets; offline loads fall back to the current shell cache.
   event.respondWith(networkFirst(event.request));
 });

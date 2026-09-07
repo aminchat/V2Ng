@@ -147,8 +147,14 @@ if (mode === 'onboarding') {
   }
   console.log('first-run onboarding smoke OK');
 } else {
-  if (!html.includes('Start urgent check') || !html.includes('Browse all guidance') || !html.includes('112')) {
-    throw new Error('English home and selected-country contact did not render');
+  if (!html.includes('First-aid guide') || !html.includes('Check the person’s condition') || !html.includes('Guides and settings') || !html.includes('112')) {
+    throw new Error('Focused English home and selected-country emergency call did not render');
+  }
+  if (html.includes('Take urgent action')) {
+    throw new Error('Removed urgent-action entry still rendered on the home screen');
+  }
+  if (html.includes('Browse all guidance') || html.includes('install-card') || html.includes('contact-card')) {
+    throw new Error('Secondary content leaked onto the focused home screen');
   }
   if (document.documentElement.lang !== 'en' || document.documentElement.dir !== 'ltr') {
     throw new Error('English document language/direction was not applied');

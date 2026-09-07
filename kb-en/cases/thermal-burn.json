@@ -2,15 +2,16 @@
   "id": "thermal-burn",
   "icon": "🔥",
   "category": "burn",
-  "version": 3,
-  "updatedAt": "2026-09-07",
+  "version": 4,
+  "updatedAt": "2026-09-08",
   "match": {
     "burn_large": 2,
     "burn_deep": 3,
     "burn_face_hands_feet": 3,
     "stuck_clothing": 1,
     "soot_nose": 2,
-    "local_pain": 1
+    "local_pain": 1,
+    "child_victim": 1
   },
   "riskQuestions": [
     "burn_face_hands_feet",

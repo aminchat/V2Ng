@@ -1,14 +1,12 @@
-import { KnowledgeBase } from './kb.js?v=10';
-import { countryName, formatDateTime, formatNumber, localeCode, localizeField, setLocale, t } from './i18n.js?v=10';
-import { emergencyContact, loadCountryData, readPreferences, savePreferences, telephoneHref } from './preferences.js?v=10';
+import { KnowledgeBase } from './kb.js?v=14';
+import { countryName, formatDateTime, formatNumber, localeCode, localizeField, setLocale, t } from './i18n.js?v=14';
+import { emergencyContact, loadCountryData, readPreferences, savePreferences, telephoneHref } from './preferences.js?v=14';
 import {
   setEngineLocale,
   hasCriticalSymptoms,
-  historicalSymptomIds,
   isCurrentSymptomVisible,
   nextTriageQuestion,
   normalizePersianSearch,
-  quickSymptomIds,
   rankCases,
   searchSymptoms,
   sortSymptomIds,
@@ -19,7 +17,7 @@ import {
   triggeredFlags,
   triageRoute,
   triageSymptoms,
-} from './engine.js?v=10';
+} from './engine.js?v=14';
 
 let kb = null;
 let countryData = null;
@@ -61,24 +59,34 @@ standaloneDisplay.addEventListener?.('change', (event) => {
   refreshInstallCard();
 });
 
-const QUICK_CATEGORY = '__quick';
-const SELECTED_CATEGORY = '__selected';
-const INITIAL_SYMPTOM_LIMIT = 12;
+const EVIDENCE_LIMITS = {
+  observed: 14,
+  reported: 10,
+  scene: 14,
+  background: 9,
+  historical: 10,
+};
 
 const state = {
   ready: false,
   fatalError: null,
   triageAnswers: {},
   triageContext: null,
+  triageAsked: [],
+  triageSeedCount: 0,
+  assessmentStep: 'scene',
+  assessmentPreserve: false,
+  triagePreserveFinder: false,
+  responseMode: null,
   caseId: null,
   caseAnswers: [],
   caseStage: 'questions',
-  diffCategory: QUICK_CATEGORY,
   diffSelected: [],
+  diffSources: {},
   diffHistorical: [],
   diffCompatibilityMessage: '',
   diffQuery: '',
-  diffShowAll: false,
+  diffExpanded: [],
   diffStage: 'questions',
   lastRouteName: null,
   preparedCaseId: null,
@@ -158,7 +166,9 @@ function currentRoute() {
   const hash = location.hash || '#/';
   if (hash === '#/' || hash === '#') return { name: 'home' };
   if (hash === '#/triage') return { name: 'triage' };
+  if (hash === '#/assessment') return { name: 'assessment' };
   if (hash === '#/symptoms') return { name: 'symptoms' };
+  if (hash === '#/more') return { name: 'more' };
   if (hash === '#/kb') return { name: 'kb' };
   if (hash === '#/settings') return { name: 'settings' };
   const match = hash.match(/^#\/case\/([^/?#]+)$/);
@@ -193,8 +203,10 @@ function render({ focus = true } = {}) {
   let heading = t('appName');
 
   if (route.name === 'triage') heading = renderTriage();
+  else if (route.name === 'assessment') heading = renderAssessment();
   else if (route.name === 'symptoms') heading = renderSymptoms();
   else if (route.name === 'case') heading = renderCase(route.id);
+  else if (route.name === 'more') heading = renderMore();
   else if (route.name === 'kb') heading = renderKb();
   else if (route.name === 'settings') heading = renderSettings();
   else if (route.name === 'not-found') heading = renderNotFound();
@@ -298,31 +310,78 @@ function setupInstallCard() {
   });
 }
 
+function resetFinder() {
+  state.diffStage = 'questions';
+  state.diffSelected = [];
+  state.diffSources = {};
+  state.diffHistorical = [];
+  state.diffCompatibilityMessage = '';
+  state.diffQuery = '';
+  state.diffExpanded = [];
+}
+
+function applyResponseMode(mode, { preserve = false } = {}) {
+  if (!preserve) resetFinder();
+  if (mode === 'limited') {
+    const keepCurrent = [];
+    for (const id of state.diffSelected) {
+      const symptom = kb.symptoms[id];
+      const wasReportedByPerson = state.diffSources[id] === 'reported';
+      if (!wasReportedByPerson) keepCurrent.push(id);
+      else {
+        if (canBeHistoricalReport(id) && !state.diffHistorical.includes(id)) state.diffHistorical.push(id);
+        delete state.diffSources[id];
+      }
+    }
+    state.diffSelected = keepCurrent;
+  }
+  state.responseMode = mode;
+}
+
 function renderHome() {
-  const emergency = emergencyName();
   app.innerHTML = `
-    <header class="topbar">
+    <header class="topbar home-topbar">
       <div><div class="eyebrow">${e(t('firstAidGuide'))}</div><h1 id="view-heading" tabindex="-1">${e(t('appName'))}</h1></div>
-      <div class="topbar-actions">${statusPill()}<a class="settings-link" href="#/settings" aria-label="${e(t('settingsAria'))}">⚙</a></div>
     </header>
-    <main class="body home-body">
-      ${compatibilityNotice()}
-      <section class="safety-notice" aria-labelledby="safety-heading">
-        <h2 id="safety-heading">${e(t('homeThreatTitle'))}</h2>
-        <p>${e(t('homeThreatText', { emergency }))}</p>
-        ${emergencyButton()}
-      </section>
-      <button class="primary-action" id="start-triage" type="button">
-        <span class="primary-icon" aria-hidden="true">⏱</span>
-        <span><strong>${e(t('homeTriage'))}</strong><small>${e(t('homeTriageSub'))}</small></span>
-      </button>
-      <button class="secondary-action" id="start-symptoms" type="button">
-        <span aria-hidden="true">🔎</span>
+    <main class="body home-body focused-home">
+      <button class="primary-action home-assessment-action" id="start-assessment" type="button">
+        <span class="primary-icon" aria-hidden="true">✓</span>
         <span><strong>${e(t('homeSymptoms'))}</strong><small>${e(t('homeSymptomsSub'))}</small></span>
       </button>
+      <div class="home-call-action">${emergencyButton('btn emergency full home-emergency-call')}</div>
+      <a class="home-more-link" href="#/more">${e(t('homeMore'))} <span aria-hidden="true">›</span></a>
+    </main>`;
+
+  document.getElementById('start-assessment').addEventListener('click', () => {
+    state.assessmentStep = 'scene';
+    state.assessmentPreserve = false;
+    state.triageAnswers = {};
+    state.triageAsked = [];
+    state.triageSeedCount = 0;
+    resetFinder();
+    state.responseMode = null;
+    navigate('#/assessment');
+  });
+  return t('home');
+}
+
+function renderMore() {
+  app.innerHTML = `
+    <header class="topbar">
+      <button class="icon-btn" id="back-home" type="button" aria-label="${e(t('backHome'))}">‹</button>
+      <div><div class="eyebrow">${e(t('moreEyebrow'))}</div><h1 id="view-heading" tabindex="-1">${e(t('moreTitle'))}</h1></div>
+      ${miniEmergencyButton()}
+    </header>
+    <main class="body more-body">
+      ${compatibilityNotice()}
+      <p class="more-help">${e(t('moreHelp'))}</p>
       <button class="secondary-action" id="open-kb" type="button">
         <span aria-hidden="true">📚</span>
         <span><strong>${e(t('homeLibrary'))}</strong><small>${e(t('homeLibrarySub', { count: formatNumber(kb.listCases().length) }))}</small></span>
+      </button>
+      <button class="secondary-action" id="open-settings" type="button">
+        <span aria-hidden="true">⚙</span>
+        <span><strong>${e(t('moreSettings'))}</strong><small>${e(t('moreSettingsSub'))}</small></span>
       </button>
       ${contactsMarkup()}
       <section class="install-card" id="install-card" aria-labelledby="install-heading" hidden>
@@ -334,43 +393,143 @@ function renderHome() {
         <div class="install-instructions" id="install-instructions" hidden></div>
         <p class="install-status" id="install-status" role="status" aria-live="polite"></p>
       </section>
-      <aside class="disclaimer"><strong>${e(t('importantLimitation'))}</strong> ${e(t('limitationText', { emergency }))}</aside>
-    </main>
-    <footer class="footer">${e(t('kbFooter', { version: kb.metadata?.kbVersion ?? '—', date: kb.metadata?.updatedAt ?? '—' }))}</footer>`;
+      <aside class="disclaimer"><strong>${e(t('importantLimitation'))}</strong> ${e(t('limitationText', { emergency: emergencyName() }))}</aside>
+      <div class="more-status">${statusPill()}<span>${e(t('kbFooter', { version: kb.metadata?.kbVersion ?? '—', date: kb.metadata?.updatedAt ?? '—' }))}</span></div>
+    </main>`;
 
-  document.getElementById('start-triage').addEventListener('click', () => {
-    state.triageAnswers = {};
-    state.triageContext = null;
-    navigate('#/triage');
-  });
-  document.getElementById('start-symptoms').addEventListener('click', () => {
-    state.diffStage = 'questions';
-    state.diffSelected = [];
-    state.diffHistorical = [];
-    state.diffCompatibilityMessage = '';
-    state.diffQuery = '';
-    state.diffShowAll = false;
-    state.diffCategory = QUICK_CATEGORY;
-    navigate('#/symptoms');
-  });
+  document.getElementById('back-home').addEventListener('click', () => navigate('#/'));
   document.getElementById('open-kb').addEventListener('click', () => navigate('#/kb'));
+  document.getElementById('open-settings').addEventListener('click', () => navigate('#/settings'));
   setupInstallCard();
-  return t('home');
+  return t('moreTitle');
+}
+
+function unsafeSceneMarkup() {
+  return `<section class="unsafe-scene" role="alert" aria-labelledby="unsafe-heading">
+    <div class="big-icon" aria-hidden="true">!</div>
+    <div class="eyebrow">${e(t('assessmentSafetyFirst'))}</div>
+    <h2 id="unsafe-heading">${e(t('assessmentUnsafeTitle'))}</h2>
+    <p>${e(t('assessmentUnsafeText', { emergency: emergencyName() }))}</p>
+    ${emergencyButton()}
+    <button class="btn outline full card-spaced" id="recheck-scene" type="button">${e(t('assessmentRecheckScene'))}</button>
+  </section>`;
+}
+
+function renderAssessment() {
+  const step = state.assessmentStep === 'scene' ? 1 : 2;
+  const unsafe = state.assessmentStep === 'unsafe';
+  const responseStep = state.assessmentStep === 'response';
+  app.innerHTML = `
+    <header class="topbar">
+      <div class="topbar-nav">
+        <button class="icon-btn" id="back-home" type="button" aria-label="${e(t('backHome'))}">‹</button>
+        ${responseStep ? `<button class="icon-btn" id="back-step" type="button" aria-label="${e(t('backStep'))}">→</button>` : ''}
+      </div>
+      <div><div class="eyebrow">${e(t('assessmentEyebrow', { step: formatNumber(step) }))}</div><h1 id="view-heading" tabindex="-1">${e(t('assessmentTitle'))}</h1></div>
+      ${miniEmergencyButton()}
+    </header>
+    <main class="body assessment-body">
+      ${unsafe ? unsafeSceneMarkup() : `
+        <section class="question-card" aria-labelledby="assessment-question">
+          <div class="big-icon" aria-hidden="true">${responseStep ? '?' : '⌂'}</div>
+          <h2 id="assessment-question">${e(t(responseStep ? 'assessmentResponseTitle' : 'assessmentSceneTitle'))}</h2>
+          <p>${e(t(responseStep ? 'assessmentResponseHelp' : 'assessmentSceneHelp'))}</p>
+        </section>
+        <div class="assessment-choices">
+          ${responseStep ? `
+            <button class="btn yes" data-response="clear" type="button">${e(t('assessmentResponseClear'))}</button>
+            <button class="btn secondary" data-response="limited" type="button">${e(t('assessmentResponseLimited'))}</button>
+            <button class="btn emergency" data-response="none" type="button">${e(t('assessmentResponseNone'))}</button>
+            <button class="btn text" data-response="unknown" type="button">${e(t('assessmentResponseUnknown'))}</button>
+          ` : `
+            <button class="btn yes" data-scene="y" type="button">${e(t('assessmentSceneSafe'))}</button>
+            <button class="btn emergency" data-scene="n" type="button">${e(t('assessmentSceneUnsafe'))}</button>
+            <button class="btn secondary" data-scene="u" type="button">${e(t('assessmentSceneUnknown'))}</button>
+          `}
+        </div>
+      `}
+    </main>`;
+
+  document.getElementById('back-home').addEventListener('click', () => {
+    state.assessmentStep = 'scene';
+    state.assessmentPreserve = false;
+    state.triageAnswers = {};
+    state.triageAsked = [];
+    state.triageSeedCount = 0;
+    state.triagePreserveFinder = false;
+    state.responseMode = null;
+    navigate('#/');
+  });
+  document.getElementById('back-step')?.addEventListener('click', () => {
+    state.assessmentStep = 'scene';
+    render({ focus: true });
+  });
+  document.getElementById('recheck-scene')?.addEventListener('click', () => {
+    state.assessmentStep = 'scene';
+    render({ focus: true });
+  });
+  document.querySelectorAll('[data-scene]').forEach((button) => button.addEventListener('click', () => {
+    state.assessmentStep = button.dataset.scene === 'y' ? 'response' : 'unsafe';
+    render({ focus: true });
+  }));
+  document.querySelectorAll('[data-response]').forEach((button) => button.addEventListener('click', () => {
+    const response = button.dataset.response;
+    const preserve = state.assessmentPreserve === true;
+    state.assessmentPreserve = false;
+    state.triagePreserveFinder = preserve;
+    if (response === 'clear' || response === 'limited') {
+      applyResponseMode(response, { preserve });
+      state.triageAnswers = {
+        sceneSafe: 'y',
+        conscious: 'y',
+        communication: response === 'clear' ? 'y' : 'n',
+      };
+    } else {
+      state.responseMode = 'limited';
+      state.triageAnswers = { sceneSafe: 'y', conscious: 'n' };
+    }
+    state.triageSeedCount = Object.keys(state.triageAnswers).length;
+    state.triageAsked = [];
+    navigate('#/triage');
+  }));
+  return t('assessmentTitle');
 }
 
 function renderTriage() {
   const questionId = nextTriageQuestion(state.triageAnswers);
   const route = triageRoute(state.triageAnswers);
   if (!questionId && route) {
+    if (route === 'scene-unsafe') {
+      app.innerHTML = `
+        <header class="topbar">
+          <button class="icon-btn" id="back-home" type="button" aria-label="${e(t('backHome'))}">‹</button>
+          <div><div class="eyebrow">${e(t('assessmentSafetyFirst'))}</div><h1 id="view-heading" tabindex="-1">${e(t('assessmentTitle'))}</h1></div>
+          ${miniEmergencyButton()}
+        </header>
+        <main class="body assessment-body">${unsafeSceneMarkup()}</main>`;
+      document.getElementById('back-home').addEventListener('click', () => {
+        state.triageAnswers = {};
+        state.triageAsked = [];
+        state.triageSeedCount = 0;
+        state.triagePreserveFinder = false;
+        state.responseMode = null;
+        navigate('#/');
+      });
+      document.getElementById('recheck-scene').addEventListener('click', () => {
+        state.triageAnswers = {};
+        state.triageAsked = [];
+        state.triageSeedCount = 0;
+        render({ focus: true });
+      });
+      return t('assessmentTitle');
+    }
     if (route === 'symptoms') {
+      const mode = state.triageAnswers.communication === 'y' ? 'clear' : 'limited';
+      applyResponseMode(mode, { preserve: state.triagePreserveFinder });
+      state.triagePreserveFinder = false;
       state.triageAnswers = {};
-      state.diffStage = 'questions';
-      state.diffSelected = [];
-      state.diffHistorical = [];
-      state.diffCompatibilityMessage = '';
-      state.diffQuery = '';
-      state.diffShowAll = false;
-      state.diffCategory = QUICK_CATEGORY;
+      state.triageAsked = [];
+      state.triageSeedCount = 0;
       navigate('#/symptoms');
       return t('triageRoute');
     }
@@ -380,60 +539,126 @@ function renderTriage() {
     state.caseAnswers = triageSymptoms(state.triageAnswers);
     state.caseStage = 'result';
     state.triageAnswers = {};
+    state.triageAsked = [];
+    state.triageSeedCount = 0;
+    state.triagePreserveFinder = false;
     navigate(caseHref(route));
     return t('triageRoute');
   }
 
-  const step = formatNumber(Object.keys(state.triageAnswers).length + 1);
+  const answered = Object.keys(state.triageAnswers).length;
+  const step = formatNumber(state.triageSeedCount > 0 ? answered - state.triageSeedCount + 3 : answered + 1);
   const questionKeys = {
-    conscious: 'triageConscious', breathing: 'triageBreathing', choking: 'triageChoking',
-    breathingDifficulty: 'triageBreathingDifficulty', bleeding: 'triageBleeding',
+    sceneSafe: 'triageSceneSafe', conscious: 'triageConscious', breathing: 'triageBreathing',
+    choking: 'triageChoking', breathingDifficulty: 'triageBreathingDifficulty',
+    bleeding: 'triageBleeding', communication: 'triageCommunication',
   };
-  const breathingHint = questionId === 'breathing'
+  const questionHint = questionId === 'breathing'
     ? `<p class="question-hint">${e(t('triageBreathingHint'))}</p>`
-    : '';
+    : questionId === 'sceneSafe'
+      ? `<p class="question-hint">${e(t('triageSceneHint'))}</p>`
+      : questionId === 'communication'
+        ? `<p class="question-hint">${e(t('triageCommunicationHint'))}</p>`
+        : '';
+  const sceneAnswers = questionId === 'sceneSafe';
+  const communicationAnswers = questionId === 'communication';
   const emergency = emergencyName();
   app.innerHTML = `
     <header class="topbar">
-      <button class="icon-btn" id="back-home" type="button" aria-label="${e(t('backHome'))}">‹</button>
-      <div><div class="eyebrow">${e(t('triageEyebrow', { step }))}</div><h1 id="view-heading" tabindex="-1">${e(t('triageTitle'))}</h1></div>
+      <div class="topbar-nav">
+        <button class="icon-btn" id="back-home" type="button" aria-label="${e(t('backHome'))}">‹</button>
+        <button class="icon-btn" id="back-step" type="button" aria-label="${e(t('backStep'))}">→</button>
+      </div>
+      <div><div class="eyebrow">${e(t('assessmentEyebrow', { step }))}</div><h1 id="view-heading" tabindex="-1">${e(t('assessmentTitle'))}</h1></div>
       ${miniEmergencyButton()}
     </header>
     <main class="body">
-      <aside class="triage-note"><strong>${e(t('triageBefore'))}</strong> ${e(t('triageBeforeText', { emergency }))}</aside>
+      ${sceneAnswers ? '' : `<aside class="triage-note"><strong>${e(t('triageBefore'))}</strong> ${e(t('triageBeforeText', { emergency }))}</aside>`}
       <section class="question-card" aria-labelledby="question-heading">
         <div class="big-icon" aria-hidden="true">?</div>
         <h2 id="question-heading">${e(t(questionKeys[questionId]))}</h2>
-        ${breathingHint}
-        <p>${e(t('triageRecheck'))}</p>
+        ${questionHint}
+        ${sceneAnswers ? '' : `<p>${e(t('triageRecheck'))}</p>`}
       </section>
-      <div class="yesno" aria-label="${e(t('triageAnswer'))}">
-        <button class="btn yes" data-answer="y" type="button">${e(t('yes'))}</button>
-        <button class="btn no" data-answer="n" type="button">${e(t('no'))}</button>
+      <div class="${sceneAnswers || communicationAnswers ? 'assessment-choices' : 'yesno'}" aria-label="${e(t('triageAnswer'))}">
+        ${sceneAnswers ? `
+          <button class="btn yes" data-answer="y" type="button">${e(t('triageSafeAnswer'))}</button>
+          <button class="btn emergency" data-answer="n" type="button">${e(t('triageUnsafeAnswer'))}</button>
+          <button class="btn secondary" data-answer="u" type="button">${e(t('triageUnknownAnswer'))}</button>
+        ` : `
+          <button class="btn yes" data-answer="y" type="button">${e(t('yes'))}</button>
+          <button class="btn no" data-answer="n" type="button">${e(t('no'))}</button>
+          ${communicationAnswers ? `<button class="btn text" data-answer="u" type="button">${e(t('unknown'))}</button>` : ''}
+        `}
       </div>
       ${emergencyButton('btn emergency full card-spaced')}
     </main>`;
 
   document.getElementById('back-home').addEventListener('click', () => {
     state.triageAnswers = {};
+    state.triageAsked = [];
+    state.triageSeedCount = 0;
+    state.triagePreserveFinder = false;
+    state.responseMode = null;
+    navigate('#/');
+  });
+  document.getElementById('back-step').addEventListener('click', () => {
+    const lastQuestion = state.triageAsked.pop();
+    if (lastQuestion) {
+      delete state.triageAnswers[lastQuestion];
+      render({ focus: true });
+      return;
+    }
+    if (state.triageSeedCount > 0) {
+      state.assessmentStep = 'response';
+      state.assessmentPreserve = true;
+      state.triageAnswers = {};
+      state.triageSeedCount = 0;
+      navigate('#/assessment');
+      return;
+    }
     navigate('#/');
   });
   document.querySelectorAll('[data-answer]').forEach((button) => button.addEventListener('click', () => {
+    state.triageAsked.push(questionId);
     state.triageAnswers[questionId] = button.dataset.answer;
     render({ focus: true });
   }));
-  return t('triageTitle');
+  return t('assessmentTitle');
 }
 
-function symptomChips(symptomIds, selected, dataAttribute = 'data-sym') {
+function defaultEvidenceType(symptom) {
+  const types = symptom?.evidenceTypes || ['observed'];
+  if (state.responseMode === 'limited') return types.find((type) => type !== 'reported') || types[0];
+  return types[0];
+}
+
+function symptomChips(symptomIds, selected, dataAttribute = 'data-sym', evidenceType = '') {
   return symptomModels(symptomIds, kb.symptoms).map((symptom) => {
     const active = selected.includes(symptom.id);
-    return `<button class="chip${active ? ' active' : ''}" type="button" ${dataAttribute}="${e(symptom.id)}" aria-pressed="${active}">${e(symptom.label)}</button>`;
+    const source = evidenceType || state.diffSources[symptom.id] || defaultEvidenceType(symptom);
+    const evidenceLabel = source ? symptom[`${source}Label`] : '';
+    const sourceAttribute = dataAttribute === 'data-sym' ? ` data-evidence="${e(source)}"` : '';
+    return `<button class="chip${active ? ' active' : ''}" type="button" ${dataAttribute}="${e(symptom.id)}"${sourceAttribute} aria-pressed="${active}">${e(evidenceLabel || symptom.label)}</button>`;
   }).join('');
 }
 
 function symptomLabels(ids) {
   return ids.map((id) => kb.symptoms[id]?.label).filter(Boolean);
+}
+
+function symptomHasEvidence(id, type) {
+  return kb.symptoms[id]?.evidenceTypes?.includes(type) === true;
+}
+
+function canBeHistoricalReport(id) {
+  const symptom = kb.symptoms[id];
+  return Boolean(symptom?.canBeHistorical || symptom?.reportedCanBeHistorical);
+}
+
+function currentEvidenceAvailable(id) {
+  const types = kb.symptoms[id]?.evidenceTypes || [];
+  return state.responseMode === 'clear' || types.some((type) => type !== 'reported');
 }
 
 function compatibilityMessage(symptomId, result) {
@@ -446,41 +671,6 @@ function compatibilityMessage(symptomId, result) {
   return parts.length ? t('compatibilityChanged', { label, changes: parts.join(t('conjunction')) }) : '';
 }
 
-let restoreCategoryControlFocus = false;
-
-function selectSymptomCategory(categoryId) {
-  const normalized = categoryId || null;
-  if (normalized === state.diffCategory) return;
-  state.diffCategory = normalized;
-  state.diffCompatibilityMessage = '';
-  state.diffShowAll = false;
-  restoreCategoryControlFocus = true;
-  render({ focus: false });
-}
-
-function setupCategoryControls() {
-  const tabs = document.getElementById('category-tabs');
-  const select = document.getElementById('category-select');
-  if (!tabs || !select) return;
-
-  tabs.addEventListener('click', (event) => {
-    const button = event.target?.closest?.('[data-cat]');
-    if (button) selectSymptomCategory(button.dataset.cat);
-  });
-  select.addEventListener('change', () => selectSymptomCategory(select.value));
-
-  if (!restoreCategoryControlFocus) return;
-  restoreCategoryControlFocus = false;
-  requestAnimationFrame(() => {
-    const mobileControl = window.matchMedia('(max-width: 600px)').matches;
-    const target = mobileControl
-      ? document.getElementById('category-select')
-      : Array.from(document.querySelectorAll('#category-tabs [data-cat]'))
-        .find((button) => (button.dataset.cat || null) === state.diffCategory);
-    target?.focus({ preventScroll: true });
-  });
-}
-
 let restoreSearchFocus = false;
 
 function selectedSymptomsMarkup() {
@@ -488,12 +678,20 @@ function selectedSymptomsMarkup() {
   const historical = sortSymptomIds(state.diffHistorical, kb.symptoms);
   if (!current.length && !historical.length) return '';
   const count = formatNumber(new Set([...current, ...historical]).size);
+  const sourceKeys = {
+    observed: 'sourceObserved', reported: 'sourceReported',
+    scene: 'sourceScene', background: 'sourceBackground',
+  };
+  const currentGroups = Object.entries(sourceKeys).map(([source, key]) => {
+    const ids = current.filter((id) => state.diffSources[id] === source);
+    return ids.length ? `<h3 class="selected-source-title">${e(t(key))}</h3><div class="chips selected-chips">${symptomChips(ids, state.diffSelected, 'data-sym', source)}</div>` : '';
+  }).join('');
   return `<section class="selected-tray" aria-labelledby="selected-tray-heading">
     <div class="section-heading-row">
       <h2 id="selected-tray-heading">${e(t('selected', { count }))}</h2>
       <button class="small-text-btn" id="clear-symptoms" type="button">${e(t('clearAll'))}</button>
     </div>
-    ${current.length ? `<div class="chips selected-chips">${symptomChips(current, state.diffSelected)}</div>` : ''}
+    ${currentGroups}
     ${historical.length ? `<h3>${e(t('historicalTitle'))}</h3><div class="chips selected-chips historical-inline">${symptomChips(historical, state.diffHistorical, 'data-history-sym')}</div>` : ''}
   </section>`;
 }
@@ -501,19 +699,48 @@ function selectedSymptomsMarkup() {
 function searchResultsMarkup(query) {
   const normalized = normalizePersianSearch(query);
   if (normalized.length < 2) return `<p class="empty-inline">${e(t('symptomsSearchMin'))}</p>`;
-  const ids = searchSymptoms(query, kb.symptoms)
-    .filter((id) => isCurrentSymptomVisible(id, state.diffSelected, kb.symptoms));
-  if (!ids.length) {
+  const matched = searchSymptoms(query, kb.symptoms);
+  const current = matched.filter((id) => (
+    currentEvidenceAvailable(id)
+    && isCurrentSymptomVisible(id, state.diffSelected, kb.symptoms)
+  ));
+  const historical = state.responseMode === 'limited'
+    ? matched.filter((id) => (
+      !current.includes(id)
+      && symptomHasEvidence(id, 'reported')
+      && canBeHistoricalReport(id)
+    ))
+    : [];
+  if (!current.length && !historical.length) {
     return `<div class="empty compact-empty"><h2>${e(t('symptomsSearchNone'))}</h2><p>${e(t('symptomsSearchNoneHelp'))}</p></div>`;
   }
-  return `<div class="section-heading-row"><h2>${e(t('symptomsSearchResults'))}</h2><span class="result-count">${e(t('itemCount', { count: formatNumber(ids.length) }))}</span></div>
-    <div class="chips" id="search-symptoms">${symptomChips(ids, state.diffSelected)}</div>`;
+  const count = formatNumber(new Set([...current, ...historical]).size);
+  const sourceGroups = [
+    ['scene', 'sourceScene'],
+    ['observed', 'sourceObserved'],
+    ['reported', 'sourceReported'],
+    ['background', 'sourceBackground'],
+  ].map(([source, labelKey]) => {
+    if (source === 'reported' && state.responseMode !== 'clear') return '';
+    const ids = current.filter((id) => symptomHasEvidence(id, source));
+    return ids.length ? `<section class="search-result-group"><h3>${e(t(labelKey))}</h3><div class="chips">${symptomChips(ids, state.diffSelected, 'data-sym', source)}</div></section>` : '';
+  }).join('');
+  return `<div class="section-heading-row"><h2>${e(t('symptomsSearchResults'))}</h2><span class="result-count">${e(t('itemCount', { count }))}</span></div>
+    ${sourceGroups}
+    ${historical.length ? `<section class="search-result-group historical-search"><h3>${e(t('searchHistoricalResults'))}</h3><div class="chips">${symptomChips(historical, state.diffHistorical, 'data-history-sym', 'reported')}</div></section>` : ''}`;
 }
 
-function applyCurrentSymptom(symptomId) {
+function applyCurrentSymptom(symptomId, evidenceType = '') {
+  const wasSelected = state.diffSelected.includes(symptomId);
   const result = toggleCurrentSymptom(state.diffSelected, state.diffHistorical, symptomId, kb.symptoms);
   state.diffSelected = result.selected;
   state.diffHistorical = result.historical;
+  if (wasSelected || !result.accepted) delete state.diffSources[symptomId];
+  else state.diffSources[symptomId] = evidenceType || defaultEvidenceType(kb.symptoms[symptomId]);
+  for (const id of [...result.removed, ...result.movedToHistorical]) delete state.diffSources[id];
+  if (result.accepted && !wasSelected && symptomId === 'unresponsive') {
+    applyResponseMode('limited', { preserve: true });
+  }
   state.diffCompatibilityMessage = compatibilityMessage(symptomId, result);
   restoreSearchFocus = Boolean(state.diffQuery);
   render({ focus: false });
@@ -521,7 +748,7 @@ function applyCurrentSymptom(symptomId) {
 
 function wireCurrentSymptomButtons(root = document) {
   root.querySelectorAll('[data-sym]').forEach((button) => button.addEventListener('click', () => {
-    applyCurrentSymptom(button.dataset.sym);
+    applyCurrentSymptom(button.dataset.sym, button.dataset.evidence);
   }));
 }
 
@@ -549,6 +776,7 @@ function setupSymptomSearch() {
     if (hasQuery) {
       searchPanel.innerHTML = searchResultsMarkup(input.value);
       wireCurrentSymptomButtons(searchPanel);
+      wireHistoricalSymptomButtons(searchPanel);
     } else {
       searchPanel.innerHTML = '';
     }
@@ -572,59 +800,76 @@ function setupSymptomSearch() {
   }
 }
 
-function renderSymptoms() {
-  const categoryIds = Object.keys(kb.categories);
-  if (state.diffStage === 'result') return renderDifferentialResults();
-
-  const configuredQuickIds = quickSymptomIds(kb.symptoms);
-  const allCategorySymptoms = [...new Set(categoryIds.flatMap((id) => kb.categories[id].diffSymptoms || []))];
-  const quickIds = configuredQuickIds.length
-    ? configuredQuickIds
-    : sortSymptomIds(allCategorySymptoms, kb.symptoms).slice(0, 8);
-  let categorySymptoms;
-  if (state.diffCategory === QUICK_CATEGORY) categorySymptoms = quickIds;
-  else if (state.diffCategory === SELECTED_CATEGORY) categorySymptoms = [...state.diffSelected];
-  else if (state.diffCategory) categorySymptoms = kb.categories[state.diffCategory]?.diffSymptoms || [];
-  else categorySymptoms = allCategorySymptoms;
-
-  const compatibleSymptoms = sortSymptomIds(
-    categorySymptoms.filter((id) => isCurrentSymptomVisible(id, state.diffSelected, kb.symptoms)),
+function evidenceSection(type, headingKey, helpKey) {
+  const compatible = sortSymptomIds(
+    Object.keys(kb.symptoms).filter((id) => (
+      symptomHasEvidence(id, type)
+      && !state.diffSelected.includes(id)
+      && isCurrentSymptomVisible(id, state.diffSelected, kb.symptoms)
+    )),
     kb.symptoms,
   );
-  const isCompactCategory = [QUICK_CATEGORY, SELECTED_CATEGORY].includes(state.diffCategory);
-  const initiallyVisible = new Set(compatibleSymptoms.slice(0, INITIAL_SYMPTOM_LIMIT));
-  for (const id of state.diffSelected) {
-    if (compatibleSymptoms.includes(id)) initiallyVisible.add(id);
+  if (!compatible.length) return '';
+  const expanded = state.diffExpanded.includes(type);
+  const limit = EVIDENCE_LIMITS[type] || 10;
+  const visible = expanded ? compatible : compatible.slice(0, limit);
+  const hiddenCount = compatible.length - visible.length;
+  return `<section class="evidence-section evidence-${e(type)}" aria-labelledby="${e(type)}-heading">
+    <div class="evidence-heading"><span class="evidence-source" aria-hidden="true">${type === 'observed' ? '◉' : type === 'reported' ? '“”' : type === 'scene' ? '⌖' : 'i'}</span><div><h2 id="${e(type)}-heading">${e(t(headingKey))}</h2><p>${e(t(helpKey))}</p></div></div>
+    <div class="chips">${symptomChips(visible, state.diffSelected, 'data-sym', type)}</div>
+    ${hiddenCount > 0 ? `<button class="show-more-symptoms" data-expand="${e(type)}" type="button">${e(t('showMore', { count: formatNumber(hiddenCount) }))}</button>` : ''}
+    ${expanded && compatible.length > limit ? `<button class="show-more-symptoms" data-collapse="${e(type)}" type="button">${e(t('showLess'))}</button>` : ''}
+  </section>`;
+}
+
+function historicalEvidenceSection() {
+  if (state.responseMode !== 'limited') return '';
+  const type = 'historical';
+  const compatible = sortSymptomIds(
+    Object.keys(kb.symptoms).filter((id) => (
+      symptomHasEvidence(id, 'reported')
+      && canBeHistoricalReport(id)
+      && !state.diffHistorical.includes(id)
+    )),
+    kb.symptoms,
+  );
+  if (!compatible.length) return '';
+  const expanded = state.diffExpanded.includes(type);
+  const limit = EVIDENCE_LIMITS[type];
+  const visible = expanded ? compatible : compatible.slice(0, limit);
+  const hiddenCount = compatible.length - visible.length;
+  return `<section class="historical-symptoms evidence-section" aria-labelledby="historical-heading">
+    <h2 id="historical-heading">${e(t('historicalHeading'))}</h2>
+    <p>${e(t('historicalHelp'))}</p>
+    <div class="chips">${symptomChips(visible, state.diffHistorical, 'data-history-sym', 'reported')}</div>
+    ${hiddenCount > 0 ? `<button class="show-more-symptoms" data-expand="${type}" type="button">${e(t('showMore', { count: formatNumber(hiddenCount) }))}</button>` : ''}
+    ${expanded && compatible.length > limit ? `<button class="show-more-symptoms" data-collapse="${type}" type="button">${e(t('showLess'))}</button>` : ''}
+  </section>`;
+}
+
+function renderSymptoms() {
+  if (!state.responseMode) {
+    state.assessmentStep = 'scene';
+    state.assessmentPreserve = false;
+    navigate('#/assessment');
+    return t('assessmentTitle');
   }
-  const currentSymptoms = state.diffShowAll || isCompactCategory
-    ? compatibleSymptoms
-    : compatibleSymptoms.filter((id) => initiallyVisible.has(id));
-  const hiddenSymptomCount = compatibleSymptoms.length - currentSymptoms.length;
-  const historicalSymptoms = state.diffCategory === SELECTED_CATEGORY
-    ? []
-    : sortSymptomIds(historicalSymptomIds(categorySymptoms, state.diffSelected, kb.symptoms), kb.symptoms);
+  if (state.diffStage === 'result') return renderDifferentialResults();
+
   const allEvidence = [...new Set([...state.diffSelected, ...state.diffHistorical])];
+  const relatedCount = rankCases(allEvidence, kb.cases).length;
   const suggestions = suggestSymptoms(allEvidence, kb.cases, kb.symptoms, 12)
-    .filter((id) => isCurrentSymptomVisible(id, state.diffSelected, kb.symptoms))
+    .filter((id) => (
+      currentEvidenceAvailable(id)
+      && !state.diffSelected.includes(id)
+      && isCurrentSymptomVisible(id, state.diffSelected, kb.symptoms)
+    ))
     .slice(0, 6);
   const selectionCount = allEvidence.length;
-
-  const categoryItems = [
-    { id: QUICK_CATEGORY, label: t('categoryQuick') },
-    { id: SELECTED_CATEGORY, label: t('categorySelected', { count: formatNumber(selectionCount) }) },
-    { id: '', label: t('categoryAll') },
-    ...categoryIds.map((id) => ({ id, label: `${kb.categories[id].icon} ${kb.categories[id].title}` })),
-  ].map((item) => ({ ...item, active: (item.id || null) === (state.diffCategory || null) }));
-  const categoryTabs = categoryItems.map(({ id, label, active }) => (
-    `<button type="button" class="cat-btn${active ? ' active' : ''}" data-cat="${e(id)}" aria-pressed="${active}">${e(label)}</button>`
-  )).join('');
-  const categoryOptions = categoryItems.map(({ id, label, active }) => (
-    `<option value="${e(id)}"${active ? ' selected' : ''}>${e(label)}</option>`
-  )).join('');
-  const activeCategoryLabel = categoryItems.find((item) => item.active)?.label.replace(/^[★✓]\s*/, '') || t('categoryAllSymptoms');
   const hasSearch = Boolean(state.diffQuery.trim());
-
   const emergency = emergencyName();
+  const responseClear = state.responseMode === 'clear';
+
   app.innerHTML = `
     <header class="topbar">
       <button class="icon-btn" id="back-home" type="button" aria-label="${e(t('backHome'))}">‹</button>
@@ -633,7 +878,11 @@ function renderSymptoms() {
     </header>
     <main class="body symptoms-body">
       ${compatibilityNotice()}
-      <aside class="disclaimer compact"><strong>${e(t('symptomsUrgent'))}</strong> ${e(t('symptomsUrgentText', { emergency }))}</aside>
+      <aside class="triage-note symptom-urgent-note"><strong>${e(t('symptomsUrgent'))}</strong> ${e(t('symptomsUrgentText', { emergency }))}<button class="small-text-btn" id="restart-urgent" type="button">${e(t('symptomsUrgentAction'))}</button></aside>
+      <section class="response-mode-card ${responseClear ? 'response-clear' : 'response-limited'}">
+        <div><strong>${e(t(responseClear ? 'responseClearTitle' : 'responseLimitedTitle'))}</strong><p>${e(t(responseClear ? 'responseClearText' : 'responseLimitedText'))}</p></div>
+        <button class="small-text-btn" id="change-response" type="button">${e(t('responseChange'))}</button>
+      </section>
       ${state.diffCompatibilityMessage ? `<p class="compatibility-notice" role="status">${e(state.diffCompatibilityMessage)}</p>` : ''}
 
       <section class="symptom-search-card" aria-labelledby="search-heading">
@@ -649,60 +898,58 @@ function renderSymptoms() {
       <section id="search-results" class="search-results" aria-live="polite" ${hasSearch ? '' : 'hidden'}>${hasSearch ? searchResultsMarkup(state.diffQuery) : ''}</section>
 
       <div id="symptom-browser" ${hasSearch ? 'hidden' : ''}>
-        <fieldset class="category-fieldset">
-          <legend>${e(t('categoryLegend'))}</legend>
-          <div class="category-tabs" id="category-tabs" role="group" aria-label="${e(t('categoryAria'))}">${categoryTabs}</div>
-          <label class="category-select-label" for="category-select">${e(t('categorySelect'))}</label>
-          <select class="category-select" id="category-select">${categoryOptions}</select>
-        </fieldset>
-
         ${suggestions.length ? `<section class="suggested-symptoms" aria-labelledby="suggested-heading">
           <h2 id="suggested-heading">${e(t('suggestedTitle'))}</h2>
           <p class="section-help">${e(t('suggestedHelp'))}</p>
           <div class="chips">${symptomChips(suggestions, state.diffSelected)}</div>
         </section>` : ''}
-
-        <section aria-labelledby="symptom-heading">
-          <h2 id="symptom-heading">${e(activeCategoryLabel)}</h2>
-          <p class="section-help">${e(t('compatibleHelp'))}</p>
-          <div class="chips" id="current-symptoms">${symptomChips(currentSymptoms, state.diffSelected)}</div>
-          ${currentSymptoms.length ? '' : `<p class="empty-inline">${e(state.diffCategory === SELECTED_CATEGORY ? t('noSelected') : t('noCompatible'))}</p>`}
-          ${hiddenSymptomCount > 0 ? `<button class="show-more-symptoms" id="show-more-symptoms" type="button">${e(t('showMore', { count: formatNumber(hiddenSymptomCount) }))}</button>` : ''}
-          ${state.diffShowAll && !isCompactCategory && compatibleSymptoms.length > INITIAL_SYMPTOM_LIMIT ? `<button class="show-more-symptoms" id="show-less-symptoms" type="button">${e(t('showLess'))}</button>` : ''}
-        </section>
-
-        ${historicalSymptoms.length ? `<section class="historical-symptoms" aria-labelledby="historical-heading">
-          <h2 id="historical-heading">${e(t('historicalHeading'))}</h2>
-          <p>${e(t('historicalHelp'))}</p>
-          <div class="chips">${symptomChips(historicalSymptoms, state.diffHistorical, 'data-history-sym')}</div>
-        </section>` : ''}
+        ${evidenceSection('scene', 'sceneHeading', 'sceneHelp')}
+        ${evidenceSection('observed', 'observedHeading', 'observedHelp')}
+        ${responseClear ? evidenceSection('reported', 'reportedHeading', 'reportedHelp') : ''}
+        ${evidenceSection('background', 'backgroundHeading', 'backgroundHelp')}
+        ${historicalEvidenceSection()}
       </div>
 
       <div class="symptom-result-bar">
-        <button class="btn primary full" id="show-results" type="button" ${selectionCount ? '' : 'disabled'}>${e(t('showRelated', { count: formatNumber(selectionCount) }))}</button>
+        <button class="btn primary full" id="show-results" type="button" ${selectionCount ? '' : 'disabled'}>${e(relatedCount ? t('showRelated', { count: formatNumber(relatedCount) }) : t('showRelatedNone'))}</button>
       </div>
     </main>`;
 
   document.getElementById('back-home').addEventListener('click', () => navigate('#/'));
-  setupCategoryControls();
+  document.getElementById('restart-urgent').addEventListener('click', () => {
+    state.assessmentStep = 'scene';
+    state.assessmentPreserve = false;
+    state.triageAnswers = {};
+    state.triageAsked = [];
+    state.triageSeedCount = 0;
+    state.triagePreserveFinder = false;
+    state.responseMode = null;
+    navigate('#/assessment');
+  });
+  document.getElementById('change-response').addEventListener('click', () => {
+    state.assessmentStep = 'response';
+    state.assessmentPreserve = true;
+    navigate('#/assessment');
+  });
   setupSymptomSearch();
   wireCurrentSymptomButtons();
   wireHistoricalSymptomButtons();
   document.getElementById('clear-symptoms')?.addEventListener('click', () => {
     state.diffSelected = [];
+    state.diffSources = {};
     state.diffHistorical = [];
     state.diffCompatibilityMessage = t('clearedAll');
-    state.diffShowAll = false;
+    state.diffExpanded = [];
     render({ focus: false });
   });
-  document.getElementById('show-more-symptoms')?.addEventListener('click', () => {
-    state.diffShowAll = true;
+  document.querySelectorAll('[data-expand]').forEach((button) => button.addEventListener('click', () => {
+    state.diffExpanded = [...new Set([...state.diffExpanded, button.dataset.expand])];
     render({ focus: false });
-  });
-  document.getElementById('show-less-symptoms')?.addEventListener('click', () => {
-    state.diffShowAll = false;
+  }));
+  document.querySelectorAll('[data-collapse]').forEach((button) => button.addEventListener('click', () => {
+    state.diffExpanded = state.diffExpanded.filter((type) => type !== button.dataset.collapse);
     render({ focus: false });
-  });
+  }));
   document.getElementById('show-results').addEventListener('click', () => {
     state.diffStage = 'result';
     state.diffCompatibilityMessage = '';
@@ -710,6 +957,7 @@ function renderSymptoms() {
   });
   return t('symptomsRoute');
 }
+
 function renderDifferentialResults() {
   const allSelected = [...new Set([...state.diffSelected, ...state.diffHistorical])];
   const ranked = rankCases(allSelected, kb.cases);
@@ -965,7 +1213,7 @@ const UPDATE_CHECK_INTERVAL = 5 * 60 * 1000;
 
 function refreshAppUpdateBanner() {
   if (!appUpdateBanner) return;
-  const safeRoute = state.ready && ['home', 'kb', 'settings'].includes(currentRoute().name);
+  const safeRoute = state.ready && ['home', 'more', 'kb', 'settings'].includes(currentRoute().name);
   appUpdateBanner.hidden = !(waitingServiceWorker && !updateDismissed && safeRoute);
 }
 
@@ -1001,7 +1249,7 @@ async function checkForAppUpdate({ force = false } = {}) {
 async function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return;
   try {
-    const registration = await navigator.serviceWorker.register('./sw.js?v=10', {
+    const registration = await navigator.serviceWorker.register('./sw.js?v=14', {
       scope: './',
       updateViaCache: 'none',
     });
@@ -1047,7 +1295,7 @@ async function backgroundSync() {
     if (result.changed.length) {
       showSyncAnnouncement(t('syncBackgroundDone'));
       const route = currentRoute();
-      if (['home', 'kb', 'symptoms'].includes(route.name)) render({ focus: false });
+      if (['home', 'more', 'kb', 'symptoms'].includes(route.name)) render({ focus: false });
     }
   } catch (error) {
     console.warn('Background KB sync failed', error);
@@ -1086,7 +1334,7 @@ async function activatePreferences(next, { persist = false, route = null } = {})
     state.fatalError = null;
     state.diffQuery = '';
     localizeStaticChrome();
-    if (route) history.replaceState(null, '', route);
+    if (route) history.replaceState({ emdApp: true }, '', route);
     render({ focus: true });
     if (loadResult?.fromCache) backgroundSync();
   } catch (error) {
@@ -1120,8 +1368,8 @@ function renderOnboarding(message = '') {
       </form>
       <div id="onboarding-contacts">${onboardingChoice.country ? contactsMarkup(onboardingChoice.country) : ''}</div>
       <section class="safety-notice onboarding-emergency">
-        <h2>${e(t('homeThreatTitle'))}</h2>
-        <p id="onboarding-emergency-text">${e(t('homeThreatText', { emergency }))}</p>
+        <h2>${e(t('onboardingEmergencyTitle'))}</h2>
+        <p id="onboarding-emergency-text">${e(t('onboardingEmergencyText', { emergency }))}</p>
         <div id="onboarding-call">${emergencyButton('btn emergency full', onboardingChoice.country)}</div>
         <button class="btn outline full card-spaced" id="onboarding-urgent" type="button">${e(t('onboardingEmergency'))}</button>
       </section>
@@ -1152,7 +1400,7 @@ function renderOnboarding(message = '') {
     onboardingChoice.country = countrySelect.value;
     document.getElementById('onboarding-contacts').innerHTML = onboardingChoice.country ? contactsMarkup(onboardingChoice.country) : '';
     document.getElementById('onboarding-call').innerHTML = emergencyButton('btn emergency full', onboardingChoice.country);
-    document.getElementById('onboarding-emergency-text').textContent = t('homeThreatText', { emergency: emergencyName(onboardingChoice.country) });
+    document.getElementById('onboarding-emergency-text').textContent = t('onboardingEmergencyText', { emergency: emergencyName(onboardingChoice.country) });
   });
   document.getElementById('onboarding-form').addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -1175,8 +1423,15 @@ function renderOnboarding(message = '') {
     const status = document.getElementById('onboarding-status');
     event.currentTarget.disabled = true;
     status.textContent = t('loading');
+    state.assessmentStep = 'scene';
+    state.assessmentPreserve = false;
+    state.triageAnswers = {};
+    state.triageAsked = [];
+    state.triageSeedCount = 0;
+    state.triagePreserveFinder = false;
+    state.responseMode = null;
     try {
-      await activatePreferences(onboardingChoice, { persist: false, route: '#/triage' });
+      await activatePreferences(onboardingChoice, { persist: false, route: '#/assessment' });
     } catch (error) {
       console.error(error);
       renderOnboarding(onboardingChoice.locale === 'en' ? t('englishDownloadRequired') : syncErrorMessage(error));
@@ -1191,11 +1446,68 @@ function renderFatal(error) {
   document.getElementById('view-heading')?.focus();
 }
 
-window.addEventListener('hashchange', () => render({ focus: true }));
+// The phone/browser back button walks the in-app screens (hash history). The very last
+// press would leave the app, so an explicit confirmation is shown before exiting.
+// Chrome also fires popstate for ordinary in-app hash navigations with a null state,
+// so the check is deferred until after the hashchange handler has marked the entry.
+let exitGuardSupported = false;
+try {
+  if (history.state === null) history.pushState({ emdExitGuard: true }, '', location.href);
+  exitGuardSupported = true;
+} catch { /* history access unavailable (e.g. sandboxed frame); confirmation is disabled */ }
+
+window.addEventListener('popstate', () => {
+  if (!exitGuardSupported) return;
+  setTimeout(() => {
+    if (history.state === null) showExitConfirm();
+  }, 0);
+});
+
+function showExitConfirm() {
+  document.getElementById('exit-confirm')?.remove();
+  const overlay = document.createElement('div');
+  overlay.id = 'exit-confirm';
+  overlay.className = 'exit-overlay';
+  overlay.innerHTML = `
+    <div class="exit-dialog" role="alertdialog" aria-modal="true" aria-labelledby="exit-confirm-title" aria-describedby="exit-confirm-text">
+      <div class="big-icon" aria-hidden="true">!</div>
+      <h2 id="exit-confirm-title">${e(t('exitConfirmTitle'))}</h2>
+      <p id="exit-confirm-text">${e(t('exitConfirmText'))}</p>
+      <div class="exit-actions">
+        <button class="btn primary" id="exit-confirm-stay" type="button">${e(t('exitConfirmStay'))}</button>
+        <button class="btn emergency" id="exit-confirm-leave" type="button">${e(t('exitConfirmLeave'))}</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  const stay = () => {
+    overlay.remove();
+    document.removeEventListener('keydown', onEscape);
+    try { history.pushState({ emdExitGuard: true }, '', location.href); } catch { /* ignore */ }
+  };
+  const leave = () => {
+    overlay.remove();
+    document.removeEventListener('keydown', onEscape);
+    history.back();
+  };
+  const onEscape = (event) => {
+    if (event.key === 'Escape') stay();
+  };
+  document.getElementById('exit-confirm-stay').addEventListener('click', stay);
+  document.getElementById('exit-confirm-leave').addEventListener('click', leave);
+  document.addEventListener('keydown', onEscape);
+  document.getElementById('exit-confirm-stay').focus();
+}
+
+window.addEventListener('hashchange', () => {
+  try {
+    if (!history.state) history.replaceState({ emdApp: true }, '', location.href);
+  } catch { /* ignore */ }
+  render({ focus: true });
+});
 window.addEventListener('online', () => {
   showSyncAnnouncement(t('onlineAgain'));
   const route = currentRoute();
-  if (route.name === 'home' || route.name === 'kb') render({ focus: false });
+  if (['home', 'more', 'kb'].includes(route.name)) render({ focus: false });
   backgroundSync();
   checkForAppUpdate({ force: true });
 });
@@ -1205,7 +1517,7 @@ document.addEventListener('visibilitychange', () => {
 window.addEventListener('offline', () => {
   showSyncAnnouncement(t('offlineNow'));
   const route = currentRoute();
-  if (route.name === 'home' || route.name === 'kb') render({ focus: false });
+  if (['home', 'more', 'kb'].includes(route.name)) render({ focus: false });
 });
 
 registerServiceWorker();

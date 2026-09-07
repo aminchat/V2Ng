@@ -3,8 +3,8 @@
   "title": "سوختگی حرارتی",
   "icon": "🔥",
   "category": "burn",
-  "version": 5,
-  "updatedAt": "2026-09-07",
+  "version": 6,
+  "updatedAt": "2026-09-08",
   "summary": "توقف سوختن و خنک‌کردن فوری با آب جاری خنک تا ۲۰ دقیقه",
   "sources": [
     "2024 American Heart Association and American Red Cross Guidelines for First Aid — Cooling and Care of Thermal Burns",
@@ -16,7 +16,8 @@
     "burn_face_hands_feet": 3,
     "stuck_clothing": 1,
     "soot_nose": 2,
-    "local_pain": 1
+    "local_pain": 1,
+    "child_victim": 1
   },
   "riskQuestions": [
     "burn_face_hands_feet",

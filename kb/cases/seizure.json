@@ -3,8 +3,8 @@
   "title": "تشنج (کونولسیون)",
   "icon": "⚡",
   "category": "consciousness",
-  "version": 5,
-  "updatedAt": "2026-09-07",
+  "version": 6,
+  "updatedAt": "2026-09-08",
   "summary": "حفاظت + زمان‌بندی — هیچ‌چیز در دهان ممنوع",
   "sources": [
     "2024 American Heart Association and American Red Cross Guidelines for First Aid — Seizures",
@@ -12,7 +12,10 @@
   ],
   "match": {
     "seizure_activity": 6,
-    "unresponsive": 2
+    "unresponsive": 2,
+    "first_seizure": 2,
+    "seizure_long": 2,
+    "pregnant": 1
   },
   "riskQuestions": [
     "seizure_long",

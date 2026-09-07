@@ -8,6 +8,9 @@
     "aliases": [
       "هوشیار است",
       "واکنش نشان می‌دهد"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "unresponsive": {
@@ -19,7 +22,10 @@
       "واکنش ندارد",
       "از حال رفته"
     ],
-    "displayPriority": 100
+    "displayPriority": 100,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "breathing_normal": {
     "label": "تنفس عادی",
@@ -35,6 +41,9 @@
     "aliases": [
       "نفس عادی",
       "طبیعی نفس می‌کشد"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "gasping": {
@@ -45,7 +54,10 @@
       "نفس‌های گاه‌به‌گاه",
       "تنفس غیرطبیعی"
     ],
-    "displayPriority": 100
+    "displayPriority": 100,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "not_breathing": {
     "label": "هیچ تنفسی ندارد",
@@ -58,7 +70,10 @@
       "قطع تنفس",
       "تنفس ندارد"
     ],
-    "displayPriority": 100
+    "displayPriority": 100,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "bleeding_heavy": {
     "label": "خونریزی شدید/جهنده یا خیس‌شدن سریع پانسمان",
@@ -67,13 +82,19 @@
       "خون فواره‌ای",
       "خون جهنده"
     ],
-    "displayPriority": 95
+    "displayPriority": 95,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "fainting": {
     "label": "غش/از دست دادن موقت هوشیاری",
     "aliases": [
       "از حال رفتن",
       "سنکوپ"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "dizziness": {
@@ -85,7 +106,10 @@
       "سبکی سر"
     ],
     "displayPriority": 72,
-    "quickAccess": true
+    "quickAccess": true,
+    "evidenceTypes": [
+      "reported"
+    ]
   },
   "nausea_vomiting": {
     "label": "تهوع یا استفراغ",
@@ -94,7 +118,14 @@
       "بالا آوردن"
     ],
     "displayPriority": 70,
-    "quickAccess": true
+    "quickAccess": true,
+    "evidenceTypes": [
+      "reported",
+      "observed"
+    ],
+    "observedLabel": "استفراغ کرده یا در حال استفراغ است",
+    "reportedLabel": "می‌گوید حالت تهوع دارد",
+    "reportedCanBeHistorical": true
   },
   "vomiting_repeated": {
     "label": "استفراغ مکرر",
@@ -102,7 +133,10 @@
       "بالا آوردن مکرر",
       "استفراغ پشت سر هم"
     ],
-    "displayPriority": 75
+    "displayPriority": 75,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "difficulty_breathing": {
     "label": "تنگی تنفس / سخت نفس کشیدن",
@@ -114,7 +148,13 @@
       "تنگی نفس"
     ],
     "displayPriority": 92,
-    "quickAccess": true
+    "quickAccess": true,
+    "evidenceTypes": [
+      "reported",
+      "observed"
+    ],
+    "observedLabel": "تنفس سخت، سریع یا همراه تقلا دیده می‌شود",
+    "reportedLabel": "می‌گوید نفس‌کشیدن برایش سخت شده است"
   },
   "chest_pain": {
     "label": "درد یا سنگینی سینه",
@@ -125,7 +165,10 @@
       "فشار سینه"
     ],
     "displayPriority": 86,
-    "quickAccess": true
+    "quickAccess": true,
+    "evidenceTypes": [
+      "reported"
+    ]
   },
   "confusion": {
     "label": "گیجی/ناهماهنگی",
@@ -136,7 +179,10 @@
       "حواس‌پرتی",
       "ناهماهنگی"
     ],
-    "displayPriority": 88
+    "displayPriority": 88,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "drowsiness": {
     "label": "خواب‌آلودگی غیرعادی",
@@ -145,6 +191,9 @@
     "aliases": [
       "خواب آلود",
       "سخت بیدار می‌شود"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "sweating_cold": {
@@ -152,6 +201,9 @@
     "aliases": [
       "عرق سرد",
       "پوست سرد و خیس"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "speech_difficulty": {
@@ -163,7 +215,10 @@
       "حرف زدن نامفهوم",
       "نمی‌تواند جمله بگوید"
     ],
-    "displayPriority": 82
+    "displayPriority": 82,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "facial_droop": {
     "label": "افتادگی یک طرف صورت",
@@ -171,7 +226,10 @@
       "کجی صورت",
       "افتادگی صورت"
     ],
-    "displayPriority": 82
+    "displayPriority": 82,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "arm_weakness": {
     "label": "بی‌حالی یک دست یا پا",
@@ -182,7 +240,10 @@
       "ضعف پا",
       "بی‌حالی یک طرف بدن"
     ],
-    "displayPriority": 82
+    "displayPriority": 82,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "seizure_activity": {
     "label": "تشنج/لرزش عمومی",
@@ -191,13 +252,19 @@
       "صرع",
       "حمله تشنجی"
     ],
-    "displayPriority": 90
+    "displayPriority": 90,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "ptosis": {
     "label": "افتادگی پلک/سختی بازکردن چشم (مسمومیت عصبی)",
     "aliases": [
       "پلک افتاده",
       "نمی‌تواند چشم را باز کند"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "muscle_tremor": {
@@ -205,6 +272,9 @@
     "aliases": [
       "لرزش عضله",
       "گرفتگی عضله"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "local_pain": {
@@ -216,7 +286,10 @@
       "محل ضربه درد دارد"
     ],
     "displayPriority": 65,
-    "quickAccess": true
+    "quickAccess": true,
+    "evidenceTypes": [
+      "reported"
+    ]
   },
   "local_swelling": {
     "label": "تورم در محل ضربه/نیش",
@@ -225,13 +298,19 @@
       "آماس محل"
     ],
     "displayPriority": 62,
-    "quickAccess": true
+    "quickAccess": true,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "local_redness": {
     "label": "قرمزی در محل",
     "aliases": [
       "سرخی محل",
       "قرمز شدن پوست"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "swelling_spreading": {
@@ -240,13 +319,19 @@
       "ورم در حال گسترش",
       "تورم سریع اندام"
     ],
-    "displayPriority": 80
+    "displayPriority": 80,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "bruising": {
     "label": "کبودی/لکه‌های بنفش روی پوست",
     "aliases": [
       "کبودشدگی",
       "خون‌مردگی"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "bleeding_gums": {
@@ -254,6 +339,9 @@
     "aliases": [
       "خون آمدن از لثه",
       "خونریزی دهان"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "hives_widespread": {
@@ -261,6 +349,9 @@
     "aliases": [
       "کهیر",
       "دانه پوستی گسترده"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "lip_tongue_swelling": {
@@ -270,7 +361,10 @@
       "ورم زبان",
       "ورم صورت"
     ],
-    "displayPriority": 84
+    "displayPriority": 84,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "throat_tightness": {
     "label": "احساس تنگی گلوی/سختی قورت دادن یا صحبت",
@@ -281,7 +375,10 @@
       "سختی بلع",
       "مشکل قورت دادن"
     ],
-    "displayPriority": 84
+    "displayPriority": 84,
+    "evidenceTypes": [
+      "reported"
+    ]
   },
   "wheezing": {
     "label": "خس‌خس یا صدای سوت هنگام تنفس",
@@ -290,6 +387,9 @@
     "aliases": [
       "خس خس",
       "سوت سینه"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "cyanosis": {
@@ -298,13 +398,19 @@
       "لب کبود",
       "ناخن کبود"
     ],
-    "displayPriority": 92
+    "displayPriority": 92,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "saw_snake": {
     "label": "مار دیده شده یا گزش مار قویاً محتمل است",
     "aliases": [
       "مارگزیدگی",
       "مار گزیده"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "two_punctures": {
@@ -312,6 +418,9 @@
     "aliases": [
       "جای دندان مار",
       "دو سوراخ گزش"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "scorpion_seen": {
@@ -319,6 +428,9 @@
     "aliases": [
       "عقرب‌زدگی",
       "عقرب گزیده"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "stinger_visible": {
@@ -326,6 +438,9 @@
     "aliases": [
       "نیش زنبور",
       "نیش داخل پوست"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "multiple_stings": {
@@ -333,6 +448,9 @@
     "aliases": [
       "چند نیش",
       "نیش زیاد"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "tick_attached": {
@@ -340,6 +458,9 @@
     "aliases": [
       "گزش کنه",
       "کنه روی پوست"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "animal_bite": {
@@ -348,6 +469,9 @@
       "گازگرفتگی حیوان",
       "سگ گاز گرفته",
       "گربه گاز گرفته"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "burn_face_hands_feet": {
@@ -356,6 +480,9 @@
       "سوختگی صورت",
       "سوختگی دست",
       "سوختگی پا"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "burn_large": {
@@ -363,6 +490,9 @@
     "aliases": [
       "سوختگی وسیع",
       "سوختگی بزرگ"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "burn_deep": {
@@ -372,7 +502,10 @@
       "سوختگی سفید",
       "سوختگی چرمی"
     ],
-    "displayPriority": 80
+    "displayPriority": 80,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "soot_nose": {
     "label": "دوده در بینی/دهان، گرفتگی صدا یا موهای بینی سوخته",
@@ -380,6 +513,9 @@
       "دوده بینی",
       "دوده دهان",
       "گرفتگی صدا بعد از دود"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "stuck_clothing": {
@@ -387,6 +523,9 @@
     "aliases": [
       "لباس چسبیده به زخم",
       "لباس چسبیده به سوختگی"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "electrical_contact": {
@@ -394,6 +533,9 @@
     "aliases": [
       "برق‌گرفتگی",
       "شوک الکتریکی"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "chemical_contact": {
@@ -401,6 +543,9 @@
     "aliases": [
       "سوختگی شیمیایی",
       "ریختن ماده شیمیایی"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "deformation": {
@@ -408,6 +553,9 @@
     "aliases": [
       "بدشکلی اندام",
       "کجی اندام"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "open_fracture": {
@@ -416,7 +564,10 @@
       "استخوان بیرون زده",
       "شکستگی همراه زخم"
     ],
-    "displayPriority": 80
+    "displayPriority": 80,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "pain_on_movement": {
     "label": "درد شدید با حرکت قسمت آسیب‌دیده",
@@ -425,6 +576,9 @@
     "aliases": [
       "درد با حرکت",
       "نمی‌تواند اندام را حرکت دهد"
+    ],
+    "evidenceTypes": [
+      "reported"
     ]
   },
   "numbness": {
@@ -434,6 +588,9 @@
     "aliases": [
       "بی حسی",
       "گزگز"
+    ],
+    "evidenceTypes": [
+      "reported"
     ]
   },
   "fall_from_height": {
@@ -441,6 +598,9 @@
     "aliases": [
       "سقوط",
       "از ارتفاع افتاده"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "car_accident": {
@@ -448,6 +608,9 @@
     "aliases": [
       "تصادف",
       "سانحه رانندگی"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "joint_swelling": {
@@ -455,6 +618,9 @@
     "aliases": [
       "ورم مفصل",
       "بدشکلی مفصل"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "head_impact": {
@@ -464,13 +630,19 @@
       "آسیب سر"
     ],
     "displayPriority": 68,
-    "quickAccess": true
+    "quickAccess": true,
+    "evidenceTypes": [
+      "scene"
+    ]
   },
   "known_diabetic": {
     "label": "مصدوم دیابتی شناخته‌شده است",
     "aliases": [
       "دیابت",
       "بیمار قندی"
+    ],
+    "evidenceTypes": [
+      "background"
     ]
   },
   "fruity_breath": {
@@ -478,6 +650,9 @@
     "aliases": [
       "بوی میوه دهان",
       "بوی استون دهان"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "kussmaul": {
@@ -485,6 +660,9 @@
     "aliases": [
       "نفس عمیق و سریع",
       "تنفس کوسمال"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "shivering": {
@@ -492,13 +670,29 @@
     "aliases": [
       "لرز",
       "بدن می‌لرزد"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "cold_skin": {
     "label": "پوست سرد و رنگ‌پریده",
     "aliases": [
       "پوست سرد",
-      "رنگ‌پریدگی"
+      "رنگ‌پریدگی",
+      "دما",
+      "دمای بدن پایین",
+      "کاهش دمای بدن",
+      "افت دمای بدن",
+      "بدن سرد",
+      "حرارت بدن پایین",
+      "هایپوترمی",
+      "کاهش دما",
+      "دمای پایین",
+      "درجه حرارت پایین"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "hot_dry_skin": {
@@ -508,14 +702,42 @@
     ],
     "aliases": [
       "پوست داغ و خشک",
-      "بدن خیلی داغ"
+      "بدن خیلی داغ",
+      "دما",
+      "دمای بدن بالا",
+      "افزایش دمای بدن",
+      "بدن داغ",
+      "حرارت بدن بالا",
+      "گرمازدگی",
+      "هایپرترمی",
+      "افزایش دما",
+      "دمای بالا",
+      "درجه حرارت بالا",
+      "تب"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "hot_flushed": {
     "label": "پوست بسیار داغ و قرمز همراه تعریق زیاد",
     "aliases": [
       "پوست داغ و عرق کرده",
-      "تعریق زیاد در گرما"
+      "تعریق زیاد در گرما",
+      "دما",
+      "دمای بدن بالا",
+      "افزایش دمای بدن",
+      "بدن داغ",
+      "حرارت بدن بالا",
+      "گرمازدگی",
+      "هایپرترمی",
+      "افزایش دما",
+      "دمای بالا",
+      "درجه حرارت بالا",
+      "تب"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "known_allergen_exposure": {
@@ -524,7 +746,13 @@
       "حساسیت",
       "آلرژی",
       "تماس با ماده حساسیت‌زا"
-    ]
+    ],
+    "evidenceTypes": [
+      "background",
+      "scene"
+    ],
+    "backgroundLabel": "فرد حساسیت شناخته‌شده دارد",
+    "sceneLabel": "مواجههٔ اخیر با مادهٔ حساسیت‌زا دیده یا گزارش شده است"
   },
   "choking_signs": {
     "label": "ناتوانی در حرف‌زدن، نفس‌کشیدن یا سرفهٔ مؤثر",
@@ -537,7 +765,10 @@
       "گیر کردن غذا",
       "راه هوایی بسته"
     ],
-    "displayPriority": 96
+    "displayPriority": 96,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "coughing_effort": {
     "label": "سرفهٔ قوی و مؤثر دارد و می‌تواند حرف بزند",
@@ -546,6 +777,9 @@
     "aliases": [
       "سرفه مؤثر",
       "می‌تواند سرفه کند"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "drowning_recent": {
@@ -553,6 +787,9 @@
     "aliases": [
       "غرق‌شدگی",
       "از آب نجات یافته"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "substance_access": {
@@ -561,6 +798,9 @@
       "مسمومیت",
       "خوردن سم",
       "مصرف مشکوک دارو"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "container_available": {
@@ -568,6 +808,9 @@
     "aliases": [
       "ظرف سم موجود است",
       "بسته دارو موجود است"
+    ],
+    "evidenceTypes": [
+      "scene"
     ]
   },
   "embedded_eye": {
@@ -575,6 +818,9 @@
     "aliases": [
       "جسم در چشم",
       "چیزی داخل چشم رفته"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "object_embedded": {
@@ -582,6 +828,9 @@
     "aliases": [
       "جسم داخل بدن",
       "شیء فرورفته"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "wound_deep": {
@@ -589,6 +838,9 @@
     "aliases": [
       "بریدگی عمیق",
       "زخم عمیق"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "seizure_long": {
@@ -596,6 +848,9 @@
     "aliases": [
       "تشنج طولانی",
       "تشنج بیشتر از پنج دقیقه"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "first_seizure": {
@@ -603,6 +858,9 @@
     "aliases": [
       "اولین تشنج",
       "سابقه تشنج ندارد"
+    ],
+    "evidenceTypes": [
+      "background"
     ]
   },
   "pregnant": {
@@ -610,6 +868,9 @@
     "aliases": [
       "بارداری",
       "حامله"
+    ],
+    "evidenceTypes": [
+      "background"
     ]
   },
   "child_victim": {
@@ -620,6 +881,9 @@
     "aliases": [
       "بچه",
       "کودک"
+    ],
+    "evidenceTypes": [
+      "background"
     ]
   },
   "elderly_victim": {
@@ -627,6 +891,9 @@
     "aliases": [
       "سالمند",
       "پیر"
+    ],
+    "evidenceTypes": [
+      "background"
     ]
   },
   "heart_known": {
@@ -634,6 +901,9 @@
     "aliases": [
       "بیماری قلبی",
       "سابقه قلبی"
+    ],
+    "evidenceTypes": [
+      "background"
     ]
   },
   "time_onset": {
@@ -641,6 +911,9 @@
     "aliases": [
       "زمان شروع",
       "آخرین زمان سلامت"
+    ],
+    "evidenceTypes": [
+      "background"
     ]
   },
   "shivering_stopped": {
@@ -648,6 +921,9 @@
     "aliases": [
       "قطع لرز در سرما",
       "دیگر نمی‌لرزد"
+    ],
+    "evidenceTypes": [
+      "observed"
     ]
   },
   "severe_headache": {
@@ -658,7 +934,10 @@
       "سردرد شدید",
       "سردرد بعد از ضربه"
     ],
-    "displayPriority": 78
+    "displayPriority": 78,
+    "evidenceTypes": [
+      "reported"
+    ]
   },
   "unequal_pupils": {
     "label": "مردمک‌های دو چشم هم‌اندازه نیستند",
@@ -666,7 +945,10 @@
       "مردمک نابرابر",
       "اندازه مردمک متفاوت"
     ],
-    "displayPriority": 78
+    "displayPriority": 78,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "blood_thinner": {
     "label": "داروی رقیق‌کنندهٔ خون مصرف می‌کند یا اختلال خونریزی دارد",
@@ -674,6 +956,9 @@
       "رقیق‌کننده خون",
       "وارفارین",
       "داروی ضد انعقاد"
+    ],
+    "evidenceTypes": [
+      "background"
     ]
   },
   "neck_pain": {
@@ -683,6 +968,9 @@
     "aliases": [
       "گردن درد",
       "درد گردن"
+    ],
+    "evidenceTypes": [
+      "reported"
     ]
   },
   "nosebleed": {
@@ -692,7 +980,10 @@
       "خونریزی بینی"
     ],
     "displayPriority": 60,
-    "quickAccess": true
+    "quickAccess": true,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "bleeding_persistent": {
     "label": "خونریزی با فشار پیوسته متوقف نمی‌شود",
@@ -700,7 +991,10 @@
       "خون بند نمی‌آید",
       "خونریزی قطع نمی‌شود"
     ],
-    "displayPriority": 60
+    "displayPriority": 60,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "shock_signs": {
     "label": "نشانه‌های شوک: پوست رنگ‌پریده/سرد و مرطوب، ضعف یا سرگیجه",
@@ -712,7 +1006,11 @@
       "نبض ضعیف",
       "پوست سرد و مرطوب"
     ],
-    "displayPriority": 88
+    "displayPriority": 88,
+    "evidenceTypes": [
+      "observed"
+    ],
+    "observedLabel": "پوست رنگ‌پریده، سرد و مرطوب یا نبض ضعیف دیده یا حس می‌شود"
   },
   "frostbitten_skin": {
     "label": "پوست یخ‌زده، بی‌حس، سفید/خاکستری یا مومی",
@@ -722,7 +1020,10 @@
       "پوست مومی",
       "بی حسی در سرما"
     ],
-    "displayPriority": 70
+    "displayPriority": 70,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "tooth_knocked_out": {
     "label": "دندان دائمی کامل از جا بیرون آمده است",
@@ -731,7 +1032,10 @@
       "کنده شدن دندان",
       "دندان از جا درآمده"
     ],
-    "displayPriority": 65
+    "displayPriority": 65,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "open_chest_wound": {
     "label": "زخم باز یا سوراخ‌شدگی قفسهٔ سینه",
@@ -740,7 +1044,10 @@
       "زخم نافذ قفسه سینه",
       "زخم باز سینه"
     ],
-    "displayPriority": 90
+    "displayPriority": 90,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "amputated_part": {
     "label": "قطع کامل انگشت یا بخشی از بدن",
@@ -749,7 +1056,10 @@
       "انگشت قطع شده",
       "دست قطع شده"
     ],
-    "displayPriority": 92
+    "displayPriority": 92,
+    "evidenceTypes": [
+      "observed"
+    ]
   },
   "jellyfish_sting": {
     "label": "تماس یا نیش عروس دریایی",
@@ -758,6 +1068,9 @@
       "سوختگی عروس دریایی",
       "شاخک عروس دریایی"
     ],
-    "displayPriority": 58
+    "displayPriority": 58,
+    "evidenceTypes": [
+      "scene"
+    ]
   }
 }

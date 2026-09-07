@@ -3,6 +3,7 @@ const SYMPTOM_RE = /^[a-z][a-z0-9_]*$/;
 const HASH_RE = /^[a-f0-9]{64}$/;
 const COUNTRY_RE = /^[A-Z]{2}$/;
 const LOCALE_RE = /^[a-z]{2}(?:-[A-Z]{2})?$/;
+const EVIDENCE_TYPES = new Set(['observed', 'reported', 'scene', 'background']);
 
 function plainObject(value) {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -66,19 +67,38 @@ export function validateKnowledgeBase(symptoms, categories, cases) {
       }
     }
     if (symptom.aliases !== undefined) {
-      if (!nonEmptyStrings(symptom.aliases) || symptom.aliases.length > 12 || symptom.aliases.some((alias) => alias.length > 80)) {
-        errors.push(`symptom "${id}": aliases must contain 1 to 12 non-empty strings of at most 80 characters`);
+      if (!nonEmptyStrings(symptom.aliases) || symptom.aliases.length > 16 || symptom.aliases.some((alias) => alias.length > 80)) {
+        errors.push(`symptom "${id}": aliases must contain 1 to 16 non-empty strings of at most 80 characters`);
       } else if (new Set(symptom.aliases.map((alias) => alias.trim())).size !== symptom.aliases.length) {
         errors.push(`symptom "${id}": aliases must not contain duplicates`);
       }
     }
-    for (const field of ['requiresResponsive', 'requiresBreathing', 'canBeHistorical', 'quickAccess']) {
+    if (!nonEmptyStrings(symptom.evidenceTypes)
+      || symptom.evidenceTypes.some((type) => !EVIDENCE_TYPES.has(type))
+      || new Set(symptom.evidenceTypes).size !== symptom.evidenceTypes.length) {
+      errors.push(`symptom "${id}": evidenceTypes must contain unique observed, reported, scene, or background values`);
+    }
+    for (const field of ['observedLabel', 'reportedLabel', 'sceneLabel', 'backgroundLabel']) {
+      if (symptom[field] !== undefined && (typeof symptom[field] !== 'string' || !symptom[field].trim())) {
+        errors.push(`symptom "${id}": ${field} must be a non-empty string`);
+      }
+    }
+    for (const type of EVIDENCE_TYPES) {
+      const field = `${type}Label`;
+      if (symptom[field] && !symptom.evidenceTypes?.includes(type)) {
+        errors.push(`symptom "${id}": ${field} requires ${type} evidence`);
+      }
+    }
+    for (const field of ['requiresResponsive', 'requiresBreathing', 'canBeHistorical', 'reportedCanBeHistorical', 'quickAccess']) {
       if (symptom[field] !== undefined && typeof symptom[field] !== 'boolean') {
         errors.push(`symptom "${id}": ${field} must be boolean`);
       }
     }
     if (symptom.canBeHistorical && !symptom.requiresResponsive && !symptom.requiresBreathing) {
       errors.push(`symptom "${id}": canBeHistorical requires an assessability constraint`);
+    }
+    if (symptom.reportedCanBeHistorical && !symptom.evidenceTypes?.includes('reported')) {
+      errors.push(`symptom "${id}": reportedCanBeHistorical requires reported evidence`);
     }
     for (const field of ['selectionPriority', 'displayPriority']) {
       if (symptom[field] !== undefined && (!Number.isInteger(symptom[field]) || symptom[field] < 0 || symptom[field] > 100)) {

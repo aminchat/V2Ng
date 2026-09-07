@@ -3,8 +3,8 @@
   "title": "سکتهٔ مغزی احتمالی (FAST)",
   "icon": "🧠",
   "category": "consciousness",
-  "version": 5,
-  "updatedAt": "2026-09-07",
+  "version": 6,
+  "updatedAt": "2026-09-08",
   "summary": "افتادگی صورت، ضعف بازو یا اختلال گفتار؛ تماس فوری و ثبت زمان شروع",
   "sources": [
     "2024 American Heart Association and American Red Cross Guidelines for First Aid — Stroke Recognition"
@@ -13,7 +13,8 @@
     "facial_droop": 5,
     "arm_weakness": 5,
     "speech_difficulty": 5,
-    "confusion": 2
+    "confusion": 2,
+    "time_onset": 1
   },
   "riskQuestions": [
     "facial_droop",
