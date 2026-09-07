@@ -1,0 +1,47 @@
+{
+  "id": "animal-bite",
+  "icon": "🐕",
+  "category": "bite",
+  "version": 3,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "animal_bite": 6,
+    "local_pain": 1,
+    "wound_deep": 1
+  },
+  "riskQuestions": [
+    "wound_deep",
+    "bleeding_heavy",
+    "local_swelling"
+  ],
+  "title": "Animal bite",
+  "summary": "Wash promptly for 15 minutes and obtain same-day assessment for rabies, tetanus, and infection.",
+  "sources": [
+    "World Health Organization — Animal bites fact sheet and rabies post-exposure guidance"
+  ],
+  "actions": [
+    "Control life-threatening bleeding first. Otherwise wash and flush the wound immediately with plenty of soap and running water for about 15 minutes.",
+    "Cover loosely with a clean dressing.",
+    "Seek same-day medical care for assessment of rabies post-exposure treatment, tetanus protection, wound closure, and antibiotics. Do not wait for symptoms of rabies.",
+    "Report the animal, location, time, and any known vaccination status. Let the appropriate authorities handle or observe the animal.",
+    "Watch for increasing pain, redness, swelling, drainage, or fever and seek care if these develop."
+  ],
+  "prohibitions": [
+    "Do not ignore a small puncture wound.",
+    "Do not burn the wound or apply herbs, acids, or home remedies.",
+    "Do not chase, capture, or kill an unknown animal yourself."
+  ],
+  "related": [
+    {
+      "case": "severe-bleeding",
+      "text": "Related guide: Severe bleeding"
+    }
+  ],
+  "emergencyCall": {
+    "always": false,
+    "text": "Call emergency services for life-threatening bleeding; every mammal bite needs prompt medical assessment.",
+    "when": [
+      "bleeding_heavy"
+    ]
+  }
+}

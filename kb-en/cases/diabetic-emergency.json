@@ -1,0 +1,56 @@
+{
+  "id": "diabetic-emergency",
+  "icon": "🩸",
+  "category": "illness",
+  "version": 3,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "known_diabetic": 4,
+    "sweating_cold": 2,
+    "confusion": 2,
+    "fruity_breath": 3,
+    "kussmaul": 3,
+    "drowsiness": 1
+  },
+  "riskQuestions": [
+    "known_diabetic",
+    "sweating_cold",
+    "confusion",
+    "fruity_breath",
+    "kussmaul",
+    "drowsiness"
+  ],
+  "title": "Diabetic emergency",
+  "summary": "Give fast-acting glucose only when the person is alert and can swallow; call for altered consciousness or suspected ketoacidosis.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Hypoglycemia",
+    "American Diabetes Association Standards of Care in Diabetes 2026 — Hypoglycemia"
+  ],
+  "actions": [
+    "If the person is alert, can swallow safely, and has symptoms of low blood glucose, check glucose if possible and give about 15 g of fast-acting carbohydrate, preferably glucose tablets or gel as labelled.",
+    "Recheck symptoms and glucose after 15 minutes. If still low or symptomatic, repeat 15 g. After recovery, give a longer-acting snack if the next meal is not soon.",
+    "If swallowing is unsafe, a seizure occurs, or alertness is reduced, give nothing by mouth. Call emergency services and use the person’s prescribed glucagon if trained.",
+    "Deep rapid breathing, fruity breath, vomiting, or marked drowsiness may indicate severe high glucose or ketoacidosis and requires urgent medical care.",
+    "If the cause is uncertain or the person does not improve, call emergency services."
+  ],
+  "prohibitions": [
+    "Do not give food or drink when swallowing is unsafe.",
+    "Do not give extra insulin or diabetes medicine unless it is part of the person’s own plan and they can manage it."
+  ],
+  "related": [
+    {
+      "case": "fainting",
+      "text": "Related guide: Fainting or near-fainting"
+    }
+  ],
+  "emergencyCall": {
+    "always": false,
+    "text": "Call emergency services for reduced consciousness, unsafe swallowing, seizure, deep laboured breathing, or failure to improve.",
+    "when": [
+      "drowsiness",
+      "confusion",
+      "kussmaul",
+      "fruity_breath"
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "id": "cardiac-arrest",
+  "icon": "🫀",
+  "category": "resuscitation",
+  "version": 4,
+  "updatedAt": "2026-09-07",
+  "crossRefs": [
+    "ERC 2025 Guidelines (BLS)"
+  ],
+  "match": {
+    "unresponsive": 3,
+    "not_breathing": 5,
+    "gasping": 4,
+    "cyanosis": 2,
+    "chest_pain": 1,
+    "choking_signs": 1
+  },
+  "riskQuestions": [
+    "choking_signs",
+    "gasping"
+  ],
+  "title": "Cardiac arrest: CPR and AED",
+  "summary": "Unresponsive with absent or abnormal breathing: call, start CPR, and use an AED.",
+  "sources": [
+    "2025 American Heart Association Guidelines for CPR and Emergency Cardiovascular Care — Adult Basic Life Support"
+  ],
+  "actions": [
+    "Make sure the scene is safe. Shout and tap the person’s shoulders to check responsiveness.",
+    "If unresponsive, send someone to call emergency services and get an AED. If alone, use the phone on speaker.",
+    "Check breathing for no more than 10 seconds. No breathing or only occasional gasps is not normal breathing.",
+    "Start chest compressions on the lower half of the breastbone at 100 to 120 per minute. For an adult, press at least 5 cm (2 in) but not more than 6 cm (2.4 in), allowing full recoil.",
+    "If trained and able, give 2 breaths after every 30 compressions. Each breath lasts about 1 second and should only make the chest rise. If unable to give breaths, continue compressions and follow the dispatcher.",
+    "Turn on the AED, attach pads as pictured, and follow its prompts. Nobody should touch the person during analysis or shock; restart CPR immediately afterward.",
+    "Continue until normal breathing returns, trained responders take over, or you are physically unable to continue."
+  ],
+  "prohibitions": [
+    "Do not delay CPR to check a pulse if you are a lay rescuer.",
+    "Do not mistake occasional gasps for normal breathing.",
+    "Keep interruptions in compressions as short as possible."
+  ],
+  "tip": "Rescue breaths are especially important after drowning, in children, and in opioid-associated emergencies.",
+  "related": [
+    {
+      "case": "choking",
+      "text": "Related guide: Severe choking"
+    },
+    {
+      "case": "drowning",
+      "text": "Related guide: Drowning"
+    }
+  ],
+  "emergencyCall": {
+    "always": true,
+    "text": "Cardiac arrest requires immediate emergency activation and CPR."
+  }
+}

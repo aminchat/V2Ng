@@ -1,0 +1,41 @@
+{
+  "id": "stroke",
+  "icon": "🧠",
+  "category": "consciousness",
+  "version": 4,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "facial_droop": 5,
+    "arm_weakness": 5,
+    "speech_difficulty": 5,
+    "confusion": 2
+  },
+  "riskQuestions": [
+    "facial_droop",
+    "arm_weakness",
+    "speech_difficulty",
+    "time_onset",
+    "dizziness"
+  ],
+  "title": "Possible stroke",
+  "summary": "Use FAST, call emergency services immediately, and record onset or last-known-well time.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Recognition of Stroke"
+  ],
+  "actions": [
+    "Use FAST: ask the person to smile, raise both arms, and repeat a simple sentence. Look for facial droop, arm drift, or abnormal speech.",
+    "Call emergency services immediately for any sign and say “possible stroke.” Record the exact symptom onset or last-known-well time.",
+    "Keep the person in a safe comfortable position and monitor breathing and alertness.",
+    "If unresponsive but breathing normally, use the recovery position. Start CPR if breathing becomes absent or abnormal.",
+    "Do not cancel the call if symptoms resolve; a transient ischemic attack is also urgent."
+  ],
+  "prohibitions": [
+    "Do not give aspirin because bleeding cannot be excluded outside hospital.",
+    "Do not give food, drink, or oral medicine because swallowing may be unsafe.",
+    "Do not wait for improvement or let the person drive."
+  ],
+  "emergencyCall": {
+    "always": true,
+    "text": "Any new face droop, one-sided weakness, or speech change is an emergency even if it resolves."
+  }
+}

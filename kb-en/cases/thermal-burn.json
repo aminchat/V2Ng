@@ -1,0 +1,65 @@
+{
+  "id": "thermal-burn",
+  "icon": "🔥",
+  "category": "burn",
+  "version": 3,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "burn_large": 2,
+    "burn_deep": 3,
+    "burn_face_hands_feet": 3,
+    "stuck_clothing": 1,
+    "soot_nose": 2,
+    "local_pain": 1
+  },
+  "riskQuestions": [
+    "burn_face_hands_feet",
+    "burn_large",
+    "burn_deep",
+    "soot_nose",
+    "stuck_clothing",
+    "child_victim"
+  ],
+  "title": "Thermal burn",
+  "summary": "Cool promptly with clean running water, remove constricting items, and cover loosely.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Cooling and Care of Thermal Burns",
+    "2025 International Consensus on First Aid Science With Treatment Recommendations (ILCOR CoSTR) — Duration of Cooling for Burns"
+  ],
+  "actions": [
+    "Stop the burning process after making the scene safe. For burning clothing: stop, drop, and roll.",
+    "Cool the burn as soon as possible with clean running water. Aim for up to 20 minutes when practical, without delaying emergency care or causing whole-body cooling.",
+    "Remove jewellery and loose clothing near the burn before swelling; do not pull off material stuck to the skin.",
+    "After cooling, cover loosely with a clean non-stick dressing or clean cloth and keep the rest of the person warm.",
+    "Call emergency services for deep or large burns; burns of the face, airway, hands, feet, genitals, or major joints; and electrical or chemical burns."
+  ],
+  "prohibitions": [
+    "Do not use ice or ice water.",
+    "Do not apply butter, oil, toothpaste, cream, or home remedies.",
+    "Do not break blisters.",
+    "Do not remove stuck clothing."
+  ],
+  "redFlags": [
+    {
+      "when": [
+        "burn_face_hands_feet",
+        "burn_large",
+        "burn_deep",
+        "soot_nose",
+        "child_victim"
+      ],
+      "text": "Emergency warning signs selected—contact emergency services now."
+    }
+  ],
+  "emergencyCall": {
+    "always": false,
+    "text": "Deep, large, airway, electrical, chemical, or critical-area burns require urgent emergency assessment.",
+    "when": [
+      "burn_face_hands_feet",
+      "burn_large",
+      "burn_deep",
+      "soot_nose",
+      "child_victim"
+    ]
+  }
+}

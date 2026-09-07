@@ -1,0 +1,43 @@
+{
+  "id": "drowning",
+  "icon": "🌊",
+  "category": "resuscitation",
+  "version": 3,
+  "updatedAt": "2026-09-07",
+  "crossRefs": [
+    "ERC 2025 Guidelines (BLS)"
+  ],
+  "match": {
+    "drowning_recent": 6,
+    "not_breathing": 3,
+    "unresponsive": 3,
+    "cyanosis": 2
+  },
+  "riskQuestions": [
+    "unresponsive",
+    "not_breathing",
+    "gasping"
+  ],
+  "title": "Drowning",
+  "summary": "Use a safe rescue, give rescue breaths promptly, then CPR and an AED if breathing is not normal.",
+  "sources": [
+    "2025 American Heart Association Guidelines for CPR and Emergency Cardiovascular Care — Drowning",
+    "European Resuscitation Council Guidelines 2025 — First Aid"
+  ],
+  "actions": [
+    "Do not enter dangerous water unless trained and equipped. Reach, throw a flotation aid, or use a safe rescue method.",
+    "Once on a firm surface, call emergency services and check responsiveness and breathing.",
+    "If unresponsive and not breathing normally, open the airway and give 2 effective rescue breaths, then begin cycles of 30 chest compressions and 2 breaths. Use an AED as soon as available.",
+    "If unresponsive but breathing normally, place in the recovery position, keep warm, and monitor continuously.",
+    "Seek medical assessment for persistent cough, breathing trouble, unusual sleepiness, or any loss of consciousness after submersion."
+  ],
+  "prohibitions": [
+    "Do not endanger yourself by entering unsafe water.",
+    "Do not use abdominal thrusts to remove water.",
+    "Do not assume the person is safe because they initially look well."
+  ],
+  "emergencyCall": {
+    "always": true,
+    "text": "Any person rescued from water with abnormal breathing, reduced responsiveness, or ongoing symptoms needs emergency assessment."
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "id": "nosebleed",
+  "icon": "👃",
+  "category": "bleeding",
+  "version": 3,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "nosebleed": 6,
+    "bleeding_persistent": 3,
+    "blood_thinner": 1
+  },
+  "riskQuestions": [
+    "head_impact",
+    "dizziness",
+    "bleeding_persistent",
+    "blood_thinner"
+  ],
+  "title": "Nosebleed",
+  "summary": "Sit forward and pinch the soft part of the nose continuously.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Epistaxis"
+  ],
+  "actions": [
+    "Sit the person upright and leaning slightly forward. Ask them to breathe through the mouth.",
+    "Pinch the soft part of the nose just below the bony bridge continuously for 10 to 15 minutes without releasing to check.",
+    "Spit out blood that enters the mouth. A cool pack over the nose or cheeks may be used for comfort.",
+    "Repeat one period of firm pressure if needed. Seek urgent care if bleeding remains heavy or persistent, follows major trauma, or the person takes anticoagulants."
+  ],
+  "prohibitions": [
+    "Do not tilt the head back or lie flat.",
+    "Do not pack the nose with tissue or cotton.",
+    "Do not release pressure every few minutes to check.",
+    "Avoid nose blowing or strenuous activity immediately afterward."
+  ],
+  "emergencyCall": {
+    "always": false,
+    "text": "Call emergency services for severe blood loss, breathing difficulty, fainting, or major facial trauma; seek care if bleeding does not stop.",
+    "when": [
+      "head_impact",
+      "dizziness",
+      "bleeding_persistent"
+    ]
+  }
+}

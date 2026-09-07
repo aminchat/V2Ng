@@ -1,0 +1,46 @@
+{
+  "id": "anaphylaxis",
+  "icon": "⚡",
+  "category": "reaction",
+  "version": 3,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "hives_widespread": 3,
+    "lip_tongue_swelling": 4,
+    "throat_tightness": 5,
+    "wheezing": 4,
+    "known_allergen_exposure": 2
+  },
+  "riskQuestions": [
+    "lip_tongue_swelling",
+    "throat_tightness",
+    "wheezing",
+    "hives_widespread",
+    "fainting",
+    "known_allergen_exposure",
+    "difficulty_breathing"
+  ],
+  "title": "Anaphylaxis (severe allergic reaction)",
+  "summary": "Use the person’s epinephrine immediately, call emergency services, and prevent sudden standing.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Anaphylaxis",
+    "World Allergy Organization Anaphylaxis Guidance 2020"
+  ],
+  "actions": [
+    "Use the person’s prescribed epinephrine auto-injector immediately. Follow the device instructions and inject into the middle of the outer thigh; many devices can be used through clothing.",
+    "Call emergency services at once. Do not wait to see whether epinephrine works.",
+    "Keep the person lying down and do not let them stand or walk. If breathing is harder when flat, allow a position that makes breathing easier with legs extended; in late pregnancy use the left side when possible.",
+    "If symptoms continue or return after 5 to 15 minutes and a second prescribed auto-injector is available, give it according to the device instructions or dispatcher guidance.",
+    "Monitor breathing and responsiveness. Use the recovery position if unresponsive but breathing normally; start CPR and use an AED if breathing is absent or abnormal."
+  ],
+  "prohibitions": [
+    "Do not delay epinephrine while looking for an antihistamine.",
+    "Do not inject an auto-injector into a hand, finger, buttock, or lower leg.",
+    "Do not allow sudden standing or walking.",
+    "Do not leave the person alone after apparent improvement."
+  ],
+  "emergencyCall": {
+    "always": true,
+    "text": "Anaphylaxis is always an emergency, even if symptoms improve after epinephrine."
+  }
+}
