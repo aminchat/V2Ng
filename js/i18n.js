@@ -1,5 +1,5 @@
-import fa from '../locales/fa.js?v=12';
-import { validateLocaleDictionary } from './schema.js?v=12';
+import fa from '../locales/fa.js?v=13';
+import { validateLocaleDictionary } from './schema.js?v=13';
 
 const supported = new Set(['fa', 'en']);
 let active = fa;
@@ -14,7 +14,7 @@ assertLocale(fa);
 export async function setLocale(code) {
   const normalized = supported.has(code) ? code : 'fa';
   if (normalized === 'en') {
-    const module = await import('../locales/en.js?v=12');
+    const module = await import('../locales/en.js?v=13');
     assertLocale(module.default);
     active = module.default;
   } else {

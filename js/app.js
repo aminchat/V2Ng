@@ -1,6 +1,6 @@
-import { KnowledgeBase } from './kb.js?v=12';
-import { countryName, formatDateTime, formatNumber, localeCode, localizeField, setLocale, t } from './i18n.js?v=12';
-import { emergencyContact, loadCountryData, readPreferences, savePreferences, telephoneHref } from './preferences.js?v=12';
+import { KnowledgeBase } from './kb.js?v=13';
+import { countryName, formatDateTime, formatNumber, localeCode, localizeField, setLocale, t } from './i18n.js?v=13';
+import { emergencyContact, loadCountryData, readPreferences, savePreferences, telephoneHref } from './preferences.js?v=13';
 import {
   setEngineLocale,
   hasCriticalSymptoms,
@@ -17,7 +17,7 @@ import {
   triggeredFlags,
   triageRoute,
   triageSymptoms,
-} from './engine.js?v=12';
+} from './engine.js?v=13';
 
 let kb = null;
 let countryData = null;
@@ -1248,7 +1248,7 @@ async function checkForAppUpdate({ force = false } = {}) {
 async function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return;
   try {
-    const registration = await navigator.serviceWorker.register('./sw.js?v=12', {
+    const registration = await navigator.serviceWorker.register('./sw.js?v=13', {
       scope: './',
       updateViaCache: 'none',
     });
@@ -1447,12 +1447,19 @@ function renderFatal(error) {
 
 // The phone/browser back button walks the in-app screens (hash history). The very last
 // press would leave the app, so an explicit confirmation is shown before exiting.
+// Chrome also fires popstate for ordinary in-app hash navigations with a null state,
+// so the check is deferred until after the hashchange handler has marked the entry.
+let exitGuardSupported = false;
 try {
   if (history.state === null) history.pushState({ emdExitGuard: true }, '', location.href);
-} catch { /* history access unavailable; back-button confirmation is best-effort */ }
+  exitGuardSupported = true;
+} catch { /* history access unavailable (e.g. sandboxed frame); confirmation is disabled */ }
 
-window.addEventListener('popstate', (event) => {
-  if (!event.state) showExitConfirm();
+window.addEventListener('popstate', () => {
+  if (!exitGuardSupported) return;
+  setTimeout(() => {
+    if (history.state === null) showExitConfirm();
+  }, 0);
 });
 
 function showExitConfirm() {
