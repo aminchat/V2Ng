@@ -5,17 +5,17 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#b4232f">
   <meta name="color-scheme" content="light">
-  <meta name="description" content="امدادگر؛ راهنمای آفلاین و فارسی کمک‌های اولیه با مسیر بررسی خطرهای فوری">
+  <meta name="description" content="Emdadgar؛ راهنمای آفلاین فارسی و plain English کمک‌های اولیه / Offline first-aid guide">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="امدادگر">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-mugPTmecZzaewftR0Z/6qyvq5GfBE+kLvx67hMDWDPI='; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <meta name="apple-mobile-web-app-title" content="Emdadgar">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-5MZN12KTNeMHErAeBoRQSJbm2/fcHNHtK+yhrENQGMI='; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
   <title>امدادگر — راهنمای آفلاین کمک‌های اولیه</title>
-  <link rel="manifest" href="manifest.webmanifest?v=9">
+  <link rel="manifest" href="manifest.webmanifest?v=10">
   <link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" sizes="180x180">
-  <link rel="stylesheet" href="css/app.css?v=9">
+  <link rel="stylesheet" href="css/app.css?v=10">
 </head>
 <body>
   <a class="skip-link" href="#app">پرش به محتوای اصلی</a>
@@ -34,10 +34,10 @@
   <div id="app" class="app-shell">
     <main class="loading" role="status" aria-live="polite">
       <div class="spinner" aria-hidden="true"></div>
-      <p>در حال آماده‌سازی راهنمای معتبر…</p>
+      <p>در حال آماده‌سازی راهنما… / Preparing guidance…</p>
     </main>
   </div>
-  <noscript><div class="noscript">برای اجرای امدادگر باید JavaScript مرورگر فعال باشد. در وضعیت اورژانسی با ۱۱۵ تماس بگیرید.</div></noscript>
+  <noscript><div class="noscript">برای اجرای امدادگر باید JavaScript فعال باشد؛ در وضعیت اورژانسی با شمارهٔ محلی تماس بگیرید. JavaScript is required; in an emergency, call your local emergency number.</div></noscript>
   <script>(() => {
     const app = document.getElementById('app');
     let completed = false;
@@ -52,10 +52,10 @@
       if (completed || !app?.querySelector('.loading')) return;
       app.innerHTML = `<main class="body centered" role="alert">
         <div class="big-icon" aria-hidden="true">!</div>
-        <h1 id="view-heading" tabindex="-1">بارگذاری برنامه کامل نشد</h1>
-        <p>نسخه‌های فایل‌های برنامه با هم هماهنگ دریافت نشدند. اتصال اینترنت را بررسی کنید و دوباره تلاش کنید؛ نیازی به پاک‌کردن کش نیست.</p>
-        <button class="btn primary" id="boot-retry" type="button">تلاش دوباره</button>
-        <a class="btn emergency full card-spaced" href="tel:115">☎ تماس با ۱۱۵</a>
+        <h1 id="view-heading" tabindex="-1">بارگذاری برنامه کامل نشد / App loading failed</h1>
+        <p>فایل‌ها هماهنگ دریافت نشدند. اتصال را بررسی و دوباره تلاش کنید؛ نیازی به پاک‌کردن کش نیست. Files did not load consistently. Check the connection and try again; do not clear site data.</p>
+        <button class="btn primary" id="boot-retry" type="button">تلاش دوباره / Try again</button>
+        <span class="btn emergency full card-spaced emergency-unavailable">با اورژانس محلی تماس بگیرید / Call local emergency services</span>
       </main>`;
       document.getElementById('boot-retry')?.addEventListener('click', () => location.reload());
       document.getElementById('view-heading')?.focus();
@@ -67,6 +67,6 @@
     }, true);
     timeoutId = setTimeout(showLoadFailure, 20000);
   })();</script>
-  <script type="module" src="js/app.js?v=9"></script>
+  <script type="module" src="js/app.js?v=10"></script>
 </body>
 </html>
