@@ -1,10 +1,8 @@
-export const TRIAGE_QUESTIONS = {
-  conscious: 'آیا فرد هوشیار است و به صدا یا لمس پاسخ می‌دهد؟',
-  breathing: 'آیا تنفس طبیعی دارد؟ نفس‌های بریده و گاه‌به‌گاه، تنفس طبیعی نیست.',
-  choking: 'آیا نشانه‌های انسداد شدید راه هوایی دارد؛ مثل ناتوانی در حرف‌زدن، سرفهٔ مؤثر یا نفس‌کشیدن؟',
-  breathingDifficulty: 'آیا تنگی نفس شدید، کبودی لب یا ناتوانی در گفتن یک جملهٔ کامل دارد؟',
-  bleeding: 'آیا خونریزی شدید یا جهنده دارد، یا لباس/پانسمان به‌سرعت از خون خیس می‌شود؟',
-};
+let collationLocale = 'fa';
+
+export function setEngineLocale(locale) {
+  collationLocale = locale === 'en' ? 'en' : 'fa';
+}
 
 export const CRITICAL_SYMPTOMS = new Set([
   'unresponsive', 'not_breathing', 'gasping', 'choking_signs', 'cyanosis',
@@ -155,6 +153,7 @@ export function toggleHistoricalSymptom(historical, symptomId, symptoms) {
 export function normalizePersianSearch(value = '') {
   return String(value)
     .normalize('NFKC')
+    .toLocaleLowerCase()
     .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, '')
     .replace(/[يى]/g, 'ی')
     .replace(/ك/g, 'ک')
@@ -174,7 +173,7 @@ function displayPriority(id, symptoms) {
 export function sortSymptomIds(ids, symptoms) {
   return [...new Set(ids)].filter((id) => symptoms[id]).sort((firstId, secondId) => (
     displayPriority(secondId, symptoms) - displayPriority(firstId, symptoms)
-    || symptoms[firstId].label.localeCompare(symptoms[secondId].label, 'fa')
+    || symptoms[firstId].label.localeCompare(symptoms[secondId].label, collationLocale)
   ));
 }
 
@@ -214,7 +213,7 @@ export function searchSymptoms(query, symptoms, limit = 24) {
     .filter(Boolean)
     .sort((first, second) => (
       second.score - first.score
-      || symptoms[first.id].label.localeCompare(symptoms[second.id].label, 'fa')
+      || symptoms[first.id].label.localeCompare(symptoms[second.id].label, collationLocale)
     ))
     .slice(0, limit)
     .map((entry) => entry.id);
@@ -239,7 +238,7 @@ export function suggestSymptoms(selected, cases, symptoms, limit = 6) {
     .sort(([firstId, firstScore], [secondId, secondScore]) => (
       secondScore - firstScore
       || displayPriority(secondId, symptoms) - displayPriority(firstId, symptoms)
-      || symptoms[firstId].label.localeCompare(symptoms[secondId].label, 'fa')
+      || symptoms[firstId].label.localeCompare(symptoms[secondId].label, collationLocale)
     ))
     .slice(0, limit)
     .map(([id]) => id);
@@ -260,7 +259,7 @@ export function rankCases(selected, cases, limit = 5) {
       };
     })
     .filter((entry) => entry.score > 0)
-    .sort((a, b) => b.score - a.score || b.matched.length - a.matched.length || a.case.title.localeCompare(b.case.title, 'fa'))
+    .sort((a, b) => b.score - a.score || b.matched.length - a.matched.length || a.case.title.localeCompare(b.case.title, collationLocale))
     .slice(0, limit);
 }
 
@@ -272,7 +271,7 @@ export function triggeredFlags(item, selected) {
   const selectedSet = new Set(selected);
   const triggered = (items) => (items || []).filter((entry) => (entry.when || []).some((symptomId) => selectedSet.has(symptomId)));
   return {
-    call115: Boolean(item.call115?.always || (item.call115?.when || []).some((symptomId) => selectedSet.has(symptomId))),
+    emergencyCall: Boolean(item.emergencyCall?.always || (item.emergencyCall?.when || []).some((symptomId) => selectedSet.has(symptomId))),
     reasons: triggered(item.redFlags),
   };
 }
