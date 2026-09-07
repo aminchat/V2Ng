@@ -668,3 +668,37 @@ html[dir="ltr"] .steps ol { padding-inline-start: 24px; padding-inline-end: 0; }
   .contact-card dl > div { grid-template-columns: 1fr; gap: 3px; }
   .contact-card dd { text-align: start; }
 }
+
+.topbar-nav {
+  display: flex;
+  flex: none !important;
+  align-items: center;
+  gap: 8px;
+}
+
+.exit-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  background: rgb(18 18 18 / 55%);
+}
+
+.exit-dialog {
+  width: min(420px, 100%);
+  padding: 24px 22px;
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: 0 18px 50px rgb(0 0 0 / 28%);
+  text-align: center;
+}
+
+.exit-dialog h2 { margin: 10px 0 6px; font-size: 1.18rem; }
+
+.exit-dialog p { margin-bottom: 16px; color: var(--muted); line-height: 1.7; }
+
+.exit-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+
+.exit-actions .btn { min-width: 130px; }

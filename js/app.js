@@ -1,6 +1,6 @@
-import { KnowledgeBase } from './kb.js?v=11';
-import { countryName, formatDateTime, formatNumber, localeCode, localizeField, setLocale, t } from './i18n.js?v=11';
-import { emergencyContact, loadCountryData, readPreferences, savePreferences, telephoneHref } from './preferences.js?v=11';
+import { KnowledgeBase } from './kb.js?v=12';
+import { countryName, formatDateTime, formatNumber, localeCode, localizeField, setLocale, t } from './i18n.js?v=12';
+import { emergencyContact, loadCountryData, readPreferences, savePreferences, telephoneHref } from './preferences.js?v=12';
 import {
   setEngineLocale,
   hasCriticalSymptoms,
@@ -17,7 +17,7 @@ import {
   triggeredFlags,
   triageRoute,
   triageSymptoms,
-} from './engine.js?v=11';
+} from './engine.js?v=12';
 
 let kb = null;
 let countryData = null;
@@ -72,6 +72,8 @@ const state = {
   fatalError: null,
   triageAnswers: {},
   triageContext: null,
+  triageAsked: [],
+  triageSeedCount: 0,
   assessmentStep: 'scene',
   assessmentPreserve: false,
   triagePreserveFinder: false,
@@ -342,10 +344,6 @@ function renderHome() {
       <div><div class="eyebrow">${e(t('firstAidGuide'))}</div><h1 id="view-heading" tabindex="-1">${e(t('appName'))}</h1></div>
     </header>
     <main class="body home-body focused-home">
-      <button class="home-urgent-action" id="start-triage" type="button">
-        <span class="home-action-icon" aria-hidden="true">!</span>
-        <span class="home-action-copy"><strong>${e(t('homeThreatTitle'))}</strong><small>${e(t('homeThreatText'))}</small><b>${e(t('homeTriage'))}</b></span>
-      </button>
       <button class="primary-action home-assessment-action" id="start-assessment" type="button">
         <span class="primary-icon" aria-hidden="true">✓</span>
         <span><strong>${e(t('homeSymptoms'))}</strong><small>${e(t('homeSymptomsSub'))}</small></span>
@@ -354,17 +352,12 @@ function renderHome() {
       <a class="home-more-link" href="#/more">${e(t('homeMore'))} <span aria-hidden="true">›</span></a>
     </main>`;
 
-  document.getElementById('start-triage').addEventListener('click', () => {
-    state.triageAnswers = {};
-    state.triageContext = null;
-    state.triagePreserveFinder = false;
-    state.responseMode = null;
-    navigate('#/triage');
-  });
   document.getElementById('start-assessment').addEventListener('click', () => {
     state.assessmentStep = 'scene';
     state.assessmentPreserve = false;
     state.triageAnswers = {};
+    state.triageAsked = [];
+    state.triageSeedCount = 0;
     resetFinder();
     state.responseMode = null;
     navigate('#/assessment');
@@ -428,7 +421,10 @@ function renderAssessment() {
   const responseStep = state.assessmentStep === 'response';
   app.innerHTML = `
     <header class="topbar">
-      <button class="icon-btn" id="back-home" type="button" aria-label="${e(t('backHome'))}">‹</button>
+      <div class="topbar-nav">
+        <button class="icon-btn" id="back-home" type="button" aria-label="${e(t('backHome'))}">‹</button>
+        ${responseStep ? `<button class="icon-btn" id="back-step" type="button" aria-label="${e(t('backStep'))}">→</button>` : ''}
+      </div>
       <div><div class="eyebrow">${e(t('assessmentEyebrow', { step: formatNumber(step) }))}</div><h1 id="view-heading" tabindex="-1">${e(t('assessmentTitle'))}</h1></div>
       ${miniEmergencyButton()}
     </header>
@@ -454,7 +450,20 @@ function renderAssessment() {
       `}
     </main>`;
 
-  document.getElementById('back-home').addEventListener('click', () => navigate('#/'));
+  document.getElementById('back-home').addEventListener('click', () => {
+    state.assessmentStep = 'scene';
+    state.assessmentPreserve = false;
+    state.triageAnswers = {};
+    state.triageAsked = [];
+    state.triageSeedCount = 0;
+    state.triagePreserveFinder = false;
+    state.responseMode = null;
+    navigate('#/');
+  });
+  document.getElementById('back-step')?.addEventListener('click', () => {
+    state.assessmentStep = 'scene';
+    render({ focus: true });
+  });
   document.getElementById('recheck-scene')?.addEventListener('click', () => {
     state.assessmentStep = 'scene';
     render({ focus: true });
@@ -479,6 +488,8 @@ function renderAssessment() {
       state.responseMode = 'limited';
       state.triageAnswers = { sceneSafe: 'y', conscious: 'n' };
     }
+    state.triageSeedCount = Object.keys(state.triageAnswers).length;
+    state.triageAsked = [];
     navigate('#/triage');
   }));
   return t('assessmentTitle');
@@ -492,25 +503,33 @@ function renderTriage() {
       app.innerHTML = `
         <header class="topbar">
           <button class="icon-btn" id="back-home" type="button" aria-label="${e(t('backHome'))}">‹</button>
-          <div><div class="eyebrow">${e(t('assessmentSafetyFirst'))}</div><h1 id="view-heading" tabindex="-1">${e(t('triageTitle'))}</h1></div>
+          <div><div class="eyebrow">${e(t('assessmentSafetyFirst'))}</div><h1 id="view-heading" tabindex="-1">${e(t('assessmentTitle'))}</h1></div>
           ${miniEmergencyButton()}
         </header>
         <main class="body assessment-body">${unsafeSceneMarkup()}</main>`;
       document.getElementById('back-home').addEventListener('click', () => {
         state.triageAnswers = {};
+        state.triageAsked = [];
+        state.triageSeedCount = 0;
+        state.triagePreserveFinder = false;
+        state.responseMode = null;
         navigate('#/');
       });
       document.getElementById('recheck-scene').addEventListener('click', () => {
         state.triageAnswers = {};
+        state.triageAsked = [];
+        state.triageSeedCount = 0;
         render({ focus: true });
       });
-      return t('triageTitle');
+      return t('assessmentTitle');
     }
     if (route === 'symptoms') {
       const mode = state.triageAnswers.communication === 'y' ? 'clear' : 'limited';
       applyResponseMode(mode, { preserve: state.triagePreserveFinder });
       state.triagePreserveFinder = false;
       state.triageAnswers = {};
+      state.triageAsked = [];
+      state.triageSeedCount = 0;
       navigate('#/symptoms');
       return t('triageRoute');
     }
@@ -520,12 +539,15 @@ function renderTriage() {
     state.caseAnswers = triageSymptoms(state.triageAnswers);
     state.caseStage = 'result';
     state.triageAnswers = {};
+    state.triageAsked = [];
+    state.triageSeedCount = 0;
     state.triagePreserveFinder = false;
     navigate(caseHref(route));
     return t('triageRoute');
   }
 
-  const step = formatNumber(Object.keys(state.triageAnswers).length + 1);
+  const answered = Object.keys(state.triageAnswers).length;
+  const step = formatNumber(state.triageSeedCount > 0 ? answered - state.triageSeedCount + 3 : answered + 1);
   const questionKeys = {
     sceneSafe: 'triageSceneSafe', conscious: 'triageConscious', breathing: 'triageBreathing',
     choking: 'triageChoking', breathingDifficulty: 'triageBreathingDifficulty',
@@ -543,8 +565,11 @@ function renderTriage() {
   const emergency = emergencyName();
   app.innerHTML = `
     <header class="topbar">
-      <button class="icon-btn" id="back-home" type="button" aria-label="${e(t('backHome'))}">‹</button>
-      <div><div class="eyebrow">${e(t('triageEyebrow', { step }))}</div><h1 id="view-heading" tabindex="-1">${e(t('triageTitle'))}</h1></div>
+      <div class="topbar-nav">
+        <button class="icon-btn" id="back-home" type="button" aria-label="${e(t('backHome'))}">‹</button>
+        <button class="icon-btn" id="back-step" type="button" aria-label="${e(t('backStep'))}">→</button>
+      </div>
+      <div><div class="eyebrow">${e(t('assessmentEyebrow', { step }))}</div><h1 id="view-heading" tabindex="-1">${e(t('assessmentTitle'))}</h1></div>
       ${miniEmergencyButton()}
     </header>
     <main class="body">
@@ -571,14 +596,35 @@ function renderTriage() {
 
   document.getElementById('back-home').addEventListener('click', () => {
     state.triageAnswers = {};
+    state.triageAsked = [];
+    state.triageSeedCount = 0;
     state.triagePreserveFinder = false;
+    state.responseMode = null;
+    navigate('#/');
+  });
+  document.getElementById('back-step').addEventListener('click', () => {
+    const lastQuestion = state.triageAsked.pop();
+    if (lastQuestion) {
+      delete state.triageAnswers[lastQuestion];
+      render({ focus: true });
+      return;
+    }
+    if (state.triageSeedCount > 0) {
+      state.assessmentStep = 'response';
+      state.assessmentPreserve = true;
+      state.triageAnswers = {};
+      state.triageSeedCount = 0;
+      navigate('#/assessment');
+      return;
+    }
     navigate('#/');
   });
   document.querySelectorAll('[data-answer]').forEach((button) => button.addEventListener('click', () => {
+    state.triageAsked.push(questionId);
     state.triageAnswers[questionId] = button.dataset.answer;
     render({ focus: true });
   }));
-  return t('triageTitle');
+  return t('assessmentTitle');
 }
 
 function defaultEvidenceType(symptom) {
@@ -870,10 +916,14 @@ function renderSymptoms() {
 
   document.getElementById('back-home').addEventListener('click', () => navigate('#/'));
   document.getElementById('restart-urgent').addEventListener('click', () => {
+    state.assessmentStep = 'scene';
+    state.assessmentPreserve = false;
     state.triageAnswers = {};
+    state.triageAsked = [];
+    state.triageSeedCount = 0;
     state.triagePreserveFinder = false;
     state.responseMode = null;
-    navigate('#/triage');
+    navigate('#/assessment');
   });
   document.getElementById('change-response').addEventListener('click', () => {
     state.assessmentStep = 'response';
@@ -1198,7 +1248,7 @@ async function checkForAppUpdate({ force = false } = {}) {
 async function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return;
   try {
-    const registration = await navigator.serviceWorker.register('./sw.js?v=11', {
+    const registration = await navigator.serviceWorker.register('./sw.js?v=12', {
       scope: './',
       updateViaCache: 'none',
     });
@@ -1283,7 +1333,7 @@ async function activatePreferences(next, { persist = false, route = null } = {})
     state.fatalError = null;
     state.diffQuery = '';
     localizeStaticChrome();
-    if (route) history.replaceState(null, '', route);
+    if (route) history.replaceState({ emdApp: true }, '', route);
     render({ focus: true });
     if (loadResult?.fromCache) backgroundSync();
   } catch (error) {
@@ -1317,8 +1367,8 @@ function renderOnboarding(message = '') {
       </form>
       <div id="onboarding-contacts">${onboardingChoice.country ? contactsMarkup(onboardingChoice.country) : ''}</div>
       <section class="safety-notice onboarding-emergency">
-        <h2>${e(t('homeThreatTitle'))}</h2>
-        <p id="onboarding-emergency-text">${e(t('homeThreatText', { emergency }))}</p>
+        <h2>${e(t('onboardingEmergencyTitle'))}</h2>
+        <p id="onboarding-emergency-text">${e(t('onboardingEmergencyText', { emergency }))}</p>
         <div id="onboarding-call">${emergencyButton('btn emergency full', onboardingChoice.country)}</div>
         <button class="btn outline full card-spaced" id="onboarding-urgent" type="button">${e(t('onboardingEmergency'))}</button>
       </section>
@@ -1349,7 +1399,7 @@ function renderOnboarding(message = '') {
     onboardingChoice.country = countrySelect.value;
     document.getElementById('onboarding-contacts').innerHTML = onboardingChoice.country ? contactsMarkup(onboardingChoice.country) : '';
     document.getElementById('onboarding-call').innerHTML = emergencyButton('btn emergency full', onboardingChoice.country);
-    document.getElementById('onboarding-emergency-text').textContent = t('homeThreatText', { emergency: emergencyName(onboardingChoice.country) });
+    document.getElementById('onboarding-emergency-text').textContent = t('onboardingEmergencyText', { emergency: emergencyName(onboardingChoice.country) });
   });
   document.getElementById('onboarding-form').addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -1372,8 +1422,15 @@ function renderOnboarding(message = '') {
     const status = document.getElementById('onboarding-status');
     event.currentTarget.disabled = true;
     status.textContent = t('loading');
+    state.assessmentStep = 'scene';
+    state.assessmentPreserve = false;
+    state.triageAnswers = {};
+    state.triageAsked = [];
+    state.triageSeedCount = 0;
+    state.triagePreserveFinder = false;
+    state.responseMode = null;
     try {
-      await activatePreferences(onboardingChoice, { persist: false, route: '#/triage' });
+      await activatePreferences(onboardingChoice, { persist: false, route: '#/assessment' });
     } catch (error) {
       console.error(error);
       renderOnboarding(onboardingChoice.locale === 'en' ? t('englishDownloadRequired') : syncErrorMessage(error));
@@ -1388,7 +1445,57 @@ function renderFatal(error) {
   document.getElementById('view-heading')?.focus();
 }
 
-window.addEventListener('hashchange', () => render({ focus: true }));
+// The phone/browser back button walks the in-app screens (hash history). The very last
+// press would leave the app, so an explicit confirmation is shown before exiting.
+try {
+  if (history.state === null) history.pushState({ emdExitGuard: true }, '', location.href);
+} catch { /* history access unavailable; back-button confirmation is best-effort */ }
+
+window.addEventListener('popstate', (event) => {
+  if (!event.state) showExitConfirm();
+});
+
+function showExitConfirm() {
+  document.getElementById('exit-confirm')?.remove();
+  const overlay = document.createElement('div');
+  overlay.id = 'exit-confirm';
+  overlay.className = 'exit-overlay';
+  overlay.innerHTML = `
+    <div class="exit-dialog" role="alertdialog" aria-modal="true" aria-labelledby="exit-confirm-title" aria-describedby="exit-confirm-text">
+      <div class="big-icon" aria-hidden="true">!</div>
+      <h2 id="exit-confirm-title">${e(t('exitConfirmTitle'))}</h2>
+      <p id="exit-confirm-text">${e(t('exitConfirmText'))}</p>
+      <div class="exit-actions">
+        <button class="btn primary" id="exit-confirm-stay" type="button">${e(t('exitConfirmStay'))}</button>
+        <button class="btn emergency" id="exit-confirm-leave" type="button">${e(t('exitConfirmLeave'))}</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  const stay = () => {
+    overlay.remove();
+    document.removeEventListener('keydown', onEscape);
+    try { history.pushState({ emdExitGuard: true }, '', location.href); } catch { /* ignore */ }
+  };
+  const leave = () => {
+    overlay.remove();
+    document.removeEventListener('keydown', onEscape);
+    history.back();
+  };
+  const onEscape = (event) => {
+    if (event.key === 'Escape') stay();
+  };
+  document.getElementById('exit-confirm-stay').addEventListener('click', stay);
+  document.getElementById('exit-confirm-leave').addEventListener('click', leave);
+  document.addEventListener('keydown', onEscape);
+  document.getElementById('exit-confirm-stay').focus();
+}
+
+window.addEventListener('hashchange', () => {
+  try {
+    if (!history.state) history.replaceState({ emdApp: true }, '', location.href);
+  } catch { /* ignore */ }
+  render({ focus: true });
+});
 window.addEventListener('online', () => {
   showSyncAnnouncement(t('onlineAgain'));
   const route = currentRoute();
