@@ -1,0 +1,35 @@
+{
+  "name": "Emdadgar — First Aid | امدادگر",
+  "short_name": "Emdadgar",
+  "description": "Offline first-aid guidance in Persian and plain international English / راهنمای آفلاین کمک‌های اولیه",
+  "id": "./",
+  "start_url": "./?source=pwa#/",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#fff8f4",
+  "theme_color": "#b4232f",
+  "prefer_related_applications": false,
+  "categories": ["medical", "health", "education"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Urgent check | بررسی فوری",
+      "short_name": "Urgent | فوری",
+      "url": "./#/triage",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "All guides | همهٔ راهنماها",
+      "short_name": "Guides | راهنماها",
+      "url": "./#/kb",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ]
+}

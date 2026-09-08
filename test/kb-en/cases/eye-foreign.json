@@ -1,0 +1,40 @@
+{
+  "id": "eye-foreign",
+  "icon": "👁️",
+  "category": "bleeding",
+  "version": 5,
+  "updatedAt": "2026-09-08",
+  "match": {
+    "embedded_eye": 5,
+    "chemical_contact": 2
+  },
+  "riskQuestions": [
+    "embedded_eye",
+    "chemical_contact"
+  ],
+  "title": "Object or chemical in the eye",
+  "summary": "Irrigate chemical exposure immediately; do not remove an embedded object.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Chemical Exposure to the Eye and Suspected Foreign Body in the Eye"
+  ],
+  "actions": [
+    "For chemical exposure, begin gentle irrigation immediately with clean running water. Hold the eyelids open and rinse away from the unaffected eye for at least 15 to 20 minutes while arranging poison-centre or medical advice.",
+    "Remove contact lenses if easy, but do not delay irrigation.",
+    "For loose dust or a small particle, encourage blinking and rinse gently. Stop if pain persists or the object does not wash out.",
+    "For an embedded or penetrating object, do not remove it. Shield the eye without pressing and obtain urgent medical care.",
+    "Seek urgent care for vision change, severe pain, light sensitivity, bleeding, an irregular pupil, or persistent symptoms."
+  ],
+  "prohibitions": [
+    "Do not rub or press the eye.",
+    "Do not use tweezers or fingers on an embedded object.",
+    "Do not use neutralizing chemicals or eye drops unless directed by a poison centre or clinician."
+  ],
+  "emergencyCall": {
+    "always": false,
+    "text": "Call emergency services for severe chemical exposure, major trauma, reduced consciousness, or breathing symptoms; urgent eye care is needed for embedded objects or vision loss.",
+    "when": [
+      "embedded_eye",
+      "chemical_contact"
+    ]
+  }
+}

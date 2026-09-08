@@ -1,0 +1,90 @@
+{
+  "id": "head-injury",
+  "icon": "🤕",
+  "category": "consciousness",
+  "version": 5,
+  "updatedAt": "2026-09-08",
+  "match": {
+    "head_impact": 5,
+    "confusion": 3,
+    "vomiting_repeated": 3,
+    "severe_headache": 3,
+    "unequal_pupils": 3,
+    "neck_pain": 1,
+    "ptosis": 2,
+    "facial_droop": 2,
+    "arm_weakness": 2,
+    "speech_difficulty": 2
+  },
+  "riskQuestions": [
+    "vomiting_repeated",
+    "confusion",
+    "drowsiness",
+    "seizure_activity",
+    "severe_headache",
+    "unequal_pupils",
+    "blood_thinner",
+    "neck_pain",
+    "car_accident",
+    "fall_from_height",
+    "ptosis",
+    "facial_droop",
+    "arm_weakness",
+    "speech_difficulty"
+  ],
+  "title": "Head injury or possible concussion",
+  "summary": "Stop activity, monitor for danger signs, and prevent another head impact.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Concussion",
+    "CDC HEADS UP — Concussion Signs and Symptoms"
+  ],
+  "actions": [
+    "Keep the person still and stop sports, driving, or risky activity. Check breathing and control serious bleeding without pressing on a suspected skull fracture.",
+    "Call emergency services for loss of consciousness, increasing drowsiness, repeated vomiting, seizure, unequal pupils, weakness, slurred speech, severe worsening headache, blood or clear fluid from the nose or ears, or a high-energy injury.",
+    "If neck or spine injury is possible, support the head in the position found and avoid unnecessary movement.",
+    "A person with possible concussion should be assessed by a health professional and should not return to sport or hazardous work the same day.",
+    "Monitor for new or worsening symptoms. Normal sleep is generally allowed after medical advice when no danger signs are present; waking repeatedly is not routinely required."
+  ],
+  "prohibitions": [
+    "Do not allow same-day return to sport after suspected concussion.",
+    "Do not leave a person with worsening symptoms alone.",
+    "Do not give alcohol, sedatives, or extra medication that could mask deterioration."
+  ],
+  "redFlags": [
+    {
+      "when": [
+        "vomiting_repeated",
+        "confusion",
+        "drowsiness",
+        "seizure_activity",
+        "severe_headache",
+        "unequal_pupils",
+        "ptosis",
+        "facial_droop",
+        "arm_weakness",
+        "speech_difficulty"
+      ],
+      "text": "Emergency warning signs selected—contact emergency services now."
+    }
+  ],
+  "emergencyCall": {
+    "always": false,
+    "text": "Call emergency services for worsening alertness, repeated vomiting, seizure, unequal pupils, drooping eyelid, face droop, limb weakness, slurred speech, severe worsening headache, or a dangerous mechanism.",
+    "when": [
+      "vomiting_repeated",
+      "confusion",
+      "drowsiness",
+      "seizure_activity",
+      "severe_headache",
+      "unequal_pupils",
+      "blood_thinner",
+      "neck_pain",
+      "car_accident",
+      "fall_from_height",
+      "ptosis",
+      "facial_droop",
+      "arm_weakness",
+      "speech_difficulty"
+    ]
+  }
+}

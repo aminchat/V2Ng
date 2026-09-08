@@ -1,0 +1,44 @@
+{
+  "id": "choking",
+  "icon": "😵",
+  "category": "resuscitation",
+  "version": 3,
+  "updatedAt": "2026-09-07",
+  "crossRefs": [
+    "ERC 2025 Guidelines (BLS)"
+  ],
+  "match": {
+    "choking_signs": 6,
+    "coughing_effort": 2,
+    "cyanosis": 2
+  },
+  "riskQuestions": [
+    "coughing_effort",
+    "choking_signs",
+    "child_victim"
+  ],
+  "title": "Severe choking",
+  "summary": "Encourage an effective cough; for severe obstruction use cycles of 5 back blows and 5 thrusts.",
+  "sources": [
+    "2025 American Heart Association Guidelines for CPR and Emergency Cardiovascular Care — Foreign-Body Airway Obstruction"
+  ],
+  "actions": [
+    "If the person can speak clearly and cough strongly, encourage coughing and watch closely.",
+    "For an adult or child older than 1 year who cannot speak, breathe, or cough effectively, call emergency services. Give 5 firm back blows followed by 5 abdominal thrusts; repeat.",
+    "In late pregnancy or when you cannot encircle the abdomen, use 5 chest thrusts instead of abdominal thrusts.",
+    "For an infant younger than 1 year, use 5 back blows and 5 chest thrusts. Do not use abdominal thrusts.",
+    "If the person becomes unresponsive, lower them to a firm surface and start CPR with chest compressions. Before breaths, remove only an object you can clearly see. Use an AED when available."
+  ],
+  "prohibitions": [
+    "Do not use a blind finger sweep.",
+    "Do not use abdominal thrusts on an infant.",
+    "Do not leave a person with severe obstruction alone."
+  ],
+  "emergencyCall": {
+    "always": false,
+    "text": "If the person cannot speak, breathe, or cough effectively, call emergency services now.",
+    "when": [
+      "choking_signs"
+    ]
+  }
+}

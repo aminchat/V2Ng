@@ -1,0 +1,41 @@
+{
+  "id": "opioid-overdose",
+  "icon": "💊",
+  "category": "illness",
+  "version": 3,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "drowsiness": 3,
+    "not_breathing": 3,
+    "difficulty_breathing": 2,
+    "substance_access": 3,
+    "unresponsive": 3
+  },
+  "riskQuestions": [
+    "not_breathing",
+    "difficulty_breathing",
+    "drowsiness",
+    "substance_access"
+  ],
+  "title": "Suspected opioid overdose",
+  "summary": "Call emergency services, give naloxone, and provide breaths and CPR without delay.",
+  "sources": [
+    "2025 American Heart Association Guidelines for CPR and Emergency Cardiovascular Care — Opioid-Associated Emergency"
+  ],
+  "actions": [
+    "Check responsiveness and breathing. Call emergency services immediately and put the phone on speaker.",
+    "If breathing is absent or abnormal, start high-quality CPR with breaths. Use an AED as soon as available.",
+    "Give naloxone by the available approved route according to the device instructions. Naloxone must not delay CPR or emergency activation.",
+    "If there is no response after 2 to 3 minutes and another dose is available, repeat according to the product instructions while continuing resuscitation.",
+    "If normal breathing returns but the person remains unresponsive, use the recovery position and monitor continuously. Stay until emergency responders arrive because overdose can recur."
+  ],
+  "prohibitions": [
+    "Do not leave the person alone.",
+    "Do not use a cold shower, slapping, forced walking, or substances to “wake” the person.",
+    "Do not assume naloxone replaces medical assessment or CPR."
+  ],
+  "emergencyCall": {
+    "always": true,
+    "text": "Unresponsiveness with absent or abnormal breathing is a resuscitation emergency."
+  }
+}

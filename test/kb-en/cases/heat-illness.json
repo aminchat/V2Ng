@@ -1,0 +1,59 @@
+{
+  "id": "heat-illness",
+  "icon": "🥵",
+  "category": "illness",
+  "version": 3,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "hot_dry_skin": 4,
+    "hot_flushed": 3,
+    "confusion": 2,
+    "nausea_vomiting": 1
+  },
+  "riskQuestions": [
+    "hot_dry_skin",
+    "confusion",
+    "drowsiness",
+    "hot_flushed",
+    "child_victim",
+    "elderly_victim",
+    "fainting"
+  ],
+  "title": "Heat exhaustion or heatstroke",
+  "summary": "Move to a cool place and cool immediately; altered mental status in heat is heatstroke.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Hyperthermia and Heatstroke",
+    "2025 International Consensus on First Aid Science With Treatment Recommendations (ILCOR CoSTR) — First Aid Cooling Techniques"
+  ],
+  "actions": [
+    "Move the person out of heat, remove excess clothing, and begin cooling.",
+    "For suspected heatstroke, call emergency services and use cold-water immersion of the torso when practical. Otherwise use any immediately available active cooling: continuous wetting, fanning, cool shower, or ice packs to the neck, armpits, and groin.",
+    "Do not delay cooling while waiting for transport. Monitor breathing and stop cooling if severe shivering develops or when directed.",
+    "For milder heat exhaustion in a fully alert person who can swallow, rest in a cool place and give frequent sips of a carbohydrate-electrolyte drink or water.",
+    "If symptoms worsen, vomiting prevents drinking, or recovery is not rapid, obtain urgent medical care."
+  ],
+  "prohibitions": [
+    "Do not give fluids to a confused, drowsy, seizing, or vomiting person.",
+    "Do not use fever medicine for heatstroke.",
+    "Do not delay emergency activation or cooling to measure an exact temperature."
+  ],
+  "redFlags": [
+    {
+      "when": [
+        "confusion",
+        "drowsiness",
+        "fainting"
+      ],
+      "text": "Emergency warning signs selected—contact emergency services now."
+    }
+  ],
+  "emergencyCall": {
+    "always": false,
+    "text": "Confusion, collapse, seizure, or reduced alertness in a hot person is heatstroke: call emergency services and cool immediately.",
+    "when": [
+      "confusion",
+      "drowsiness",
+      "fainting"
+    ]
+  }
+}

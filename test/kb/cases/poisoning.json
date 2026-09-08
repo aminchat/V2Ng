@@ -1,0 +1,56 @@
+{
+  "id": "poisoning",
+  "title": "مسمومیت (خوراکی/تنفسی/پوستی)",
+  "icon": "☠️",
+  "category": "illness",
+  "version": 7,
+  "updatedAt": "2026-09-08",
+  "summary": "ایمنی نجاتگر، تماس با اورژانس/مرکز اطلاع‌رسانی سموم و پرهیز از درمان خودسرانه",
+  "sources": [
+    "WHO Basic Emergency Care — Poisoning",
+    "WHO — Prevention and management of cases of poisoning",
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Chemical Exposure to the Skin"
+  ],
+  "match": {
+    "substance_access": 4,
+    "confusion": 1,
+    "drowsiness": 1,
+    "nausea_vomiting": 1,
+    "container_available": 1,
+    "chemical_contact": 2
+  },
+  "riskQuestions": [
+    "container_available",
+    "substance_access",
+    "confusion",
+    "drowsiness",
+    "seizure_activity",
+    "difficulty_breathing",
+    "chemical_contact"
+  ],
+  "actions": [
+    "ابتدا از ایمنی خود مطمئن شوید. در گاز، دود یا مادهٔ ناشناخته بدون تجهیزات وارد محیط آلوده نشوید؛ از محل امن با اورژانس یا آتش‌نشانی تماس بگیرید.",
+    "در بی‌هوشی، تشنج، تنگی نفس، سوختگی شدید یا بدحال‌بودن فوراً با اورژانس تماس بگیرید. در سایر موارد با مرکز سموم تأییدشدهٔ کشور انتخابی تماس بگیرید و دستور آن را دنبال کنید.",
+    "نام ماده، مقدار احتمالی، زمان و راه تماس، سن، وزن تقریبی و علائم را آماده کنید. ظرف یا عکس برچسب را فقط اگر ایمن است نگه دارید.",
+    "مادهٔ خشک را با محافظ مناسب به‌آرامی از پوست پاک کنید؛ لباس و زیورآلات آلوده را خارج و پوست را دست‌کم ۱۵ دقیقه با آب جاری بشویید، مگر دستور اختصاصی معتبر ماده خلاف آن را بگوید.",
+    "اگر بی‌هوش اما دارای تنفس طبیعی است، راه هوایی را باز نگه دارید و در وضعیت بازیابی قرار دهید؛ در نبود تنفس طبیعی CPR را آغاز کنید.",
+    "تنها بر اساس دستور مرکز سموم یا کادر درمان اقدام خوراکی یا دارویی انجام دهید."
+  ],
+  "prohibitions": [
+    "فرد را وادار به استفراغ نکنید",
+    "شیر، آب‌لیمو، نمک، زغال فعال یا مادهٔ خنثی‌کننده را خودسرانه ندهید",
+    "برای نجات وارد فضای دارای گاز یا بخار ناشناخته نشوید",
+    "به فرد خواب‌آلود، گیج یا بی‌هوش چیزی از راه دهان ندهید"
+  ],
+  "emergencyCall": {
+    "always": false,
+    "when": [
+      "confusion",
+      "drowsiness",
+      "seizure_activity",
+      "difficulty_breathing",
+      "chemical_contact"
+    ],
+    "text": "تماس شیمیایی گسترده/چشمی/تنفسی یا بدحالی = تماس فوری با اورژانس"
+  }
+}

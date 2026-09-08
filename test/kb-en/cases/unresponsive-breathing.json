@@ -1,0 +1,41 @@
+{
+  "id": "unresponsive-breathing",
+  "icon": "🛌",
+  "category": "consciousness",
+  "version": 4,
+  "updatedAt": "2026-09-08",
+  "match": {
+    "unresponsive": 4,
+    "breathing_normal": 3,
+    "neck_pain": 2
+  },
+  "riskQuestions": [
+    "head_impact",
+    "car_accident",
+    "known_diabetic",
+    "seizure_activity",
+    "neck_pain"
+  ],
+  "title": "Unresponsive but breathing normally",
+  "summary": "Call emergency services, maintain an open airway, and monitor continuously.",
+  "sources": [
+    "2025 American Heart Association Guidelines for CPR and Emergency Cardiovascular Care — Recovery Position",
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Positioning of the Ill or Injured Person"
+  ],
+  "actions": [
+    "Call emergency services immediately and keep checking for normal breathing.",
+    "If serious spine, hip, or pelvic injury is not suspected, place the person on their side in the recovery position with the airway open and mouth directed downward.",
+    "If major trauma is possible, avoid unnecessary movement, but airway and breathing take priority. Turn as a unit with help if vomiting or airway obstruction requires it.",
+    "Loosen tight clothing, keep warm, and look for a medical alert identifier or medicine container without delaying care.",
+    "If breathing becomes absent or abnormal, roll onto the back on a firm surface and start CPR and an AED."
+  ],
+  "prohibitions": [
+    "Do not give food, drink, or oral medicine.",
+    "Do not leave the person alone.",
+    "Do not let concern about the spine prevent essential airway care."
+  ],
+  "emergencyCall": {
+    "always": true,
+    "text": "Unresponsiveness requires emergency assessment even when breathing is normal."
+  }
+}

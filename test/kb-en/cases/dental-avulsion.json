@@ -1,0 +1,46 @@
+{
+  "id": "dental-avulsion",
+  "icon": "🦷",
+  "category": "trauma",
+  "version": 2,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "tooth_knocked_out": 7,
+    "local_pain": 1,
+    "bleeding_persistent": 1
+  },
+  "riskQuestions": [
+    "unresponsive",
+    "difficulty_breathing",
+    "bleeding_heavy",
+    "head_impact"
+  ],
+  "title": "Knocked-out permanent tooth",
+  "summary": "Handle by the crown, rinse briefly, replant when safe or keep moist, and obtain immediate dental care.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Dental Avulsion",
+    "2025 International Consensus on First Aid Science With Treatment Recommendations (ILCOR CoSTR) — Dental Avulsion"
+  ],
+  "actions": [
+    "Hold the tooth only by the white crown, not the root. If visibly dirty, rinse gently for less than 10 seconds without scrubbing.",
+    "For a permanent tooth, if the person is alert and cooperative and there is no choking risk, place it back in the socket in the correct direction and have the person bite gently on gauze.",
+    "If replanting is not possible, use a tooth-preservation solution, prepared oral rehydration solution, or clean cling film. Cold cow’s milk is a practical second-line option.",
+    "Take the person and tooth to a dentist or emergency facility immediately and record the dry time.",
+    "Control mouth bleeding with gentle pressure and assess for head or jaw injury."
+  ],
+  "prohibitions": [
+    "Do not replant a baby tooth.",
+    "Do not touch, scrub, disinfect, or dry the root.",
+    "Do not store the tooth in tap water.",
+    "Do not keep the tooth in the mouth of a child or anyone with reduced alertness or swallowing risk."
+  ],
+  "emergencyCall": {
+    "always": false,
+    "text": "Call emergency services for major head injury, breathing trouble, or severe bleeding; a knocked-out permanent tooth needs immediate dental care.",
+    "when": [
+      "unresponsive",
+      "difficulty_breathing",
+      "bleeding_heavy"
+    ]
+  }
+}

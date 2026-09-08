@@ -1,0 +1,73 @@
+{
+  "id": "bee-wasp-sting",
+  "icon": "🐝",
+  "category": "bite",
+  "version": 3,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "stinger_visible": 3,
+    "local_pain": 2,
+    "local_swelling": 2,
+    "multiple_stings": 3
+  },
+  "riskQuestions": [
+    "hives_widespread",
+    "lip_tongue_swelling",
+    "throat_tightness",
+    "wheezing",
+    "difficulty_breathing",
+    "multiple_stings",
+    "known_allergen_exposure",
+    "fainting"
+  ],
+  "title": "Bee or wasp sting",
+  "summary": "Remove a retained stinger promptly, treat local pain, and watch for anaphylaxis.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Bee and Wasp Stings",
+    "World Allergy Organization Anaphylaxis Guidance 2020"
+  ],
+  "actions": [
+    "Move away from the insects. Remove a visible stinger as quickly as possible by scraping or pulling; speed matters more than the method.",
+    "Wash with soap and water. Apply a cold pack wrapped in cloth for up to 20 minutes at a time.",
+    "Widespread hives, swelling of the lips or tongue, throat tightness, wheezing, breathing difficulty, repeated vomiting, or fainting may be anaphylaxis: use prescribed epinephrine and call emergency services.",
+    "Get urgent help for many stings or a sting inside the mouth or throat.",
+    "Monitor local swelling. Seek medical care if swelling becomes extensive, infection develops, or symptoms persist."
+  ],
+  "prohibitions": [
+    "Do not delay while choosing a stinger-removal method.",
+    "Do not scratch the site or apply toothpaste, urine, or unproven remedies.",
+    "Do not leave a person with systemic symptoms alone."
+  ],
+  "redFlags": [
+    {
+      "when": [
+        "hives_widespread",
+        "lip_tongue_swelling",
+        "throat_tightness",
+        "wheezing",
+        "difficulty_breathing",
+        "fainting"
+      ],
+      "text": "Emergency warning signs selected—contact emergency services now."
+    }
+  ],
+  "related": [
+    {
+      "case": "anaphylaxis",
+      "text": "Related guide: Anaphylaxis (severe allergic reaction)"
+    }
+  ],
+  "emergencyCall": {
+    "always": false,
+    "text": "Call emergency services for any whole-body allergic reaction, breathing problem, fainting, or numerous stings.",
+    "when": [
+      "hives_widespread",
+      "lip_tongue_swelling",
+      "throat_tightness",
+      "wheezing",
+      "difficulty_breathing",
+      "multiple_stings",
+      "fainting"
+    ]
+  }
+}

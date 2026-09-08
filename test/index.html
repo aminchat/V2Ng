@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#b4232f">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Emdadgar؛ راهنمای آفلاین فارسی و plain English کمک‌های اولیه / Offline first-aid guide">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Emdadgar">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-5MZN12KTNeMHErAeBoRQSJbm2/fcHNHtK+yhrENQGMI='; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <title>امدادگر — راهنمای آفلاین کمک‌های اولیه</title>
+  <link rel="manifest" href="manifest.webmanifest?v=17">
+  <link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" sizes="180x180">
+  <link rel="stylesheet" href="css/app.css?v=17">
+</head>
+<body>
+  <a class="skip-link" href="#app">پرش به محتوای اصلی</a>
+  <div id="route-announcer" class="visually-hidden" role="status" aria-live="polite"></div>
+  <div id="sync-announcer" class="visually-hidden" role="status" aria-live="polite"></div>
+  <aside id="app-update" class="app-update" aria-labelledby="app-update-title" hidden>
+    <div>
+      <strong id="app-update-title">نسخهٔ جدید امدادگر آماده است</strong>
+      <p>برای فعال‌شدن نسخهٔ تازه، برنامه یک‌بار بازنشانی می‌شود.</p>
+    </div>
+    <div class="app-update-actions">
+      <button id="app-update-now" class="btn primary" type="button">اکنون به‌روزرسانی</button>
+      <button id="app-update-later" class="btn secondary" type="button">بعداً</button>
+    </div>
+  </aside>
+  <div id="app" class="app-shell">
+    <main class="loading" role="status" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>در حال آماده‌سازی راهنما… / Preparing guidance…</p>
+    </main>
+  </div>
+  <noscript><div class="noscript">برای اجرای امدادگر باید JavaScript فعال باشد؛ در وضعیت اورژانسی با شمارهٔ محلی تماس بگیرید. JavaScript is required; in an emergency, call your local emergency number.</div></noscript>
+  <script>(() => {
+    const app = document.getElementById('app');
+    let completed = false;
+    let timeoutId;
+
+    const finish = () => {
+      completed = true;
+      clearTimeout(timeoutId);
+    };
+
+    const showLoadFailure = () => {
+      if (completed || !app?.querySelector('.loading')) return;
+      app.innerHTML = `<main class="body centered" role="alert">
+        <div class="big-icon" aria-hidden="true">!</div>
+        <h1 id="view-heading" tabindex="-1">بارگذاری برنامه کامل نشد / App loading failed</h1>
+        <p>فایل‌ها هماهنگ دریافت نشدند. اتصال را بررسی و دوباره تلاش کنید؛ نیازی به پاک‌کردن کش نیست. Files did not load consistently. Check the connection and try again; do not clear site data.</p>
+        <button class="btn primary" id="boot-retry" type="button">تلاش دوباره / Try again</button>
+        <span class="btn emergency full card-spaced emergency-unavailable">با اورژانس محلی تماس بگیرید / Call local emergency services</span>
+      </main>`;
+      document.getElementById('boot-retry')?.addEventListener('click', () => location.reload());
+      document.getElementById('view-heading')?.focus();
+    };
+
+    window.addEventListener('emdadgar:boot-complete', finish, { once: true });
+    window.addEventListener('error', (event) => {
+      if (event.target?.tagName === 'SCRIPT') setTimeout(showLoadFailure, 0);
+    }, true);
+    timeoutId = setTimeout(showLoadFailure, 20000);
+  })();</script>
+  <script type="module" src="js/app.js?v=17"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{
+  "id": "dislocation-sprain",
+  "title": "دررفتگی / کوفتگی مفصل",
+  "icon": "🦵",
+  "category": "trauma",
+  "version": 5,
+  "updatedAt": "2026-09-07",
+  "summary": "RICE + ممنوعیت جااندازی خودسرانه",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Sprains and Strains",
+    "WHO Basic Emergency Care — Fractures and Musculoskeletal Trauma"
+  ],
+  "match": {
+    "joint_swelling": 5,
+    "deformation": 4,
+    "pain_on_movement": 2
+  },
+  "riskQuestions": [
+    "deformation",
+    "joint_swelling",
+    "numbness",
+    "fall_from_height"
+  ],
+  "actions": [
+    "حرکت مفصل آسیب‌دیده را متوقف کنید.",
+    "RICE: استراحت، یخ غیرمستقیم ۱۵ تا ۲۰ دقیقه، باند کشی خفیف (به‌طوری که انگشتان کبود نشود)، بالا نگه‌داشتن اندام.",
+    "اگر شکل مفصل تغییر کرده یا مصدوم اصلاً نمی‌تواند آن را حرکت دهد: دررفتگی مشکوک — جا نیندازید، اندام را تثبیت کنید و با اورژانس تماس بگیرید (نیاز به عکس و جااندازی تحت بیهوشی/آرام‌کننده).",
+    "اگر فقط کوفتگی/ورم ساده است: تا ۴۸ ساعت یخ + استراحت و به درمانگاه مراجعه."
+  ],
+  "prohibitions": [
+    "مفصل دررفته را خودتان جا نیندازید",
+    "برای «تست» کشش/چرخش فعال انجام ندهید",
+    "باند را آن‌قدر محکم نبندید که انگشتان/پا بی‌حس شود"
+  ],
+  "emergencyCall": {
+    "always": false,
+    "when": [
+      "deformation",
+      "numbness"
+    ],
+    "text": "تغییر شکل زشت یا بی‌حسی = احتمالی دررفتگی — اورژانس"
+  }
+}

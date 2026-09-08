@@ -1,0 +1,150 @@
+{
+  "resuscitation": {
+    "title": "احیا و تنفس",
+    "icon": "🫀",
+    "diffSymptoms": [
+      "unresponsive",
+      "gasping",
+      "not_breathing",
+      "choking_signs",
+      "coughing_effort",
+      "wheezing",
+      "cyanosis",
+      "drowning_recent",
+      "difficulty_breathing"
+    ]
+  },
+  "consciousness": {
+    "title": "غش و هوشیاری",
+    "icon": "🧠",
+    "diffSymptoms": [
+      "fainting",
+      "unresponsive",
+      "head_impact",
+      "confusion",
+      "drowsiness",
+      "speech_difficulty",
+      "facial_droop",
+      "arm_weakness",
+      "seizure_activity",
+      "car_accident",
+      "fall_from_height",
+      "severe_headache",
+      "unequal_pupils",
+      "neck_pain",
+      "blood_thinner"
+    ]
+  },
+  "bleeding": {
+    "title": "خونریزی و زخم",
+    "icon": "🩸",
+    "diffSymptoms": [
+      "bleeding_heavy",
+      "wound_deep",
+      "object_embedded",
+      "embedded_eye",
+      "local_pain",
+      "local_redness",
+      "nosebleed",
+      "bleeding_persistent",
+      "blood_thinner"
+    ]
+  },
+  "bite": {
+    "title": "گزش و نیش",
+    "icon": "🐍",
+    "diffSymptoms": [
+      "saw_snake",
+      "two_punctures",
+      "scorpion_seen",
+      "stinger_visible",
+      "multiple_stings",
+      "tick_attached",
+      "animal_bite",
+      "local_pain",
+      "local_swelling",
+      "swelling_spreading",
+      "dizziness",
+      "nausea_vomiting",
+      "difficulty_breathing",
+      "muscle_tremor",
+      "ptosis",
+      "fainting",
+      "jellyfish_sting"
+    ]
+  },
+  "reaction": {
+    "title": "واکنش شدید",
+    "icon": "⚡",
+    "diffSymptoms": [
+      "hives_widespread",
+      "lip_tongue_swelling",
+      "throat_tightness",
+      "wheezing",
+      "difficulty_breathing",
+      "fainting",
+      "known_allergen_exposure",
+      "stinger_visible",
+      "multiple_stings"
+    ]
+  },
+  "burn": {
+    "title": "سوختگی و برق",
+    "icon": "🔥",
+    "diffSymptoms": [
+      "burn_face_hands_feet",
+      "burn_large",
+      "burn_deep",
+      "soot_nose",
+      "stuck_clothing",
+      "electrical_contact",
+      "chemical_contact",
+      "local_pain",
+      "local_redness"
+    ]
+  },
+  "trauma": {
+    "title": "تروما و استخوان",
+    "icon": "🦴",
+    "diffSymptoms": [
+      "deformation",
+      "open_fracture",
+      "pain_on_movement",
+      "numbness",
+      "joint_swelling",
+      "fall_from_height",
+      "car_accident",
+      "head_impact",
+      "tooth_knocked_out",
+      "open_chest_wound",
+      "amputated_part"
+    ]
+  },
+  "illness": {
+    "title": "بیماری‌های داخلی",
+    "icon": "💊",
+    "diffSymptoms": [
+      "chest_pain",
+      "sweating_cold",
+      "nausea_vomiting",
+      "confusion",
+      "drowsiness",
+      "facial_droop",
+      "arm_weakness",
+      "speech_difficulty",
+      "hot_dry_skin",
+      "hot_flushed",
+      "shivering",
+      "cold_skin",
+      "seizure_activity",
+      "fruity_breath",
+      "kussmaul",
+      "known_diabetic",
+      "substance_access",
+      "difficulty_breathing",
+      "shivering_stopped",
+      "shock_signs",
+      "frostbitten_skin"
+    ]
+  }
+}

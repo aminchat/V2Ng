@@ -1,0 +1,1064 @@
+{
+  "conscious": {
+    "exclusiveWith": [
+      "unresponsive"
+    ],
+    "selectionPriority": 20,
+    "label": "Responds to voice or touch",
+    "aliases": [
+      "awake",
+      "responsive"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "unresponsive": {
+    "selectionPriority": 100,
+    "displayPriority": 100,
+    "label": "Unresponsive / unconscious",
+    "aliases": [
+      "unconscious",
+      "not responding",
+      "passed out"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "breathing_normal": {
+    "exclusiveWith": [
+      "not_breathing",
+      "gasping",
+      "difficulty_breathing",
+      "wheezing",
+      "choking_signs",
+      "cyanosis"
+    ],
+    "selectionPriority": 20,
+    "label": "Breathing normally",
+    "aliases": [
+      "normal breathing"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "gasping": {
+    "selectionPriority": 100,
+    "displayPriority": 100,
+    "label": "Not breathing normally; only occasional gasps",
+    "aliases": [
+      "agonal gasps",
+      "gasping",
+      "abnormal breathing"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "not_breathing": {
+    "exclusiveWith": [
+      "gasping"
+    ],
+    "selectionPriority": 100,
+    "displayPriority": 100,
+    "label": "Not breathing",
+    "aliases": [
+      "no breathing",
+      "stopped breathing"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "bleeding_heavy": {
+    "displayPriority": 95,
+    "label": "Severe, spurting, or rapidly soaking bleeding",
+    "aliases": [
+      "heavy bleeding",
+      "spurting blood",
+      "life-threatening bleeding"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "fainting": {
+    "label": "Fainting or brief loss of consciousness",
+    "aliases": [
+      "fainted",
+      "syncope",
+      "passed out briefly"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "dizziness": {
+    "requiresResponsive": true,
+    "canBeHistorical": true,
+    "displayPriority": 72,
+    "quickAccess": true,
+    "label": "Dizziness or light-headedness",
+    "aliases": [
+      "dizzy",
+      "lightheaded"
+    ],
+    "evidenceTypes": [
+      "reported"
+    ]
+  },
+  "nausea_vomiting": {
+    "displayPriority": 70,
+    "quickAccess": true,
+    "label": "Nausea or vomiting",
+    "aliases": [
+      "feeling sick",
+      "vomiting",
+      "throwing up"
+    ],
+    "evidenceTypes": [
+      "reported",
+      "observed"
+    ],
+    "observedLabel": "Vomiting or has vomited",
+    "reportedLabel": "Says they feel nauseated",
+    "reportedCanBeHistorical": true
+  },
+  "vomiting_repeated": {
+    "displayPriority": 75,
+    "label": "Repeated vomiting",
+    "aliases": [
+      "keeps vomiting",
+      "persistent vomiting"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "difficulty_breathing": {
+    "requiresBreathing": true,
+    "canBeHistorical": true,
+    "displayPriority": 92,
+    "quickAccess": true,
+    "label": "Shortness of breath or difficult breathing",
+    "aliases": [
+      "breathless",
+      "cannot breathe",
+      "breathing difficulty"
+    ],
+    "evidenceTypes": [
+      "reported",
+      "observed"
+    ],
+    "observedLabel": "Breathing looks hard, fast, or laboured",
+    "reportedLabel": "Says it is hard to breathe"
+  },
+  "chest_pain": {
+    "requiresResponsive": true,
+    "canBeHistorical": true,
+    "displayPriority": 86,
+    "quickAccess": true,
+    "label": "Chest pain, pressure, or heaviness",
+    "aliases": [
+      "chest pressure",
+      "tight chest"
+    ],
+    "evidenceTypes": [
+      "reported"
+    ]
+  },
+  "confusion": {
+    "requiresResponsive": true,
+    "canBeHistorical": true,
+    "displayPriority": 88,
+    "label": "New confusion or poor coordination",
+    "aliases": [
+      "confused",
+      "disoriented"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "drowsiness": {
+    "requiresResponsive": true,
+    "canBeHistorical": true,
+    "label": "Unusual drowsiness or hard to wake",
+    "aliases": [
+      "very sleepy",
+      "hard to wake"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "sweating_cold": {
+    "label": "Cold, pale, clammy, or sweaty skin",
+    "aliases": [
+      "cold sweat",
+      "clammy skin",
+      "pale and sweaty"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "speech_difficulty": {
+    "requiresResponsive": true,
+    "canBeHistorical": true,
+    "displayPriority": 82,
+    "label": "Slurred speech or unable to speak a full sentence",
+    "aliases": [
+      "slurred speech",
+      "speech trouble",
+      "cannot speak clearly"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "facial_droop": {
+    "displayPriority": 82,
+    "label": "One side of the face is drooping",
+    "aliases": [
+      "face droop",
+      "uneven smile"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "arm_weakness": {
+    "requiresResponsive": true,
+    "canBeHistorical": true,
+    "displayPriority": 82,
+    "label": "Weakness in one arm, leg, or one side",
+    "aliases": [
+      "arm weakness",
+      "one-sided weakness",
+      "leg weakness"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "seizure_activity": {
+    "displayPriority": 90,
+    "label": "Seizure or whole-body convulsions",
+    "aliases": [
+      "seizure",
+      "fit",
+      "convulsion"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "ptosis": {
+    "label": "Drooping eyelid or difficulty opening one or both eyes",
+    "aliases": [
+      "drooping eyelid",
+      "droopy eyelid",
+      "ptosis",
+      "cannot open the eye"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "muscle_tremor": {
+    "label": "Muscle tremor, twitching, or spasms",
+    "aliases": [
+      "muscle twitching",
+      "spasm",
+      "tremor"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "local_pain": {
+    "requiresResponsive": true,
+    "canBeHistorical": true,
+    "displayPriority": 65,
+    "quickAccess": true,
+    "label": "Pain at the injury, bite, or sting site",
+    "aliases": [
+      "site pain",
+      "painful area"
+    ],
+    "evidenceTypes": [
+      "reported"
+    ]
+  },
+  "local_swelling": {
+    "displayPriority": 62,
+    "quickAccess": true,
+    "label": "Swelling at the injury, bite, or sting site",
+    "aliases": [
+      "local swelling",
+      "swollen area"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "local_redness": {
+    "label": "Redness at the site",
+    "aliases": [
+      "red skin",
+      "local redness"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "swelling_spreading": {
+    "displayPriority": 80,
+    "label": "Swelling spreading quickly beyond the site",
+    "aliases": [
+      "rapid swelling",
+      "spreading swelling"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "bruising": {
+    "label": "Bruising or purple skin patches",
+    "aliases": [
+      "bruises",
+      "purple spots"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "bleeding_gums": {
+    "label": "Bleeding gums or bleeding from puncture sites",
+    "aliases": [
+      "gum bleeding",
+      "unusual bleeding"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "hives_widespread": {
+    "label": "Widespread hives away from the site",
+    "aliases": [
+      "hives",
+      "itchy welts",
+      "widespread rash"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "lip_tongue_swelling": {
+    "displayPriority": 84,
+    "label": "Swelling of the lips, tongue, or face",
+    "aliases": [
+      "swollen lips",
+      "swollen tongue",
+      "facial swelling"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "throat_tightness": {
+    "requiresResponsive": true,
+    "canBeHistorical": true,
+    "displayPriority": 84,
+    "label": "Throat tightness or trouble swallowing or speaking",
+    "aliases": [
+      "tight throat",
+      "difficulty swallowing",
+      "throat swelling"
+    ],
+    "evidenceTypes": [
+      "reported"
+    ]
+  },
+  "wheezing": {
+    "requiresBreathing": true,
+    "canBeHistorical": true,
+    "label": "Wheezing or a whistling sound when breathing",
+    "aliases": [
+      "wheeze",
+      "whistling breathing"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "cyanosis": {
+    "displayPriority": 92,
+    "label": "Blue or grey lips or nails",
+    "aliases": [
+      "blue lips",
+      "grey lips",
+      "cyanosis"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "saw_snake": {
+    "label": "A snake was seen or a snakebite is strongly suspected",
+    "aliases": [
+      "snakebite",
+      "bitten by snake"
+    ],
+    "evidenceTypes": [
+      "scene"
+    ]
+  },
+  "two_punctures": {
+    "label": "Paired puncture marks at the bite site",
+    "aliases": [
+      "fang marks",
+      "two punctures"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "scorpion_seen": {
+    "label": "A scorpion was seen or a sting is suspected",
+    "aliases": [
+      "scorpion sting",
+      "stung by scorpion"
+    ],
+    "evidenceTypes": [
+      "scene"
+    ]
+  },
+  "stinger_visible": {
+    "label": "A stinger or foreign material is visible in the skin",
+    "aliases": [
+      "bee stinger",
+      "stinger in skin"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "multiple_stings": {
+    "label": "Multiple stings",
+    "aliases": [
+      "many stings",
+      "several stings"
+    ],
+    "evidenceTypes": [
+      "scene"
+    ]
+  },
+  "tick_attached": {
+    "label": "A tick is attached to the skin",
+    "aliases": [
+      "tick bite",
+      "embedded tick"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "animal_bite": {
+    "label": "Bite from a dog, cat, bat, or other animal",
+    "aliases": [
+      "dog bite",
+      "cat bite",
+      "animal bite"
+    ],
+    "evidenceTypes": [
+      "scene"
+    ]
+  },
+  "burn_face_hands_feet": {
+    "label": "Burn to face, hands, feet, genitals, or a major joint",
+    "aliases": [
+      "facial burn",
+      "hand burn",
+      "foot burn"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "burn_large": {
+    "label": "Burn larger than the person's palm",
+    "aliases": [
+      "large burn",
+      "extensive burn"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "burn_deep": {
+    "displayPriority": 80,
+    "label": "White, charred, leathery, or painless deep burn",
+    "aliases": [
+      "deep burn",
+      "charred burn",
+      "white burn"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "soot_nose": {
+    "label": "Soot around mouth or nose, hoarse voice, or singed nasal hair",
+    "aliases": [
+      "smoke inhalation",
+      "soot in nose",
+      "hoarse after fire"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "stuck_clothing": {
+    "label": "Clothing is stuck to the burn",
+    "aliases": [
+      "clothes stuck to burn"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "electrical_contact": {
+    "label": "Contact with electricity or a power line",
+    "aliases": [
+      "electric shock",
+      "electrocution"
+    ],
+    "evidenceTypes": [
+      "scene"
+    ]
+  },
+  "chemical_contact": {
+    "label": "Contact with a chemical",
+    "aliases": [
+      "chemical burn",
+      "chemical exposure"
+    ],
+    "evidenceTypes": [
+      "scene"
+    ]
+  },
+  "deformation": {
+    "label": "Obvious deformity or abnormal limb position",
+    "aliases": [
+      "deformed limb",
+      "crooked joint"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "open_fracture": {
+    "displayPriority": 80,
+    "label": "Open fracture or bone visible through a wound",
+    "aliases": [
+      "bone sticking out",
+      "compound fracture"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "pain_on_movement": {
+    "requiresResponsive": true,
+    "canBeHistorical": true,
+    "label": "Severe pain when the injured part moves",
+    "aliases": [
+      "movement pain",
+      "cannot move limb"
+    ],
+    "evidenceTypes": [
+      "reported"
+    ]
+  },
+  "numbness": {
+    "requiresResponsive": true,
+    "canBeHistorical": true,
+    "label": "Numbness, tingling, or reduced feeling in fingers or toes",
+    "aliases": [
+      "numb",
+      "pins and needles",
+      "tingling"
+    ],
+    "evidenceTypes": [
+      "reported"
+    ]
+  },
+  "fall_from_height": {
+    "label": "Fall from height",
+    "aliases": [
+      "high fall",
+      "fell from height"
+    ],
+    "evidenceTypes": [
+      "scene"
+    ]
+  },
+  "car_accident": {
+    "label": "Vehicle crash or high-energy collision",
+    "aliases": [
+      "car crash",
+      "road accident",
+      "collision"
+    ],
+    "evidenceTypes": [
+      "scene"
+    ]
+  },
+  "joint_swelling": {
+    "label": "Rapid joint swelling or deformity",
+    "aliases": [
+      "swollen joint",
+      "joint injury"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "head_impact": {
+    "displayPriority": 68,
+    "quickAccess": true,
+    "label": "Direct blow or impact to the head",
+    "aliases": [
+      "head injury",
+      "hit head"
+    ],
+    "evidenceTypes": [
+      "scene"
+    ]
+  },
+  "known_diabetic": {
+    "label": "The person is known to have diabetes",
+    "aliases": [
+      "diabetic",
+      "diabetes"
+    ],
+    "evidenceTypes": [
+      "background"
+    ]
+  },
+  "fruity_breath": {
+    "label": "Fruity or acetone-like breath",
+    "aliases": [
+      "fruity breath",
+      "acetone breath"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "kussmaul": {
+    "label": "Deep, rapid, laboured breathing",
+    "aliases": [
+      "Kussmaul breathing",
+      "deep fast breathing"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "shivering": {
+    "label": "Strong shivering",
+    "aliases": [
+      "shaking from cold",
+      "shivering"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "cold_skin": {
+    "label": "Cold, pale skin",
+    "aliases": [
+      "cold skin",
+      "pale skin",
+      "temperature",
+      "low body temperature",
+      "reduced body temperature",
+      "body very cold",
+      "hypothermia"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "hot_dry_skin": {
+    "exclusiveWith": [
+      "hot_flushed"
+    ],
+    "label": "Very hot, dry skin",
+    "aliases": [
+      "hot dry skin",
+      "overheated",
+      "temperature",
+      "high body temperature",
+      "raised body temperature",
+      "body very hot",
+      "hyperthermia",
+      "heatstroke",
+      "fever"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "hot_flushed": {
+    "label": "Very hot, flushed skin with heavy sweating",
+    "aliases": [
+      "hot sweaty skin",
+      "heavy sweating in heat",
+      "temperature",
+      "high body temperature",
+      "raised body temperature",
+      "body very hot",
+      "hyperthermia",
+      "heatstroke",
+      "fever"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "known_allergen_exposure": {
+    "label": "Known allergy or recent allergen exposure",
+    "aliases": [
+      "allergy",
+      "allergen exposure"
+    ],
+    "evidenceTypes": [
+      "background",
+      "scene"
+    ],
+    "backgroundLabel": "The person has a known allergy",
+    "sceneLabel": "Recent exposure to an allergen was seen or reliably reported"
+  },
+  "choking_signs": {
+    "exclusiveWith": [
+      "coughing_effort"
+    ],
+    "selectionPriority": 90,
+    "displayPriority": 96,
+    "label": "Cannot speak, breathe, or cough effectively",
+    "aliases": [
+      "choking",
+      "blocked airway",
+      "silent cough"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "coughing_effort": {
+    "requiresResponsive": true,
+    "requiresBreathing": true,
+    "label": "Strong effective cough and able to speak",
+    "aliases": [
+      "effective cough",
+      "strong cough"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "drowning_recent": {
+    "label": "Recently rescued from water",
+    "aliases": [
+      "drowning",
+      "pulled from water",
+      "submersion"
+    ],
+    "evidenceTypes": [
+      "scene"
+    ]
+  },
+  "substance_access": {
+    "label": "Possible exposure to a medicine, poison, drug, or chemical",
+    "aliases": [
+      "poisoning",
+      "overdose",
+      "chemical exposure"
+    ],
+    "evidenceTypes": [
+      "scene"
+    ]
+  },
+  "container_available": {
+    "label": "Container, label, or remaining substance is available",
+    "aliases": [
+      "poison container",
+      "medicine packet"
+    ],
+    "evidenceTypes": [
+      "scene"
+    ]
+  },
+  "embedded_eye": {
+    "label": "An object is embedded in the eye",
+    "aliases": [
+      "object in eye",
+      "penetrating eye injury"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "object_embedded": {
+    "label": "An object is embedded in the body",
+    "aliases": [
+      "impaled object",
+      "object stuck in wound"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "wound_deep": {
+    "label": "Deep, long, or gaping wound",
+    "aliases": [
+      "deep cut",
+      "gaping wound"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "seizure_long": {
+    "label": "Seizure lasting more than 5 minutes",
+    "aliases": [
+      "long seizure",
+      "seizure over five minutes"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "first_seizure": {
+    "label": "This is the first known seizure",
+    "aliases": [
+      "first fit",
+      "no seizure history"
+    ],
+    "evidenceTypes": [
+      "background"
+    ]
+  },
+  "pregnant": {
+    "label": "The person is pregnant",
+    "aliases": [
+      "pregnancy",
+      "pregnant person"
+    ],
+    "evidenceTypes": [
+      "background"
+    ]
+  },
+  "child_victim": {
+    "exclusiveWith": [
+      "elderly_victim"
+    ],
+    "label": "The person is a child",
+    "aliases": [
+      "child",
+      "baby",
+      "infant"
+    ],
+    "evidenceTypes": [
+      "background"
+    ]
+  },
+  "elderly_victim": {
+    "label": "The person is an older adult",
+    "aliases": [
+      "elderly",
+      "older person"
+    ],
+    "evidenceTypes": [
+      "background"
+    ]
+  },
+  "heart_known": {
+    "label": "Known heart disease",
+    "aliases": [
+      "heart condition",
+      "cardiac history"
+    ],
+    "evidenceTypes": [
+      "background"
+    ]
+  },
+  "time_onset": {
+    "label": "Symptom onset or last-known-well time is known",
+    "aliases": [
+      "time symptoms started",
+      "last known well"
+    ],
+    "evidenceTypes": [
+      "background"
+    ]
+  },
+  "shivering_stopped": {
+    "label": "Shivering has stopped despite severe cold",
+    "aliases": [
+      "stopped shivering",
+      "no longer shivering"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "severe_headache": {
+    "requiresResponsive": true,
+    "canBeHistorical": true,
+    "displayPriority": 78,
+    "label": "Severe or worsening headache after injury",
+    "aliases": [
+      "bad headache",
+      "headache after injury"
+    ],
+    "evidenceTypes": [
+      "reported"
+    ]
+  },
+  "unequal_pupils": {
+    "displayPriority": 78,
+    "label": "Pupils are unequal in size",
+    "aliases": [
+      "unequal pupils",
+      "different pupil size"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "blood_thinner": {
+    "label": "Takes an anticoagulant or has a bleeding disorder",
+    "aliases": [
+      "blood thinner",
+      "warfarin",
+      "anticoagulant"
+    ],
+    "evidenceTypes": [
+      "background"
+    ]
+  },
+  "neck_pain": {
+    "requiresResponsive": true,
+    "canBeHistorical": true,
+    "label": "Neck pain or tenderness after injury",
+    "aliases": [
+      "neck pain",
+      "sore neck"
+    ],
+    "evidenceTypes": [
+      "reported"
+    ]
+  },
+  "nosebleed": {
+    "displayPriority": 60,
+    "quickAccess": true,
+    "label": "Bleeding from the nose",
+    "aliases": [
+      "nosebleed",
+      "bloody nose"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "bleeding_persistent": {
+    "displayPriority": 60,
+    "label": "Bleeding does not stop with continuous pressure",
+    "aliases": [
+      "bleeding will not stop",
+      "persistent bleeding"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "shock_signs": {
+    "requiresResponsive": true,
+    "canBeHistorical": true,
+    "displayPriority": 88,
+    "label": "Signs of shock: pale, cool, clammy skin, weakness, or dizziness",
+    "aliases": [
+      "shock",
+      "weak pulse",
+      "pale and clammy"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ],
+    "observedLabel": "Pale, cool, clammy skin or a weak pulse is observed"
+  },
+  "frostbitten_skin": {
+    "displayPriority": 70,
+    "label": "Frozen, numb, white, grey, or waxy skin",
+    "aliases": [
+      "frostbite",
+      "frozen skin",
+      "waxy skin"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "tooth_knocked_out": {
+    "displayPriority": 65,
+    "label": "A permanent tooth has been completely knocked out",
+    "aliases": [
+      "knocked-out tooth",
+      "avulsed tooth"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "open_chest_wound": {
+    "displayPriority": 90,
+    "label": "Open or penetrating wound to the chest",
+    "aliases": [
+      "sucking chest wound",
+      "penetrating chest injury"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "amputated_part": {
+    "displayPriority": 92,
+    "label": "A finger, limb, or body part is completely amputated",
+    "aliases": [
+      "amputation",
+      "severed finger",
+      "severed limb"
+    ],
+    "evidenceTypes": [
+      "observed"
+    ]
+  },
+  "jellyfish_sting": {
+    "displayPriority": 58,
+    "label": "Contact with or sting from a jellyfish",
+    "aliases": [
+      "jellyfish sting",
+      "jellyfish tentacle"
+    ],
+    "evidenceTypes": [
+      "scene"
+    ]
+  }
+}

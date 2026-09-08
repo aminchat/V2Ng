@@ -1,0 +1,63 @@
+{
+  "id": "fainting",
+  "title": "غش / سنکوپ",
+  "icon": "😌",
+  "category": "consciousness",
+  "version": 6,
+  "updatedAt": "2026-09-08",
+  "summary": "خواباندن ایمن، بررسی تنفس و جست‌وجوی علت‌های خطرناک",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Presyncope",
+    "IFRC International First Aid Guidelines — Unresponsiveness"
+  ],
+  "match": {
+    "fainting": 4,
+    "dizziness": 2,
+    "sweating_cold": 1,
+    "nausea_vomiting": 1,
+    "first_seizure": 1,
+    "pregnant": 1
+  },
+  "riskQuestions": [
+    "chest_pain",
+    "head_impact",
+    "car_accident",
+    "pregnant",
+    "first_seizure",
+    "confusion"
+  ],
+  "actions": [
+    "از افتادن جلوگیری کنید و فرد را به پشت بخوابانید. اگر آسیب، درد یا تنگی نفس ندارد می‌توانید پاها را کمی بالا ببرید.",
+    "تنفس طبیعی را بررسی کنید، لباس تنگ را باز کنید و فرد را تنها نگذارید. اگر بی‌هوشی ادامه دارد با اورژانس تماس بگیرید.",
+    "پس از بازگشت کامل هوشیاری، اجازه دهید چند دقیقه درازکش بماند و سپس آهسته بنشیند؛ در صورت بازگشت سرگیجه دوباره بخوابد.",
+    "اگر غش هنگام ورزش، همراه درد سینه/تپش، در بارداری، پس از ضربه، برای نخستین بار، یا همراه گیجی پایدار رخ داده است با اورژانس تماس بگیرید.",
+    "اگر دیابت و افت قند محتمل است، فقط پس از هوشیاری کامل و بلع ایمن از راهنمای افت قند استفاده کنید."
+  ],
+  "prohibitions": [
+    "به صورت فرد سیلی نزنید و آب روی او نریزید",
+    "فرد را سریع ننشانید یا وادار به راه‌رفتن نکنید",
+    "تا وقتی هوشیاری و بلع کامل نشده است خوراکی یا نوشیدنی ندهید",
+    "غش همراه نشانه‌های خطر را غش ساده فرض نکنید"
+  ],
+  "related": [
+    {
+      "case": "head-injury",
+      "text": "اگر قبل از غش ضربه سر دارد: پروتکل ضربه سر"
+    },
+    {
+      "case": "heart-attack",
+      "text": "اگر درد سینه دارد: پروتکل شبه سکته قلبی"
+    }
+  ],
+  "emergencyCall": {
+    "always": false,
+    "when": [
+      "chest_pain",
+      "head_impact",
+      "car_accident",
+      "pregnant",
+      "confusion"
+    ],
+    "text": "غش با درد سینه، ضربه، تصادف یا در بارداری ساده نیست"
+  }
+}

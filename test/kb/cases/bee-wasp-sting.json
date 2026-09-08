@@ -1,0 +1,73 @@
+{
+  "id": "bee-wasp-sting",
+  "title": "نیش زنبور",
+  "icon": "🐝",
+  "category": "bite",
+  "version": 4,
+  "updatedAt": "2026-09-07",
+  "summary": "خارج‌کردن سریع نیش، کمپرس سرد و پایش آنافیلاکسی",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Insect Stings",
+    "World Allergy Organization Anaphylaxis Guidance 2020"
+  ],
+  "match": {
+    "stinger_visible": 3,
+    "local_pain": 2,
+    "local_swelling": 2,
+    "multiple_stings": 3
+  },
+  "riskQuestions": [
+    "hives_widespread",
+    "lip_tongue_swelling",
+    "throat_tightness",
+    "wheezing",
+    "difficulty_breathing",
+    "multiple_stings",
+    "known_allergen_exposure",
+    "fainting"
+  ],
+  "actions": [
+    "از محل دور شوید تا نیش بیشتری رخ ندهد. اگر نیش در پوست مانده، آن را هرچه سریع‌تر با کشیدن یا تراشیدن خارج کنید؛ سرعت مهم‌تر از روش است.",
+    "محل را با آب و صابون بشویید و کمپرس سردِ پیچیده در پارچه، هر بار حدود ۲۰ دقیقه، بگذارید.",
+    "کهیر دور از محل، تورم لب/زبان/گلو، خس‌خس، تنگی نفس، استفراغ مکرر یا غش نشانهٔ آنافیلاکسی است: اپی‌نفرین خودکارِ خود فرد و تماس فوری با اورژانس.",
+    "در نیش‌های متعدد، نیش داخل دهان/گلو، یا بدحال‌شدن فرد با اورژانس تماس بگیرید.",
+    "تورم موضعی را زیر نظر بگیرید؛ گسترش زیاد، عفونت یا باقی‌ماندن علائم نیازمند ارزیابی پزشکی است."
+  ],
+  "redFlags": [
+    {
+      "when": [
+        "hives_widespread",
+        "lip_tongue_swelling",
+        "throat_tightness",
+        "wheezing",
+        "difficulty_breathing",
+        "fainting"
+      ],
+      "text": "احتمال آنافیلاکسی — پروتکل آنافیلاکسی و تماس فوری با اورژانس"
+    }
+  ],
+  "prohibitions": [
+    "برای انتخاب روش خارج‌کردن نیش وقت تلف نکنید",
+    "محل را نخراشید و خمیردندان، ادرار یا مادهٔ خانگی روی آن نگذارید",
+    "فرد دارای نشانه‌های عمومی را تنها نگذارید یا وادار به راه‌رفتن نکنید"
+  ],
+  "related": [
+    {
+      "case": "anaphylaxis",
+      "text": "اگر واکنش سیستمیک دیدید: پروتکل آنافیلاکسی"
+    }
+  ],
+  "emergencyCall": {
+    "always": false,
+    "when": [
+      "hives_widespread",
+      "lip_tongue_swelling",
+      "throat_tightness",
+      "wheezing",
+      "difficulty_breathing",
+      "multiple_stings",
+      "fainting"
+    ],
+    "text": "چندین نیش یا هر علامت سیستمیک = تماس فوری با اورژانس"
+  }
+}

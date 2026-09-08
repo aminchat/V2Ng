@@ -1,0 +1,53 @@
+{
+  "id": "seizure",
+  "icon": "⚡",
+  "category": "consciousness",
+  "version": 4,
+  "updatedAt": "2026-09-08",
+  "match": {
+    "seizure_activity": 6,
+    "unresponsive": 2,
+    "first_seizure": 2,
+    "seizure_long": 2,
+    "pregnant": 1
+  },
+  "riskQuestions": [
+    "seizure_long",
+    "first_seizure",
+    "child_victim",
+    "pregnant",
+    "known_diabetic",
+    "head_impact",
+    "car_accident"
+  ],
+  "title": "Seizure",
+  "summary": "Protect from injury, time the seizure, and call for prolonged, first, repeated, or complicated seizures.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Seizures"
+  ],
+  "actions": [
+    "Clear hard or dangerous objects away and cushion the head with something soft.",
+    "Time the seizure from its start. Do not restrain the movements.",
+    "After convulsions stop, check breathing. Use the recovery position if breathing normally and stay calmly with the person.",
+    "Call emergency services for a first seizure, duration over 5 minutes, repeated seizures without recovery, seizure in water, significant injury, breathing difficulty, pregnancy, an infant younger than 6 months, or no return to usual alertness within 5 to 10 minutes.",
+    "Start CPR if normal breathing does not resume."
+  ],
+  "prohibitions": [
+    "Do not put anything in the mouth.",
+    "Do not hold the person down or try to stop the movements.",
+    "Do not give food, drink, or oral medicine until fully alert and able to swallow."
+  ],
+  "emergencyCall": {
+    "always": false,
+    "text": "Call emergency services for a seizure longer than 5 minutes, a first seizure, repeated seizures without recovery, injury, water involvement, breathing trouble, pregnancy, or failure to return to baseline.",
+    "when": [
+      "seizure_long",
+      "first_seizure",
+      "child_victim",
+      "pregnant",
+      "known_diabetic",
+      "head_impact",
+      "car_accident"
+    ]
+  }
+}

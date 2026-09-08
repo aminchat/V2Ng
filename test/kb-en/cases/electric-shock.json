@@ -1,0 +1,39 @@
+{
+  "id": "electric-shock",
+  "icon": "⚡",
+  "category": "burn",
+  "version": 3,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "electrical_contact": 6,
+    "not_breathing": 3,
+    "unresponsive": 3
+  },
+  "riskQuestions": [
+    "not_breathing",
+    "unresponsive",
+    "fall_from_height"
+  ],
+  "title": "Electrical injury",
+  "summary": "Disconnect power safely, avoid contact until the source is isolated, and assess for cardiac arrest and burns.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Electrical Injury",
+    "WHO Basic Emergency Care: Approach to the Acutely Ill and Injured"
+  ],
+  "actions": [
+    "Do not touch the person until the power source is isolated. Turn off mains power or have the utility disconnect a high-voltage line.",
+    "Call emergency services for high-voltage exposure, lightning, loss of consciousness, breathing difficulty, chest pain, abnormal heartbeat, or significant burns.",
+    "When safe, check responsiveness and breathing. Start CPR and use an AED if breathing is absent or abnormal.",
+    "Cool visible thermal burns with clean running water and cover loosely after cooling. Electrical injury may be severe beneath small skin marks.",
+    "Keep the person still and monitor until help arrives."
+  ],
+  "prohibitions": [
+    "Do not approach fallen power lines or an energized vehicle.",
+    "Do not use a wet or metal object to move a live wire.",
+    "Do not apply ice, ointment, or home remedies to burns."
+  ],
+  "emergencyCall": {
+    "always": true,
+    "text": "High-voltage, lightning, loss of consciousness, abnormal breathing, chest symptoms, or significant burns requires emergency services."
+  }
+}

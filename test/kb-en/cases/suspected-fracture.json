@@ -1,0 +1,67 @@
+{
+  "id": "suspected-fracture",
+  "icon": "🦴",
+  "category": "trauma",
+  "version": 5,
+  "updatedAt": "2026-09-08",
+  "match": {
+    "deformation": 5,
+    "open_fracture": 5,
+    "pain_on_movement": 2,
+    "fall_from_height": 2,
+    "car_accident": 2,
+    "head_impact": 1,
+    "neck_pain": 2
+  },
+  "riskQuestions": [
+    "deformation",
+    "open_fracture",
+    "numbness",
+    "pain_on_movement",
+    "car_accident",
+    "fall_from_height",
+    "head_impact",
+    "neck_pain"
+  ],
+  "title": "Suspected fracture",
+  "summary": "Support in the position found, check circulation, and avoid unnecessary movement.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Fractures and Suspected Spinal Injury",
+    "WHO Basic Emergency Care: Approach to the Acutely Ill and Injured"
+  ],
+  "actions": [
+    "Do not move the person except for immediate safety, airway care, or CPR when a high-energy mechanism or spine injury is possible.",
+    "Support and immobilize the injured part in the position found. Keep joints above and below still when practical.",
+    "Check colour, warmth, and feeling beyond any splint before and after application. Loosen bindings if circulation worsens; do not straighten the limb.",
+    "Apply a cold pack wrapped in cloth without pressing on deformity or exposed bone.",
+    "Cover an open fracture with a dry sterile dressing without pushing bone back. Control bleeding by pressing around, not on, exposed bone."
+  ],
+  "prohibitions": [
+    "Do not straighten or reduce a bone or joint.",
+    "Do not press on exposed bone or an embedded object.",
+    "Do not make the person walk on or test the injured part."
+  ],
+  "redFlags": [
+    {
+      "when": [
+        "open_fracture",
+        "car_accident",
+        "fall_from_height",
+        "neck_pain"
+      ],
+      "text": "Emergency warning signs selected—contact emergency services now."
+    }
+  ],
+  "emergencyCall": {
+    "always": false,
+    "text": "Call emergency services for an open fracture, loss of circulation or feeling, severe deformity, major mechanism, neck pain or possible spine, pelvis, or thigh injury.",
+    "when": [
+      "open_fracture",
+      "car_accident",
+      "fall_from_height",
+      "numbness",
+      "head_impact",
+      "neck_pain"
+    ]
+  }
+}

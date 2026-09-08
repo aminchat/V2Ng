@@ -1,0 +1,69 @@
+{
+  "id": "suspected-fracture",
+  "title": "شکستگی مشکوک",
+  "icon": "🦴",
+  "category": "trauma",
+  "version": 8,
+  "updatedAt": "2026-09-08",
+  "summary": "حمایت و تثبیت در وضعیت موجود؛ صاف‌کردن یا جااندازی ممنوع",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Fractures and Suspected Spinal Injury",
+    "WHO Basic Emergency Care — Fractures"
+  ],
+  "match": {
+    "deformation": 5,
+    "open_fracture": 5,
+    "pain_on_movement": 2,
+    "fall_from_height": 2,
+    "car_accident": 2,
+    "head_impact": 1,
+    "neck_pain": 2
+  },
+  "riskQuestions": [
+    "deformation",
+    "open_fracture",
+    "numbness",
+    "pain_on_movement",
+    "car_accident",
+    "fall_from_height",
+    "head_impact",
+    "neck_pain"
+  ],
+  "actions": [
+    "جز برای ایمنی صحنه، بازکردن راه هوایی یا CPR، فرد را جابه‌جا نکنید؛ در تصادف یا سقوط، آسیب ستون فقرات را نیز فرض کنید.",
+    "اندام را در همان وضعیتی که پیدا کرده‌اید حمایت و ثابت کنید. مفاصل بالا و پایین محل آسیب را در صورت امکان بی‌حرکت نگه دارید.",
+    "پیش و پس از آتل‌بندی، رنگ، گرما و حس انگشتان را بررسی کنید. اگر انگشتان سرد، کبود یا بی‌حس شد، بست را شل کنید؛ خود اندام را صاف نکنید.",
+    "کمپرس سردِ پیچیده در پارچه را بدون فشار روی محل بگذارید و پوست را مرتب بررسی کنید.",
+    "در شکستگی باز، زخم را بدون فشار روی استخوان با پانسمان استریل خشک بپوشانید و خونریزی را با فشار اطراف زخم کنترل کنید.",
+    "شکستگی باز، بی‌حسی/نبود گردش خون، تغییر شکل شدید، آسیب لگن/ران/ستون فقرات یا مکانیسم پرانرژی نیازمند اورژانس است."
+  ],
+  "redFlags": [
+    {
+      "when": [
+        "open_fracture",
+        "car_accident",
+        "fall_from_height",
+        "neck_pain"
+      ],
+      "text": "شکستگی باز یا مکانیسم تصادف/افت = اورژانس و بدون نیاز به جابه‌جایی"
+    }
+  ],
+  "prohibitions": [
+    "استخوان یا مفصل را صاف و جااندازی نکنید",
+    "روی استخوان بیرون‌زده یا جسم فرورفته فشار ندهید",
+    "برای آزمودن آسیب، اندام را حرکت یا وزن‌گذاری نکنید",
+    "در آسیب احتمالی ستون فقرات، فرد را بی‌دلیل جابه‌جا نکنید"
+  ],
+  "emergencyCall": {
+    "always": false,
+    "when": [
+      "open_fracture",
+      "car_accident",
+      "fall_from_height",
+      "numbness",
+      "head_impact",
+      "neck_pain"
+    ],
+    "text": "شکستگی باز، تصادف، بی‌حسی اندام یا درد/آسیب گردن = اورژانس و جابه‌جایی ممنوع"
+  }
+}

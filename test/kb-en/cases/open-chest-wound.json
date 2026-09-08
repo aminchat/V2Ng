@@ -1,0 +1,42 @@
+{
+  "id": "open-chest-wound",
+  "icon": "🫁",
+  "category": "trauma",
+  "version": 2,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "open_chest_wound": 7,
+    "difficulty_breathing": 3,
+    "bleeding_heavy": 2,
+    "cyanosis": 2
+  },
+  "riskQuestions": [
+    "difficulty_breathing",
+    "cyanosis",
+    "bleeding_heavy",
+    "object_embedded",
+    "confusion",
+    "drowsiness"
+  ],
+  "title": "Open chest wound",
+  "summary": "Call emergency services; leave exposed or use a clean nonocclusive dressing while monitoring breathing.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Open Chest Wounds"
+  ],
+  "actions": [
+    "Call emergency services immediately and use a safe position that makes breathing easiest unless reduced alertness or other injuries prevent it.",
+    "Leave the wound open to air or cover with a clean, dry, nonocclusive dressing. Use a purpose-made vented chest seal only if available and you know how.",
+    "If breathing worsens after a dressing is placed, loosen or remove it. Control bleeding around the wound without pressing on an embedded object.",
+    "Monitor breathing and alertness continuously. Start CPR and use an AED if breathing becomes absent or abnormal.",
+    "Keep the person warm and still; stabilize any embedded object with bulky dressings around it."
+  ],
+  "prohibitions": [
+    "Do not seal the wound with unvented plastic.",
+    "Do not remove an embedded object.",
+    "Do not give food or drink."
+  ],
+  "emergencyCall": {
+    "always": true,
+    "text": "Every open or penetrating chest wound is a life-threatening emergency."
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "id": "poisoning",
+  "icon": "☠️",
+  "category": "illness",
+  "version": 5,
+  "updatedAt": "2026-09-08",
+  "match": {
+    "substance_access": 4,
+    "confusion": 1,
+    "drowsiness": 1,
+    "nausea_vomiting": 1,
+    "container_available": 1,
+    "chemical_contact": 2
+  },
+  "riskQuestions": [
+    "container_available",
+    "substance_access",
+    "confusion",
+    "drowsiness",
+    "seizure_activity",
+    "difficulty_breathing",
+    "chemical_contact"
+  ],
+  "title": "Suspected poisoning or chemical exposure",
+  "summary": "Protect the rescuer, call the poison centre or emergency services, and avoid unadvised remedies.",
+  "sources": [
+    "WHO Basic Emergency Care: Approach to the Acutely Ill and Injured",
+    "World Health Organization — Prevention and management of poisoning",
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Chemical Exposure to the Skin"
+  ],
+  "actions": [
+    "Protect yourself. Do not enter an area with unknown gas, fumes, or chemical contamination without appropriate training and equipment.",
+    "For severe symptoms call emergency services. Otherwise contact the verified poison centre for the selected country and follow its instructions.",
+    "Have the substance name, amount, time, route of exposure, age, approximate weight, and symptoms ready. Keep the container or a photo of the label only when safe.",
+    "Brush off a dry chemical carefully before water unless product-specific instructions say otherwise. Remove contaminated clothing and jewellery, then irrigate exposed skin with running water for at least 15 minutes.",
+    "If unresponsive but breathing normally, use the recovery position. Start CPR if breathing is absent or abnormal."
+  ],
+  "prohibitions": [
+    "Do not induce vomiting.",
+    "Do not give milk, lemon juice, salt, activated charcoal, or a neutralizing chemical unless a poison specialist directs it.",
+    "Do not enter a contaminated space to attempt a rescue.",
+    "Give nothing by mouth to a drowsy, confused, seizing, or unresponsive person."
+  ],
+  "emergencyCall": {
+    "always": false,
+    "text": "Call emergency services for a large/eye/airway chemical exposure, severe burns, or severe illness.",
+    "when": [
+      "confusion",
+      "drowsiness",
+      "seizure_activity",
+      "difficulty_breathing",
+      "chemical_contact"
+    ]
+  }
+}

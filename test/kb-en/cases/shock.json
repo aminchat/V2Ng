@@ -1,0 +1,44 @@
+{
+  "id": "shock",
+  "icon": "⚠️",
+  "category": "illness",
+  "version": 2,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "shock_signs": 6,
+    "sweating_cold": 3,
+    "dizziness": 2,
+    "confusion": 3,
+    "bleeding_heavy": 2
+  },
+  "riskQuestions": [
+    "bleeding_heavy",
+    "difficulty_breathing",
+    "chest_pain",
+    "confusion",
+    "drowsiness",
+    "fainting"
+  ],
+  "title": "Shock from illness or injury",
+  "summary": "Call emergency services, use a safe lying position, keep warm, and control an obvious cause such as bleeding.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Position for Shock",
+    "WHO Basic Emergency Care: Approach to the Acutely Ill and Injured"
+  ],
+  "actions": [
+    "Call emergency services immediately and describe the likely cause.",
+    "Keep an alert person lying on their back. If this worsens breathing, allow the most comfortable breathing position; use the left side in late pregnancy when practical.",
+    "Control severe bleeding, loosen tight clothing, and protect from cold with a blanket.",
+    "If there is no trauma or pain, raising the feet about 15 to 30 cm (6 to 12 in) may be reasonable. Lower them if pain, discomfort, or worsening occurs.",
+    "Monitor alertness and breathing. Use the recovery position if alertness falls but breathing remains normal; start CPR for absent or abnormal breathing."
+  ],
+  "prohibitions": [
+    "Do not give food, drink, or oral medicine.",
+    "Do not make the person stand or walk.",
+    "Do not raise the legs when leg, pelvis, abdomen, chest, or spine injury is possible."
+  ],
+  "emergencyCall": {
+    "always": true,
+    "text": "Signs of shock can indicate life-threatening bleeding or illness; call emergency services now."
+  }
+}

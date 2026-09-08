@@ -1,0 +1,61 @@
+{
+  "id": "breathing-difficulty",
+  "icon": "🫁",
+  "category": "resuscitation",
+  "version": 3,
+  "updatedAt": "2026-09-07",
+  "match": {
+    "difficulty_breathing": 5,
+    "wheezing": 3,
+    "cyanosis": 3,
+    "chest_pain": 1
+  },
+  "riskQuestions": [
+    "wheezing",
+    "cyanosis",
+    "difficulty_breathing",
+    "confusion",
+    "drowsiness",
+    "speech_difficulty",
+    "child_victim"
+  ],
+  "title": "Breathing difficulty or asthma attack",
+  "summary": "Allow a comfortable position, help with the person’s prescribed reliever, and recognize severe breathing failure.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Asthma",
+    "WHO Basic Emergency Care: Approach to the Acutely Ill and Injured"
+  ],
+  "actions": [
+    "If smoke, gas, or another hazard is present, do not enter an unsafe area. Move to fresh air only when it is safe and call emergency services.",
+    "Let an alert person sit in the position that makes breathing easiest, often upright and leaning slightly forward. Loosen tight clothing.",
+    "Help the person use their own prescribed reliever inhaler according to their action plan or device instructions.",
+    "Call emergency services immediately for inability to speak a full sentence, blue or grey lips, confusion, drowsiness, very little air movement, or no rapid improvement with the reliever.",
+    "Stay with the person and monitor breathing. Start CPR if breathing becomes absent or abnormal."
+  ],
+  "prohibitions": [
+    "Do not give another person’s medicine.",
+    "Do not force an alert breathless person to lie flat, walk, or exercise.",
+    "Do not delay emergency help when severe signs are present."
+  ],
+  "redFlags": [
+    {
+      "when": [
+        "cyanosis",
+        "confusion",
+        "drowsiness",
+        "speech_difficulty"
+      ],
+      "text": "Emergency warning signs selected—contact emergency services now."
+    }
+  ],
+  "emergencyCall": {
+    "always": false,
+    "text": "Blue or grey lips, confusion, drowsiness, or inability to speak in full sentences requires immediate emergency help.",
+    "when": [
+      "cyanosis",
+      "confusion",
+      "drowsiness",
+      "speech_difficulty"
+    ]
+  }
+}

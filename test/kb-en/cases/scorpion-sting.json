@@ -1,0 +1,69 @@
+{
+  "id": "scorpion-sting",
+  "icon": "🦂",
+  "category": "bite",
+  "version": 5,
+  "updatedAt": "2026-09-08",
+  "match": {
+    "scorpion_seen": 6,
+    "local_pain": 1,
+    "local_swelling": 2,
+    "bruising": 2,
+    "muscle_tremor": 2,
+    "child_victim": 2,
+    "ptosis": 2
+  },
+  "riskQuestions": [
+    "difficulty_breathing",
+    "muscle_tremor",
+    "confusion",
+    "sweating_cold",
+    "local_swelling",
+    "bruising",
+    "child_victim",
+    "elderly_victim",
+    "fainting",
+    "ptosis"
+  ],
+  "title": "Scorpion sting",
+  "summary": "Obtain urgent advice and watch for breathing, neurological, cardiovascular, or delayed systemic effects.",
+  "sources": [
+    "2024 American Heart Association and American Red Cross Guidelines for First Aid — Spider and Scorpion Envenomation",
+    "Peer-reviewed clinical literature on Hemiscorpius lepturus and Androctonus crassicauda envenomation"
+  ],
+  "actions": [
+    "Move away from the scorpion and call emergency services or the verified poison centre. Report the time and geographic location of the sting.",
+    "Wash with soap and water, remove tight jewellery, and keep the person and limb still. Use a cool pack wrapped in cloth for local pain.",
+    "Monitor breathing, alertness, sweating, vomiting, muscle twitching, abnormal heart symptoms, dark urine, jaundice, bleeding, and spreading swelling.",
+    "Children, older adults, and people with systemic symptoms need urgent assessment. Little or no initial pain does not always mean a mild sting.",
+    "Antivenom and medicines are clinical decisions based on species, region, time, and symptoms."
+  ],
+  "prohibitions": [
+    "Do not apply a tourniquet, cut the wound, or attempt suction.",
+    "Do not apply ice directly, alcohol, herbs, or chemicals.",
+    "Do not delay care because pain is mild.",
+    "Do not risk capturing the scorpion."
+  ],
+  "regionalNotes": {
+    "IR": "In Iran, Hemiscorpius lepturus in the south and southwest may cause little early pain but delayed haemolysis, tissue injury, and kidney damage. Androctonus crassicauda is also medically important. Children, especially under 10 years, are at higher risk."
+  },
+  "redFlags": [
+    {
+      "when": [
+        "difficulty_breathing",
+        "muscle_tremor",
+        "confusion",
+        "sweating_cold",
+        "bruising",
+        "child_victim",
+        "fainting",
+        "ptosis"
+      ],
+      "text": "Emergency warning signs selected—contact emergency services now."
+    }
+  ],
+  "emergencyCall": {
+    "always": true,
+    "text": "A child, systemic symptoms, an unknown species, or any deterioration requires urgent emergency assessment."
+  }
+}
