@@ -1,6 +1,6 @@
-import { KnowledgeBase } from './kb.js?v=14';
-import { countryName, formatDateTime, formatNumber, localeCode, localizeField, setLocale, t } from './i18n.js?v=14';
-import { emergencyContact, loadCountryData, readPreferences, savePreferences, telephoneHref } from './preferences.js?v=14';
+import { KnowledgeBase } from './kb.js?v=15';
+import { countryName, formatDateTime, formatNumber, localeCode, localizeField, setLocale, t } from './i18n.js?v=15';
+import { emergencyContact, loadCountryData, readPreferences, savePreferences, telephoneHref } from './preferences.js?v=15';
 import {
   setEngineLocale,
   hasCriticalSymptoms,
@@ -17,7 +17,7 @@ import {
   triggeredFlags,
   triageRoute,
   triageSymptoms,
-} from './engine.js?v=14';
+} from './engine.js?v=15';
 
 let kb = null;
 let countryData = null;
@@ -186,6 +186,38 @@ function currentRoute() {
 function navigate(hash) {
   if (location.hash === hash) render({ focus: true });
   else location.hash = hash;
+}
+
+/* Flow screens keep one history entry per step so the phone/browser back button
+   walks the flow step by step. Each entry stores a snapshot of the flow state. */
+function flowSnapshot(flowKey) {
+  return {
+    emdExitGuard: true,
+    emdFlow: flowKey,
+    triageAnswers: { ...state.triageAnswers },
+    triageAsked: [...state.triageAsked],
+    triageSeedCount: state.triageSeedCount,
+    assessmentStep: state.assessmentStep,
+    assessmentPreserve: state.assessmentPreserve,
+    responseMode: state.responseMode,
+    triagePreserveFinder: state.triagePreserveFinder,
+  };
+}
+
+function pushFlow(flowKey, hash) {
+  try { history.pushState(flowSnapshot(flowKey), '', hash); } catch { /* history access unavailable */ }
+  render({ focus: true });
+}
+
+function restoreFlow(snapshot) {
+  if (!snapshot) return;
+  state.triageAnswers = { ...(snapshot.triageAnswers || {}) };
+  state.triageAsked = [...(snapshot.triageAsked || [])];
+  state.triageSeedCount = Number.isInteger(snapshot.triageSeedCount) ? snapshot.triageSeedCount : 0;
+  state.assessmentStep = snapshot.assessmentStep || 'scene';
+  state.assessmentPreserve = snapshot.assessmentPreserve === true;
+  state.responseMode = snapshot.responseMode ?? null;
+  state.triagePreserveFinder = snapshot.triagePreserveFinder === true;
 }
 
 function setDocumentTitle(title) {
@@ -360,7 +392,7 @@ function renderHome() {
     state.triageSeedCount = 0;
     resetFinder();
     state.responseMode = null;
-    navigate('#/assessment');
+    pushFlow('a-scene', '#/assessment');
   });
   return t('home');
 }
@@ -368,7 +400,7 @@ function renderHome() {
 function renderMore() {
   app.innerHTML = `
     <header class="topbar">
-      <button class="icon-btn" id="back-home" type="button" aria-label="${e(t('backHome'))}">‹</button>
+      <button class="back-home-chip" id="back-home" type="button"><span aria-hidden="true">⌂</span><span>${e(t('home'))}</span></button>
       <div><div class="eyebrow">${e(t('moreEyebrow'))}</div><h1 id="view-heading" tabindex="-1">${e(t('moreTitle'))}</h1></div>
       ${miniEmergencyButton()}
     </header>
@@ -421,10 +453,7 @@ function renderAssessment() {
   const responseStep = state.assessmentStep === 'response';
   app.innerHTML = `
     <header class="topbar">
-      <div class="topbar-nav">
-        <button class="icon-btn" id="back-home" type="button" aria-label="${e(t('backHome'))}">‹</button>
-        ${responseStep ? `<button class="icon-btn" id="back-step" type="button" aria-label="${e(t('backStep'))}">→</button>` : ''}
-      </div>
+      <button class="back-home-chip" id="back-home" type="button"><span aria-hidden="true">⌂</span><span>${e(t('home'))}</span></button>
       <div><div class="eyebrow">${e(t('assessmentEyebrow', { step: formatNumber(step) }))}</div><h1 id="view-heading" tabindex="-1">${e(t('assessmentTitle'))}</h1></div>
       ${miniEmergencyButton()}
     </header>
@@ -460,17 +489,13 @@ function renderAssessment() {
     state.responseMode = null;
     navigate('#/');
   });
-  document.getElementById('back-step')?.addEventListener('click', () => {
-    state.assessmentStep = 'scene';
-    render({ focus: true });
-  });
   document.getElementById('recheck-scene')?.addEventListener('click', () => {
     state.assessmentStep = 'scene';
-    render({ focus: true });
+    pushFlow('a-scene', '#/assessment');
   });
   document.querySelectorAll('[data-scene]').forEach((button) => button.addEventListener('click', () => {
     state.assessmentStep = button.dataset.scene === 'y' ? 'response' : 'unsafe';
-    render({ focus: true });
+    pushFlow(state.assessmentStep === 'response' ? 'a-response' : 'a-unsafe', '#/assessment');
   }));
   document.querySelectorAll('[data-response]').forEach((button) => button.addEventListener('click', () => {
     const response = button.dataset.response;
@@ -490,7 +515,7 @@ function renderAssessment() {
     }
     state.triageSeedCount = Object.keys(state.triageAnswers).length;
     state.triageAsked = [];
-    navigate('#/triage');
+    pushFlow('triage', '#/triage');
   }));
   return t('assessmentTitle');
 }
@@ -502,7 +527,7 @@ function renderTriage() {
     if (route === 'scene-unsafe') {
       app.innerHTML = `
         <header class="topbar">
-          <button class="icon-btn" id="back-home" type="button" aria-label="${e(t('backHome'))}">‹</button>
+          <button class="back-home-chip" id="back-home" type="button"><span aria-hidden="true">⌂</span><span>${e(t('home'))}</span></button>
           <div><div class="eyebrow">${e(t('assessmentSafetyFirst'))}</div><h1 id="view-heading" tabindex="-1">${e(t('assessmentTitle'))}</h1></div>
           ${miniEmergencyButton()}
         </header>
@@ -565,10 +590,7 @@ function renderTriage() {
   const emergency = emergencyName();
   app.innerHTML = `
     <header class="topbar">
-      <div class="topbar-nav">
-        <button class="icon-btn" id="back-home" type="button" aria-label="${e(t('backHome'))}">‹</button>
-        <button class="icon-btn" id="back-step" type="button" aria-label="${e(t('backStep'))}">→</button>
-      </div>
+      <button class="back-home-chip" id="back-home" type="button"><span aria-hidden="true">⌂</span><span>${e(t('home'))}</span></button>
       <div><div class="eyebrow">${e(t('assessmentEyebrow', { step }))}</div><h1 id="view-heading" tabindex="-1">${e(t('assessmentTitle'))}</h1></div>
       ${miniEmergencyButton()}
     </header>
@@ -602,27 +624,10 @@ function renderTriage() {
     state.responseMode = null;
     navigate('#/');
   });
-  document.getElementById('back-step').addEventListener('click', () => {
-    const lastQuestion = state.triageAsked.pop();
-    if (lastQuestion) {
-      delete state.triageAnswers[lastQuestion];
-      render({ focus: true });
-      return;
-    }
-    if (state.triageSeedCount > 0) {
-      state.assessmentStep = 'response';
-      state.assessmentPreserve = true;
-      state.triageAnswers = {};
-      state.triageSeedCount = 0;
-      navigate('#/assessment');
-      return;
-    }
-    navigate('#/');
-  });
   document.querySelectorAll('[data-answer]').forEach((button) => button.addEventListener('click', () => {
     state.triageAsked.push(questionId);
     state.triageAnswers[questionId] = button.dataset.answer;
-    render({ focus: true });
+    pushFlow('triage', '#/triage');
   }));
   return t('assessmentTitle');
 }
@@ -851,7 +856,7 @@ function renderSymptoms() {
   if (!state.responseMode) {
     state.assessmentStep = 'scene';
     state.assessmentPreserve = false;
-    navigate('#/assessment');
+    pushFlow('a-scene', '#/assessment');
     return t('assessmentTitle');
   }
   if (state.diffStage === 'result') return renderDifferentialResults();
@@ -872,7 +877,7 @@ function renderSymptoms() {
 
   app.innerHTML = `
     <header class="topbar">
-      <button class="icon-btn" id="back-home" type="button" aria-label="${e(t('backHome'))}">‹</button>
+      <button class="back-home-chip" id="back-home" type="button"><span aria-hidden="true">⌂</span><span>${e(t('home'))}</span></button>
       <div><div class="eyebrow">${e(t('symptomsEyebrow'))}</div><h1 id="view-heading" tabindex="-1">${e(t('symptomsTitle'))}</h1></div>
       ${miniEmergencyButton()}
     </header>
@@ -924,12 +929,12 @@ function renderSymptoms() {
     state.triageSeedCount = 0;
     state.triagePreserveFinder = false;
     state.responseMode = null;
-    navigate('#/assessment');
+    pushFlow('a-scene', '#/assessment');
   });
   document.getElementById('change-response').addEventListener('click', () => {
     state.assessmentStep = 'response';
     state.assessmentPreserve = true;
-    navigate('#/assessment');
+    pushFlow('a-response', '#/assessment');
   });
   setupSymptomSearch();
   wireCurrentSymptomButtons();
@@ -1096,7 +1101,7 @@ function renderKb() {
 
   app.innerHTML = `
     <header class="topbar">
-      <button class="icon-btn" id="back-home" type="button" aria-label="${e(t('backHome'))}">‹</button>
+      <button class="back-home-chip" id="back-home" type="button"><span aria-hidden="true">⌂</span><span>${e(t('home'))}</span></button>
       <div><div class="eyebrow">${e(t('libraryEyebrow'))}</div><h1 id="view-heading" tabindex="-1">${e(t('libraryTitle'))}</h1></div>
       ${statusPill()}
     </header>
@@ -1135,7 +1140,7 @@ function renderKb() {
 function renderSettings() {
   app.innerHTML = `
     <header class="topbar">
-      <button class="icon-btn" id="back-home" type="button" aria-label="${e(t('backHome'))}">‹</button>
+      <button class="back-home-chip" id="back-home" type="button"><span aria-hidden="true">⌂</span><span>${e(t('home'))}</span></button>
       <div><div class="eyebrow">${e(t('settingsEyebrow'))}</div><h1 id="view-heading" tabindex="-1">${e(t('settingsTitle'))}</h1></div>
       ${miniEmergencyButton()}
     </header>
@@ -1249,7 +1254,7 @@ async function checkForAppUpdate({ force = false } = {}) {
 async function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return;
   try {
-    const registration = await navigator.serviceWorker.register('./sw.js?v=14', {
+    const registration = await navigator.serviceWorker.register('./sw.js?v=15', {
       scope: './',
       updateViaCache: 'none',
     });
@@ -1334,7 +1339,13 @@ async function activatePreferences(next, { persist = false, route = null } = {})
     state.fatalError = null;
     state.diffQuery = '';
     localizeStaticChrome();
-    if (route) history.replaceState({ emdApp: true }, '', route);
+    if (route) {
+      if (route === '#/assessment') {
+        try { history.pushState(flowSnapshot('a-scene'), '', route); } catch { /* ignore */ }
+      } else {
+        try { history.replaceState({ emdExitGuard: true }, '', route); } catch { /* ignore */ }
+      }
+    }
     render({ focus: true });
     if (loadResult?.fromCache) backgroundSync();
   } catch (error) {
@@ -1446,21 +1457,46 @@ function renderFatal(error) {
   document.getElementById('view-heading')?.focus();
 }
 
-// The phone/browser back button walks the in-app screens (hash history). The very last
-// press would leave the app, so an explicit confirmation is shown before exiting.
-// Chrome also fires popstate for ordinary in-app hash navigations with a null state,
-// so the check is deferred until after the hashchange handler has marked the entry.
+// The phone/browser back button walks the in-app screens (hash history). Flow screens
+// keep one history entry per step, so back moves one step at a time. Pressing back on
+// the first screen asks before exiting. Chrome also fires popstate for ordinary in-app
+// hash navigations, so the boundary check runs against the entry's stored state.
 let exitGuardSupported = false;
 try {
   if (history.state === null) history.pushState({ emdExitGuard: true }, '', location.href);
   exitGuardSupported = true;
 } catch { /* history access unavailable (e.g. sandboxed frame); confirmation is disabled */ }
 
-window.addEventListener('popstate', () => {
+let popHandled = false;
+window.addEventListener('popstate', (event) => {
   if (!exitGuardSupported) return;
-  setTimeout(() => {
-    if (history.state === null) showExitConfirm();
-  }, 0);
+  const target = event.state;
+  if (target && !target.emdFlow && target.emdExitGuard) {
+    showExitConfirm();
+    return;
+  }
+  if (target && target.emdFlow) {
+    restoreFlow(target);
+    popHandled = true;
+    queueMicrotask(() => { popHandled = false; });
+    render({ focus: true });
+    return;
+  }
+  // Legacy entries without flow state: degrade gracefully by route.
+  const route = currentRoute();
+  if (route.name === 'assessment' && state.assessmentStep !== 'scene') {
+    state.assessmentStep = 'scene';
+    popHandled = true;
+    queueMicrotask(() => { popHandled = false; });
+    render({ focus: true });
+  } else if (route.name === 'triage' && state.triageAsked.length) {
+    const lastQuestion = state.triageAsked.pop();
+    delete state.triageAnswers[lastQuestion];
+    popHandled = true;
+    queueMicrotask(() => { popHandled = false; });
+    render({ focus: true });
+  }
+  // Otherwise the hashchange handler renders the previous screen.
 });
 
 function showExitConfirm() {
@@ -1499,6 +1535,10 @@ function showExitConfirm() {
 }
 
 window.addEventListener('hashchange', () => {
+  if (popHandled) {
+    popHandled = false;
+    return;
+  }
   try {
     if (!history.state) history.replaceState({ emdApp: true }, '', location.href);
   } catch { /* ignore */ }

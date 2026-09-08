@@ -9,7 +9,6 @@ export default {
     home: 'Home',
     back: 'Back',
     backHome: 'Back to home',
-    backStep: 'Previous step',
     exitConfirmTitle: 'Exit the app?',
     exitConfirmText: 'Do you want to leave Emdadgar?',
     exitConfirmLeave: 'Exit',

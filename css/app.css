@@ -669,11 +669,25 @@ html[dir="ltr"] .steps ol { padding-inline-start: 24px; padding-inline-end: 0; }
   .contact-card dd { text-align: start; }
 }
 
-.topbar-nav {
-  display: flex;
-  flex: none !important;
+.back-home-chip {
+  flex: none;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--primary-dark);
+  font-size: .82rem;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.back-home-chip:hover, .back-home-chip:focus-visible {
+  border-color: var(--primary-dark);
 }
 
 .exit-overlay {

@@ -9,7 +9,6 @@ export default {
     home: 'خانه',
     back: 'بازگشت',
     backHome: 'بازگشت به خانه',
-    backStep: 'مرحلهٔ قبل',
     exitConfirmTitle: 'خروج از برنامه؟',
     exitConfirmText: 'آیا می‌خواهید از امدادگر خارج شوید؟',
     exitConfirmLeave: 'خروج',
