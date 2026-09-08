@@ -1,6 +1,6 @@
-import { KnowledgeBase } from './kb.js?v=16';
-import { countryName, formatDateTime, formatNumber, localeCode, localizeField, setLocale, t } from './i18n.js?v=16';
-import { emergencyContact, loadCountryData, readPreferences, savePreferences, telephoneHref } from './preferences.js?v=16';
+import { KnowledgeBase } from './kb.js?v=17';
+import { countryName, formatDateTime, formatNumber, localeCode, localizeField, setLocale, t } from './i18n.js?v=17';
+import { emergencyContact, loadCountryData, readPreferences, savePreferences, telephoneHref } from './preferences.js?v=17';
 import {
   setEngineLocale,
   hasCriticalSymptoms,
@@ -17,7 +17,7 @@ import {
   triggeredFlags,
   triageRoute,
   triageSymptoms,
-} from './engine.js?v=16';
+} from './engine.js?v=17';
 
 let kb = null;
 let countryData = null;
@@ -184,8 +184,11 @@ function currentRoute() {
 }
 
 function navigate(hash) {
-  if (location.hash === hash) render({ focus: true });
-  else location.hash = hash;
+  if (location.hash === hash) { render({ focus: true }); return; }
+  // Push a stateful history entry instead of assigning the hash, so every app
+  // entry carries its index and back/forward detection stays reliable.
+  try { history.pushState({ emdExitGuard: true, emdNav: true, emdIndex: ++historyIndex }, '', hash); } catch { location.hash = hash; }
+  render({ focus: true });
 }
 
 /* The home chip starts a clean home entry that severs the flow history, so pressing
@@ -220,8 +223,8 @@ function flowSnapshot(flowKey) {
   };
 }
 
-function pushFlow(flowKey, hash) {
-  try { history.pushState(flowSnapshot(flowKey), '', hash); } catch { /* history access unavailable */ }
+function pushFlow(flowKey, hash, snapshot = flowSnapshot(flowKey)) {
+  try { history.pushState(snapshot, '', hash); } catch { /* history access unavailable */ }
   render({ focus: true });
 }
 
@@ -619,9 +622,13 @@ function renderTriage() {
 
   document.getElementById('back-home').addEventListener('click', () => goCleanHome());
   document.querySelectorAll('[data-answer]').forEach((button) => button.addEventListener('click', () => {
+    // Snapshot BEFORE recording the answer, so the phone back button restores
+    // this exact question instead of the already-completed next step (which
+    // used to bounce straight back to the symptoms page or the case).
+    const before = flowSnapshot('triage');
     state.triageAsked.push(questionId);
     state.triageAnswers[questionId] = button.dataset.answer;
-    pushFlow('triage', '#/triage');
+    pushFlow('triage', '#/triage', before);
   }));
   return t('assessmentTitle');
 }
@@ -1013,7 +1020,10 @@ function renderCase(id) {
 
 function caseHeader(item, eyebrow = t('caseDefaultEyebrow')) {
   return `<header class="topbar">
-    <button class="icon-btn" id="case-back" type="button" aria-label="${e(t('back'))}">‹</button>
+    <div class="topbar-nav">
+      <button class="back-home-chip" id="back-home" type="button"><span aria-hidden="true">⌂</span><span>${e(t('home'))}</span></button>
+      <button class="icon-btn" id="case-back" type="button" aria-label="${e(t('back'))}">‹</button>
+    </div>
     <div><div class="eyebrow">${e(eyebrow)}</div><h1 id="view-heading" tabindex="-1">${e(item.title)}</h1></div>
     ${miniEmergencyButton()}
   </header>`;
@@ -1034,6 +1044,7 @@ function renderCaseQuestions(item) {
     </main>`;
 
   document.getElementById('case-back').addEventListener('click', () => history.length > 1 ? history.back() : goCleanHome());
+  document.getElementById('back-home')?.addEventListener('click', () => goCleanHome());
   document.querySelectorAll('[data-sym]').forEach((button) => button.addEventListener('click', () => {
     const symptomId = button.dataset.sym;
     state.caseAnswers = state.caseAnswers.includes(symptomId)
@@ -1080,6 +1091,7 @@ function renderCaseResult(item) {
     </main>`;
 
   document.getElementById('case-back').addEventListener('click', () => history.length > 1 ? history.back() : goCleanHome());
+  document.getElementById('back-home')?.addEventListener('click', () => goCleanHome());
   document.getElementById('review-risks')?.addEventListener('click', () => {
     state.caseStage = 'questions';
     render({ focus: true });
@@ -1248,7 +1260,7 @@ async function checkForAppUpdate({ force = false } = {}) {
 async function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return;
   try {
-    const registration = await navigator.serviceWorker.register('./sw.js?v=16', {
+    const registration = await navigator.serviceWorker.register('./sw.js?v=17', {
       scope: './',
       updateViaCache: 'none',
     });
@@ -1466,23 +1478,35 @@ try {
 let popHandled = false;
 let exitDialogOpen = false;
 let stayInProgress = false;
+let exitInProgress = false;
 window.addEventListener('popstate', (event) => {
   if (!exitGuardSupported) return;
-  // "Stay" re-forwards to the home entry after the dialog; just render it.
+  const target = event.state;
+  const targetIndex = Number.isInteger(target?.emdIndex) ? target.emdIndex : -1;
+  // "Stay" re-forwards to the home entry after the dialog; sync the index so a
+  // later back press is still detected as backward movement.
   if (stayInProgress) {
     stayInProgress = false;
+    if (targetIndex >= 0) historyIndex = targetIndex;
     popHandled = true;
     queueMicrotask(() => { popHandled = false; });
     render({ focus: true });
     return;
   }
   // The user confirmed exit: let the remaining back traversal leave the app
-  // without reopening the dialog.
-  if (exitDialogOpen) { exitDialogOpen = false; historyIndex = 0; return; }
-  const target = event.state;
-  const targetIndex = Number.isInteger(target?.emdIndex) ? target.emdIndex : -1;
+  // without reopening the dialog or re-marking the entry.
+  if (exitDialogOpen) {
+    exitDialogOpen = false;
+    historyIndex = 0;
+    popHandled = true;
+    queueMicrotask(() => { popHandled = false; });
+    return;
+  }
+  // Direction must be compared against the index BEFORE syncing to the target.
   const backward = targetIndex < historyIndex;
-  historyIndex = Math.max(0, targetIndex);
+  if (targetIndex >= 0) historyIndex = targetIndex;
+  // Pressing back again while the exit dialog is open means "yes, exit".
+  if (document.getElementById('exit-confirm')) { confirmLeave(); return; }
   const fromHome = state.lastRouteName === 'home';
   if (target && target.emdFlow) {
     // Home is the edge of the app: back from home must never resurrect a flow
@@ -1495,10 +1519,15 @@ window.addEventListener('popstate', (event) => {
     return;
   }
   if (target && target.emdExitGuard && !target.emdFlow) {
-    // Guard/home entries: reaching them from inside the app just renders that
-    // screen (e.g. back from the first step returns to home). Only back pressed
-    // ON home asks before exiting.
+    // Guard/home/nav entries: reaching them from inside the app just renders
+    // that screen (e.g. back from the first step returns to home). Only back
+    // pressed ON home asks before exiting.
     if (fromHome && backward) showExitConfirm();
+    else {
+      popHandled = true;
+      queueMicrotask(() => { popHandled = false; });
+      render({ focus: true });
+    }
     return;
   }
   if (fromHome && backward) { showExitConfirm(); return; }
@@ -1515,8 +1544,11 @@ window.addEventListener('popstate', (event) => {
     popHandled = true;
     queueMicrotask(() => { popHandled = false; });
     render({ focus: true });
+  } else {
+    popHandled = true;
+    queueMicrotask(() => { popHandled = false; });
+    render({ focus: true });
   }
-  // Otherwise the hashchange handler renders the previous screen.
 });
 
 function showExitConfirm() {
@@ -1546,9 +1578,7 @@ function showExitConfirm() {
   const leave = () => {
     overlay.remove();
     document.removeEventListener('keydown', onEscape);
-    exitDialogOpen = true;
-    if (history.length > 1) history.go(-(history.length - 1));
-    else { try { window.close(); } catch { /* ignore */ } }
+    confirmLeave();
   };
   const onEscape = (event) => {
     if (event.key === 'Escape') stay();
@@ -1557,6 +1587,52 @@ function showExitConfirm() {
   document.getElementById('exit-confirm-leave').addEventListener('click', leave);
   document.addEventListener('keydown', onEscape);
   document.getElementById('exit-confirm-stay').focus();
+}
+
+/* Leave in one tap: try to close the window, then walk back from the current
+   history position to the first entry. Browsers only honor window.close() for
+   script-opened windows, so when the tab cannot be closed by itself (e.g. the
+   app was opened directly), show a short note telling the user how to finish
+   exiting. */
+let exitGuardReset = null;
+function confirmLeave() {
+  exitInProgress = true;
+  exitDialogOpen = true;
+  document.getElementById('exit-confirm')?.remove();
+  try { window.close(); } catch { /* ignore */ }
+  if (historyIndex > 0 && history.length > 1) history.go(-historyIndex);
+  // Clear the traversal guard even when the browser performed no traversal
+  // (e.g. the dialog was opened on the first history entry and go() was a
+  // no-op), so a later back press is never swallowed.
+  clearTimeout(exitGuardReset);
+  exitGuardReset = setTimeout(() => { exitDialogOpen = false; }, 800);
+  setTimeout(() => {
+    if (!exitInProgress) return;
+    exitInProgress = false;
+    showExitNote();
+  }, 400);
+}
+
+function showExitNote() {
+  document.getElementById('exit-note')?.remove();
+  const overlay = document.createElement('div');
+  overlay.id = 'exit-note';
+  overlay.className = 'exit-overlay';
+  overlay.innerHTML = `
+    <div class="exit-dialog" role="alertdialog" aria-modal="true" aria-labelledby="exit-note-title" aria-describedby="exit-note-text">
+      <div class="big-icon" aria-hidden="true">✓</div>
+      <h2 id="exit-note-title">${e(t('exitNoteTitle'))}</h2>
+      <p id="exit-note-text">${e(t('exitNoteText'))}</p>
+      <div class="exit-actions">
+        <button class="btn primary" id="exit-note-stay" type="button">${e(t('exitNoteStay'))}</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.getElementById('exit-note-stay').addEventListener('click', () => {
+    overlay.remove();
+    stayInProgress = true;
+    try { history.forward(); } catch { stayInProgress = false; render({ focus: true }); }
+  });
 }
 
 window.addEventListener('hashchange', () => {

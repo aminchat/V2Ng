@@ -293,14 +293,14 @@ test('PWA manifest supplies 192 and 512 PNG icons', ['192x192', '512x512'].every
 test('PWA manifest supplies maskable 192 and 512 icons', ['192x192', '512x512'].every((size) => maskableIconSizes.has(size)));
 const serviceWorker = readFileSync(join(root, 'sw.js'), 'utf8');
 test('service worker precaches the schema module and shell', serviceWorker.includes('./js/schema.js') && serviceWorker.includes('./index.html'));
-test('service worker precaches the versioned install manifest and every app icon', serviceWorker.includes('./manifest.webmanifest?v=16') && webManifest.icons.every((icon) => serviceWorker.includes(`./${icon.src}`)) && serviceWorker.includes('./icons/apple-touch-icon.png'));
+test('service worker precaches the versioned install manifest and every app icon', serviceWorker.includes('./manifest.webmanifest?v=17') && webManifest.icons.every((icon) => serviceWorker.includes(`./${icon.src}`)) && serviceWorker.includes('./icons/apple-touch-icon.png'));
 test('service worker derives subpath boundaries from registration scope', serviceWorker.includes('self.registration.scope'));
 test('service worker deliberately bypasses HTTP caching for both KB languages', serviceWorker.includes('`${scopePath}kb/`') && serviceWorker.includes('`${scopePath}kb-en/`'));
 test('service worker only deletes its own cache namespace', serviceWorker.includes('key.startsWith(CACHE_PREFIX)'));
 const installSection = serviceWorker.slice(serviceWorker.indexOf("self.addEventListener('install'"), serviceWorker.indexOf("self.addEventListener('message'"));
 test('v11 only bypasses waiting to recover incompatible older workers and v5-v9 shell caches', installSection.includes('RECOVERY_WORKER_VERSIONS.has(activeVersion)') && installSection.includes('RECOVERY_SHELL_CACHES.has(key)') && installSection.includes('if (needsRecovery) await self.skipWaiting()') && serviceWorker.includes("new Set([null, '5', '6', '7', '8', '9'])") && ['shell-v5', 'shell-v6', 'shell-v7', 'shell-v8', 'shell-v9'].every((name) => serviceWorker.includes(name)));
 test('normal future updates still accept explicit SKIP_WAITING activation messages', serviceWorker.includes("event.data?.type === 'SKIP_WAITING'") && serviceWorker.includes('self.skipWaiting()'));
-test('service worker shell cache is v12', serviceWorker.includes("const SHELL_CACHE = `${CACHE_PREFIX}shell-v16`"));
+test('service worker shell cache is v12', serviceWorker.includes("const SHELL_CACHE = `${CACHE_PREFIX}shell-v17`"));
 test('service worker uses network-first shell delivery with an offline cache fallback', serviceWorker.includes('async function networkFirst') && serviceWorker.includes("cache: 'no-cache'") && serviceWorker.includes('cache.match(fallbackKey)'));
 
 const html = readFileSync(join(root, 'index.html'), 'utf8');
@@ -311,13 +311,13 @@ const bootstrapSource = html.match(/<script>([\s\S]*?)<\/script>/)?.[1] || '';
 const bootstrapHash = createHash('sha256').update(bootstrapSource).digest('base64');
 test('app shell has CSP and polite live regions', html.includes('Content-Security-Policy') && html.includes('route-announcer') && html.includes('sync-announcer'));
 test('CSP authorizes exactly the inline recovery bootstrap by hash', bootstrapSource.length > 0 && html.includes(`script-src 'self' 'sha256-${bootstrapHash}'`));
-test('HTML links the versioned manifest and explicit Apple touch icon', html.includes('rel="manifest" href="manifest.webmanifest?v=16"') && html.includes('rel="apple-touch-icon"') && html.includes('sizes="180x180"'));
+test('HTML links the versioned manifest and explicit Apple touch icon', html.includes('rel="manifest" href="manifest.webmanifest?v=17"') && html.includes('rel="apple-touch-icon"') && html.includes('sizes="180x180"'));
 test('HTML enables standalone-capable iOS presentation', html.includes('name="apple-mobile-web-app-capable" content="yes"') && html.includes('name="apple-mobile-web-app-title" content="Emdadgar"'));
 test('both locale dictionaries pass the shared locale schema', validateLocaleDictionary(faLocale).length === 0 && validateLocaleDictionary(enLocale).length === 0);
 test('Persian and English locale dictionaries have exact key parity', JSON.stringify(Object.keys(faLocale.messages).sort()) === JSON.stringify(Object.keys(enLocale.messages).sort()));
 test('application logic contains no embedded Persian UI prose', !/[\u0600-\u06ff]/u.test(appSource));
-test('English UI dictionary is loaded dynamically on demand', i18nSource.includes("import('../locales/en.js?v=16')") && !serviceWorker.includes('./locales/en.js?v=16'));
-test('Persian UI, country data, and preference modules are available in the offline shell', ['./locales/fa.js?v=16', './data/countries.json?v=16', './js/preferences.js?v=16'].every((asset) => serviceWorker.includes(asset)));
+test('English UI dictionary is loaded dynamically on demand', i18nSource.includes("import('../locales/en.js?v=17')") && !serviceWorker.includes('./locales/en.js?v=17'));
+test('Persian UI, country data, and preference modules are available in the offline shell', ['./locales/fa.js?v=17', './data/countries.json?v=17', './js/preferences.js?v=17'].every((asset) => serviceWorker.includes(asset)));
 test('first-run settings store independent language and country choices locally', preferencesSource.includes('emdadgar.preferences.v1') && preferencesSource.includes('locale') && preferencesSource.includes('country') && appSource.includes('renderOnboarding'));
 test('first-run onboarding exposes a no-save person check path', appSource.includes('id="onboarding-urgent"') && appSource.includes("persist: false, route: '#/assessment'"));
 test('settings can change language while retaining shared in-memory symptom IDs', appSource.includes('async function activatePreferences') && appSource.includes("state.diffQuery = ''") && !appSource.includes('state.diffSelected = []', appSource.indexOf('async function activatePreferences')));
@@ -343,9 +343,13 @@ test('successful installation and standalone mode hide the install card', appSou
 test('iPhone fallback gives Safari Add to Home Screen instructions', appSource.includes('isIosDevice') && enLocale.messages.installIos3.includes('Add to Home Screen') && enLocale.messages.installIos4.includes('Open as Web App'));
 test('symptom chips expose aria-pressed', appSource.includes('aria-pressed="${active}"'));
 test('phone back walks flow steps through per-step history entries with snapshots', appSource.includes('pushFlow') && appSource.includes('restoreFlow') && appSource.includes("'a-scene'") && appSource.includes("'a-response'") && appSource.includes('emdFlow') && appSource.includes('queueMicrotask(() => { popHandled = false; })'));
+test('every triage answer stores the pre-answer snapshot so back re-asks the question instead of bouncing', appSource.includes("const before = flowSnapshot('triage')") && appSource.includes('pushFlow(\'triage\', \'#/triage\', before)') && appSource.includes('snapshot = flowSnapshot(flowKey)'));
 test('the home chip starts a clean home entry that severs the flow history', appSource.includes('goCleanHome') && appSource.includes("history.pushState({ emdExitGuard: true, emdHome: true, emdIndex: ++historyIndex }"));
 test('back from home always asks before exiting and never resurrects a flow step', appSource.includes("const fromHome = state.lastRouteName === 'home'") && appSource.includes('fromHome && backward') && appSource.includes('exitDialogOpen') && appSource.includes('stayInProgress'));
-test('confirmed exit walks past app entries without reopening the dialog, and stay returns to home', appSource.includes('exitDialogOpen = true') && appSource.includes('history.go(-(history.length - 1))') && appSource.includes('history.forward()'));
+test('stay syncs the history index so the next back press still opens the exit dialog', appSource.includes("const backward = targetIndex < historyIndex") && appSource.includes('if (targetIndex >= 0) historyIndex = targetIndex'));
+test('pressing back while the exit dialog is open confirms the exit', appSource.includes("document.getElementById('exit-confirm')") && appSource.includes('confirmLeave'));
+test('confirmed exit walks past app entries, tries window.close and explains when the tab cannot close itself', appSource.includes('exitDialogOpen = true') && appSource.includes('history.go(-historyIndex)') && appSource.includes('window.close()') && appSource.includes('showExitNote') && appSource.includes('exitNoteStay'));
+test('case pages expose the home chip next to the back button', appSource.includes('topbar-nav') && appSource.includes('caseHeader') && appSource.includes("document.getElementById('back-home')?.addEventListener('click', () => goCleanHome())"));
 test('system back at the app entry asks before exiting, but in-app hash navigation never triggers it', appSource.includes('emdExitGuard') && appSource.includes('exitConfirmTitle') && appSource.includes("window.addEventListener('popstate'") && appSource.includes('exitGuardSupported') && appSource.includes('history.state === null'));
 test('symptom UI filters incompatible current options', appSource.includes('isCurrentSymptomVisible(id, state.diffSelected, kb.symptoms)'));
 test('symptom UI separates earlier reports from current observations', symptomFinderSource.includes("t('historicalHeading')") && symptomFinderSource.includes('data-history-sym'));
@@ -378,12 +382,12 @@ test('mobile result action remains reachable without horizontal movement', cssSo
 test('source cards, search, selection tray, and suggestions have responsive styling', ['.evidence-section', '.response-mode-card', '.symptom-search-card', '.selected-tray', '.suggested-symptoms'].every((selector) => cssSource.includes(selector)));
 
 /* ---------- User-controlled app updates ---------- */
-test('versioned v11 shell assets bypass an older cache during this upgrade', html.includes('css/app.css?v=16') && html.includes('js/app.js?v=16') && serviceWorker.includes('./css/app.css?v=16') && serviceWorker.includes('./js/app.js?v=16'));
-test('every browser module dependency is versioned together', appSource.includes("'./kb.js?v=16'") && appSource.includes("'./engine.js?v=16'") && kbSource.includes("'./schema.js?v=16'") && serviceWorker.includes('./js/kb.js?v=16') && serviceWorker.includes('./js/engine.js?v=16') && serviceWorker.includes('./js/schema.js?v=16'));
+test('versioned v11 shell assets bypass an older cache during this upgrade', html.includes('css/app.css?v=17') && html.includes('js/app.js?v=17') && serviceWorker.includes('./css/app.css?v=17') && serviceWorker.includes('./js/app.js?v=17'));
+test('every browser module dependency is versioned together', appSource.includes("'./kb.js?v=17'") && appSource.includes("'./engine.js?v=17'") && kbSource.includes("'./schema.js?v=17'") && serviceWorker.includes('./js/kb.js?v=17') && serviceWorker.includes('./js/engine.js?v=17') && serviceWorker.includes('./js/schema.js?v=17'));
 test('independent inline bootstrap replaces an indefinitely stuck loader', bootstrapSource.includes('setTimeout(showLoadFailure, 20000)') && bootstrapSource.includes('boot-retry') && bootstrapSource.includes('location.reload()') && appSource.includes("'emdadgar:boot-complete'"));
 test('the update banner is outside the rerendered app shell', html.indexOf('id="app-update"') < html.indexOf('id="app"'));
 test('the update banner offers now and later actions', html.includes('id="app-update-now"') && html.includes('id="app-update-later"'));
-test('registration bypasses HTTP cache when checking the worker', appSource.includes("updateViaCache: 'none'") && appSource.includes("register('./sw.js?v=16'"));
+test('registration bypasses HTTP cache when checking the worker', appSource.includes("updateViaCache: 'none'") && appSource.includes("register('./sw.js?v=17'"));
 test('an already waiting worker is offered immediately', appSource.includes('if (registration.waiting) offerAppUpdate(registration.waiting)'));
 test('new worker installation is observed', appSource.includes("registration.addEventListener('updatefound'"));
 test('updates activate only after the user requests them', appSource.includes("worker.postMessage({ type: 'SKIP_WAITING' })") && appSource.includes("appUpdateNow?.addEventListener('click'"));
