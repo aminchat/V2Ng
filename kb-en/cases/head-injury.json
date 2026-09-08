@@ -2,7 +2,7 @@
   "id": "head-injury",
   "icon": "🤕",
   "category": "consciousness",
-  "version": 4,
+  "version": 5,
   "updatedAt": "2026-09-08",
   "match": {
     "head_impact": 5,
@@ -10,7 +10,11 @@
     "vomiting_repeated": 3,
     "severe_headache": 3,
     "unequal_pupils": 3,
-    "neck_pain": 1
+    "neck_pain": 1,
+    "ptosis": 2,
+    "facial_droop": 2,
+    "arm_weakness": 2,
+    "speech_difficulty": 2
   },
   "riskQuestions": [
     "vomiting_repeated",
@@ -22,7 +26,11 @@
     "blood_thinner",
     "neck_pain",
     "car_accident",
-    "fall_from_height"
+    "fall_from_height",
+    "ptosis",
+    "facial_droop",
+    "arm_weakness",
+    "speech_difficulty"
   ],
   "title": "Head injury or possible concussion",
   "summary": "Stop activity, monitor for danger signs, and prevent another head impact.",
@@ -50,14 +58,18 @@
         "drowsiness",
         "seizure_activity",
         "severe_headache",
-        "unequal_pupils"
+        "unequal_pupils",
+        "ptosis",
+        "facial_droop",
+        "arm_weakness",
+        "speech_difficulty"
       ],
       "text": "Emergency warning signs selected—contact emergency services now."
     }
   ],
   "emergencyCall": {
     "always": false,
-    "text": "Call emergency services for worsening alertness, repeated vomiting, seizure, unequal pupils, weakness, severe worsening headache, or a dangerous mechanism.",
+    "text": "Call emergency services for worsening alertness, repeated vomiting, seizure, unequal pupils, drooping eyelid, face droop, limb weakness, slurred speech, severe worsening headache, or a dangerous mechanism.",
     "when": [
       "vomiting_repeated",
       "confusion",
@@ -68,7 +80,11 @@
       "blood_thinner",
       "neck_pain",
       "car_accident",
-      "fall_from_height"
+      "fall_from_height",
+      "ptosis",
+      "facial_droop",
+      "arm_weakness",
+      "speech_difficulty"
     ]
   }
 }

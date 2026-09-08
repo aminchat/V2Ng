@@ -3,7 +3,7 @@
   "title": "مسمومیت (خوراکی/تنفسی/پوستی)",
   "icon": "☠️",
   "category": "illness",
-  "version": 6,
+  "version": 7,
   "updatedAt": "2026-09-08",
   "summary": "ایمنی نجاتگر، تماس با اورژانس/مرکز اطلاع‌رسانی سموم و پرهیز از درمان خودسرانه",
   "sources": [
@@ -16,7 +16,8 @@
     "confusion": 1,
     "drowsiness": 1,
     "nausea_vomiting": 1,
-    "container_available": 1
+    "container_available": 1,
+    "chemical_contact": 2
   },
   "riskQuestions": [
     "container_available",
@@ -24,7 +25,8 @@
     "confusion",
     "drowsiness",
     "seizure_activity",
-    "difficulty_breathing"
+    "difficulty_breathing",
+    "chemical_contact"
   ],
   "actions": [
     "ابتدا از ایمنی خود مطمئن شوید. در گاز، دود یا مادهٔ ناشناخته بدون تجهیزات وارد محیط آلوده نشوید؛ از محل امن با اورژانس یا آتش‌نشانی تماس بگیرید.",
@@ -46,8 +48,9 @@
       "confusion",
       "drowsiness",
       "seizure_activity",
-      "difficulty_breathing"
+      "difficulty_breathing",
+      "chemical_contact"
     ],
-    "text": "بی‌هوشی، تشنج یا تنگی نفس = تماس فوری با اورژانس"
+    "text": "تماس شیمیایی گسترده/چشمی/تنفسی یا بدحالی = تماس فوری با اورژانس"
   }
 }

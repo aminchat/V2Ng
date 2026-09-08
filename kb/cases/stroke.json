@@ -3,7 +3,7 @@
   "title": "سکتهٔ مغزی احتمالی (FAST)",
   "icon": "🧠",
   "category": "consciousness",
-  "version": 6,
+  "version": 7,
   "updatedAt": "2026-09-08",
   "summary": "افتادگی صورت، ضعف بازو یا اختلال گفتار؛ تماس فوری و ثبت زمان شروع",
   "sources": [
@@ -14,14 +14,22 @@
     "arm_weakness": 5,
     "speech_difficulty": 5,
     "confusion": 2,
-    "time_onset": 1
+    "time_onset": 1,
+    "ptosis": 2,
+    "severe_headache": 2,
+    "unequal_pupils": 2,
+    "neck_pain": 2
   },
   "riskQuestions": [
     "facial_droop",
     "arm_weakness",
     "speech_difficulty",
     "time_onset",
-    "dizziness"
+    "dizziness",
+    "ptosis",
+    "severe_headache",
+    "unequal_pupils",
+    "neck_pain"
   ],
   "actions": [
     "FAST را بررسی کنید: از فرد بخواهید لبخند بزند، هر دو دست را بالا نگه دارد و یک جملهٔ ساده تکرار کند؛ افتادگی صورت، پایین‌افتادن یک دست یا گفتار نامفهوم نشانهٔ خطر است.",
@@ -40,5 +48,16 @@
   "emergencyCall": {
     "always": true,
     "text": "سکته = اورژانسِ «مغز»؛ زمان شروع علائم را یادداشت کنید"
-  }
+  },
+  "redFlags": [
+    {
+      "when": [
+        "ptosis",
+        "severe_headache",
+        "unequal_pupils",
+        "neck_pain"
+      ],
+      "text": "نشانه‌های عصبی اضافی: افتادگی پلک، سردرد شدید، مردمک نامساوی یا درد گردن؛ تماس فوری با اورژانس"
+    }
+  ]
 }

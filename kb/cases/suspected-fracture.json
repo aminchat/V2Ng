@@ -3,8 +3,8 @@
   "title": "شکستگی مشکوک",
   "icon": "🦴",
   "category": "trauma",
-  "version": 6,
-  "updatedAt": "2026-09-07",
+  "version": 8,
+  "updatedAt": "2026-09-08",
   "summary": "حمایت و تثبیت در وضعیت موجود؛ صاف‌کردن یا جااندازی ممنوع",
   "sources": [
     "2024 American Heart Association and American Red Cross Guidelines for First Aid — Fractures and Suspected Spinal Injury",
@@ -16,7 +16,8 @@
     "pain_on_movement": 2,
     "fall_from_height": 2,
     "car_accident": 2,
-    "head_impact": 1
+    "head_impact": 1,
+    "neck_pain": 2
   },
   "riskQuestions": [
     "deformation",
@@ -25,7 +26,8 @@
     "pain_on_movement",
     "car_accident",
     "fall_from_height",
-    "head_impact"
+    "head_impact",
+    "neck_pain"
   ],
   "actions": [
     "جز برای ایمنی صحنه، بازکردن راه هوایی یا CPR، فرد را جابه‌جا نکنید؛ در تصادف یا سقوط، آسیب ستون فقرات را نیز فرض کنید.",
@@ -40,7 +42,8 @@
       "when": [
         "open_fracture",
         "car_accident",
-        "fall_from_height"
+        "fall_from_height",
+        "neck_pain"
       ],
       "text": "شکستگی باز یا مکانیسم تصادف/افت = اورژانس و بدون نیاز به جابه‌جایی"
     }
@@ -58,8 +61,9 @@
       "car_accident",
       "fall_from_height",
       "numbness",
-      "head_impact"
+      "head_impact",
+      "neck_pain"
     ],
-    "text": "شکستگی باز، تصادف، یا بی‌حسی اندام = اورژانس و جابه‌جایی ممنوع"
+    "text": "شکستگی باز، تصادف، بی‌حسی اندام یا درد/آسیب گردن = اورژانس و جابه‌جایی ممنوع"
   }
 }

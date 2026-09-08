@@ -3,8 +3,8 @@
   "title": "اورژانس دیابتی (افت/افزایش قند)",
   "icon": "🩸",
   "category": "illness",
-  "version": 4,
-  "updatedAt": "2026-09-07",
+  "version": 5,
+  "updatedAt": "2026-09-08",
   "summary": "افت قند در فرد هوشیار: ۱۵ گرم قند سریع؛ کاهش هوشیاری: هیچ خوراکی و تماس با اورژانس",
   "sources": [
     "2024 American Heart Association and American Red Cross Guidelines for First Aid — Hypoglycemia",
@@ -16,7 +16,8 @@
     "confusion": 2,
     "fruity_breath": 3,
     "kussmaul": 3,
-    "drowsiness": 1
+    "drowsiness": 1,
+    "speech_difficulty": 2
   },
   "riskQuestions": [
     "known_diabetic",
@@ -24,7 +25,8 @@
     "confusion",
     "fruity_breath",
     "kussmaul",
-    "drowsiness"
+    "drowsiness",
+    "speech_difficulty"
   ],
   "actions": [
     "اگر فرد هوشیار، قادر به بلع و دچار علائم افت قند است، در صورت امکان قند خون را اندازه بگیرید و حدود ۱۵ گرم کربوهیدرات سریع بدهید؛ مانند قرص/ژل گلوکز طبق برچسب یا حدود ۱۲۰ میلی‌لیتر آب‌میوه.",
@@ -50,8 +52,9 @@
       "drowsiness",
       "confusion",
       "kussmaul",
-      "fruity_breath"
+      "fruity_breath",
+      "speech_difficulty"
     ],
-    "text": "بی‌هوشی/گیجی یا علائم افزایش شدید قند = اورژانس"
+    "text": "بی‌هوشی/گیجی/اختلال گفتار یا علائم افزایش شدید قند = اورژانس"
   }
 }

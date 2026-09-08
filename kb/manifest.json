@@ -1,11 +1,11 @@
 {
-  "kbVersion": 19,
+  "kbVersion": 21,
   "updatedAt": "2026-09-08",
   "generator": "tools/build-manifest.mjs",
   "entries": {
     "__symptoms": {
-      "version": 9,
-      "hash": "909a298f482e9c319419e5ecf44f1f7bfe1527824cf1137a9946193575eca32a",
+      "version": 10,
+      "hash": "64dac965d196596a3d9a960e2f4bbba3e819c1152467a125e5906cadb1495925",
       "url": "kb/symptoms.json"
     },
     "__categories": {
@@ -51,8 +51,8 @@
       "url": "kb/cases/dental-avulsion.json"
     },
     "diabetic-emergency": {
-      "version": 4,
-      "hash": "9db7eb943985b93a7c84e32f7333bba54f81ee3f8333afbf33e06458dbca0c05",
+      "version": 5,
+      "hash": "6becaa9153cddbcaaa2984410bfc3e6f985d8ba9d851bd86598eb7de14cb3f8b",
       "url": "kb/cases/diabetic-emergency.json"
     },
     "dislocation-sprain": {
@@ -86,8 +86,8 @@
       "url": "kb/cases/frostbite.json"
     },
     "head-injury": {
-      "version": 6,
-      "hash": "e9bb035d8b209a6f8ec7640e694559db749067203dcafcf4075d38ffbb088fd4",
+      "version": 8,
+      "hash": "55fb03a0b8411ad067388900c21af6a6d2d2540dfec9b9117173b5eb7b9da614",
       "url": "kb/cases/head-injury.json"
     },
     "heart-attack": {
@@ -131,13 +131,13 @@
       "url": "kb/cases/opioid-overdose.json"
     },
     "poisoning": {
-      "version": 6,
-      "hash": "8416cbff2523ef4b7616a1186faa75d3861a6087ddaab92d0058609203183b43",
+      "version": 7,
+      "hash": "29b6559887da1325dcd9ed0f265a47ea4758a83a288654e79e2b3fc7606f6898",
       "url": "kb/cases/poisoning.json"
     },
     "scorpion-sting": {
-      "version": 7,
-      "hash": "798701b42c2d06085acd3ee306a1a109e21607fda7f70248f22a61628cfeeaf2",
+      "version": 8,
+      "hash": "14c21067ed2d4b6fce59fbd443ac1ff00944a025f17d4c3742a90a85493dfac7",
       "url": "kb/cases/scorpion-sting.json"
     },
     "seizure": {
@@ -161,13 +161,13 @@
       "url": "kb/cases/snake-bite.json"
     },
     "stroke": {
-      "version": 6,
-      "hash": "54276ae4a6db6beadf28a3b7aa2d0d5b5dcd633b8054f25711a7fe1ba0a7fdf7",
+      "version": 7,
+      "hash": "27e3e96821d9b7f9696ae5b8c28070d598edfa388d2937859b03b3158ef0e335",
       "url": "kb/cases/stroke.json"
     },
     "suspected-fracture": {
-      "version": 6,
-      "hash": "ba2ab0e8a96e0d77f51389a1cfb058f00f9fa05cebaae97c4c301e711dfba656",
+      "version": 8,
+      "hash": "27fe708d3bd726898840f497dc5221df00d6624b2e76f94e882820d3d257208a",
       "url": "kb/cases/suspected-fracture.json"
     },
     "thermal-burn": {
@@ -186,8 +186,8 @@
       "url": "kb/cases/traumatic-amputation.json"
     },
     "unresponsive-breathing": {
-      "version": 4,
-      "hash": "364182acdf23683261b494a700fb5c637522dccd46e1b53d812560a7e73a8bef",
+      "version": 5,
+      "hash": "6e8298e4bdb0cfd60da6ae8c6c82970500adf8ab886cdfe9d444e5eb4303cfea",
       "url": "kb/cases/unresponsive-breathing.json"
     }
   }

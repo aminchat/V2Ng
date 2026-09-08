@@ -2,21 +2,29 @@
   "id": "stroke",
   "icon": "🧠",
   "category": "consciousness",
-  "version": 5,
+  "version": 6,
   "updatedAt": "2026-09-08",
   "match": {
     "facial_droop": 5,
     "arm_weakness": 5,
     "speech_difficulty": 5,
     "confusion": 2,
-    "time_onset": 1
+    "time_onset": 1,
+    "ptosis": 2,
+    "severe_headache": 2,
+    "unequal_pupils": 2,
+    "neck_pain": 2
   },
   "riskQuestions": [
     "facial_droop",
     "arm_weakness",
     "speech_difficulty",
     "time_onset",
-    "dizziness"
+    "dizziness",
+    "ptosis",
+    "severe_headache",
+    "unequal_pupils",
+    "neck_pain"
   ],
   "title": "Possible stroke",
   "summary": "Use FAST, call emergency services immediately, and record onset or last-known-well time.",
@@ -38,5 +46,16 @@
   "emergencyCall": {
     "always": true,
     "text": "Any new face droop, one-sided weakness, or speech change is an emergency even if it resolves."
-  }
+  },
+  "redFlags": [
+    {
+      "when": [
+        "ptosis",
+        "severe_headache",
+        "unequal_pupils",
+        "neck_pain"
+      ],
+      "text": "Additional neurological warning signs: drooping eyelid, severe headache, unequal pupils, or neck pain—call emergency services now."
+    }
+  ]
 }
