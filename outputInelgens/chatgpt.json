@@ -1,0 +1,223 @@
+﻿{
+"format": "linkage-review-output-v1",
+"basis": {
+"faKbVersion": 21,
+"enKbVersion": 9,
+"languageScope": "both"
+},
+"assumptions": [
+"مرور بر اساس کل محتوای ۱۸۲۱ خط فایل انجام شد و فقط فیلدهای ساختاری مجاز بررسی شدند؛ title، متن‌ها و سایر فیلدهای ممنوع عمداً دست‌نخورده فرض شده‌اند.",
+"در match، وزن بالاتر فقط زمانی پیشنهاد شده که خود نشانه بدون نیاز به متن نمایشی بتواند کیس را به‌طور معقول در رتبه‌بندی مرتبط قرار دهد.",
+"رابطه‌های صرفاً زمینه‌ای مانند child_victim، elderly_victim، car_accident و fall_from_height لزوماً نباید match شوند؛ چون بیشتر برای سؤال خطر هستند تا شناسایی کیس.",
+"برای جلوگیری از false-positive، نشانه‌های عمومی مثل difficulty_breathing، confusion، dizziness و nausea_vomiting فقط در مواردی که ارزش رتبه‌بندی مستقلی دارند پیشنهاد شده‌اند."
+],
+"changes": [
+{
+"action": "add_relation",
+"caseId": "anaphylaxis",
+"symptomId": "difficulty_breathing",
+"field": "match",
+"value": 3,
+"reason": "تنگی نفس یکی از نشانه‌های خطر واکنش حساسیتی شدید است و در حال حاضر فقط در riskQuestions وجود دارد؛ نبود match باعث می‌شود آنافیلاکسی از نتایج مرتبط با difficulty_breathing حذف شود.",
+"confidence": "medium"
+},
+{
+"action": "add_relation",
+"caseId": "anaphylaxis",
+"symptomId": "fainting",
+"field": "match",
+"value": 2,
+"reason": "غش در ساختار کیس به‌عنوان سؤال خطر آنافیلاکسی پذیرفته شده، اما در match وجود ندارد. افزودن وزن پایین، ارتباط را بدون تبدیل آن به نشانه اختصاصی حفظ می‌کند.",
+"confidence": "medium"
+},
+{
+"action": "add_relation",
+"caseId": "animal-bite",
+"symptomId": "local_swelling",
+"field": "match",
+"value": 2,
+"reason": "تورم موضعی در این کیس سؤال خطر است و همراه با local_pain می‌تواند ارتباط اولیه با گزش حیوان را تقویت کند؛ در حال حاضر فقط risk دارد و در رتبه‌بندی نقشی ندارد.",
+"confidence": "medium"
+},
+{
+"action": "add_relation",
+"caseId": "drowning",
+"symptomId": "gasping",
+"field": "match",
+"value": 3,
+"reason": "gasping در کیس غرق‌آبی به‌عنوان وضعیت تنفسی مهم ثبت شده، اما در match نیست. افزودن آن باعث می‌شود این کیس در مواجهه با تنفس‌های غیرطبیعی پس از نجات از آب قابل کشف باشد.",
+"confidence": "medium"
+},
+{
+"action": "add_relation",
+"caseId": "dislocation-sprain",
+"symptomId": "numbness",
+"field": "match",
+"value": 2,
+"reason": "بی‌حسی در این کیس یک علامت خطر مرتبط با آسیب مفصل/دررفتگی است و در حال حاضر فقط risk و emergency دارد؛ نبود match آن را از رتبه‌بندی مرتبط حذف می‌کند.",
+"confidence": "medium"
+},
+{
+"action": "add_relation",
+"caseId": "heat-illness",
+"symptomId": "drowsiness",
+"field": "match",
+"value": 2,
+"reason": "خواب‌آلودگی در این کیس همراه با confusion و fainting به‌عنوان نشانه خطر گرمازدگی ثبت شده است و افزودن match با وزن پایین ارتباط بالینی را در رتبه‌بندی حفظ می‌کند.",
+"confidence": "medium"
+},
+{
+"action": "add_relation",
+"caseId": "heat-illness",
+"symptomId": "fainting",
+"field": "match",
+"value": 2,
+"reason": "غش در گرما مستقیماً در redFlags و emergencyCall این کیس آمده است؛ افزودن match باعث می‌شود heat-illness فقط پس از ورود به کیس قابل مشاهده نباشد.",
+"confidence": "medium"
+},
+{
+"action": "add_relation",
+"caseId": "hypothermia",
+"symptomId": "not_breathing",
+"field": "match",
+"value": 2,
+"reason": "نبود تنفس در کیس هایپوترمی در riskQuestions و emergencyCall آمده است. وزن پایین مناسب‌تر از وزن بالا است، زیرا not_breathing نشانه اختصاصی هایپوترمی نیست.",
+"confidence": "low"
+},
+{
+"action": "add_relation",
+"caseId": "poisoning",
+"symptomId": "difficulty_breathing",
+"field": "match",
+"value": 2,
+"reason": "اختلال تنفس در این کیس هم risk و هم emergencyCall است و در مسمومیت می‌تواند تظاهر مهم باشد؛ نبود match باعث حذف کیس از رتبه‌بندی هنگام ورود این نشانه می‌شود.",
+"confidence": "medium"
+},
+{
+"action": "add_relation",
+"caseId": "poisoning",
+"symptomId": "seizure_activity",
+"field": "match",
+"value": 2,
+"reason": "تشنج در poisoning در riskQuestions و emergencyCall قرار دارد و می‌تواند تظاهر مهم مسمومیت باشد؛ وزن پایین از رقابت بیش از حد با کیس seizure جلوگیری می‌کند.",
+"confidence": "medium"
+},
+{
+"action": "add_relation",
+"caseId": "severe-bleeding",
+"symptomId": "dizziness",
+"field": "match",
+"value": 2,
+"reason": "سرگیجه در این کیس همراه با sweating_cold در redFlags آمده و به شوک ناشی از خونریزی اشاره می‌کند؛ افزودن match ضعیف، کشف کیس را از روی این نشانه ممکن می‌کند.",
+"confidence": "medium"
+},
+{
+"action": "add_relation",
+"caseId": "shock",
+"symptomId": "difficulty_breathing",
+"field": "match",
+"value": 2,
+"reason": "difficulty_breathing در riskQuestions کیس شوک قرار دارد و در زمینه شوک می‌تواند نشانه وضعیت جدی باشد؛ وزن پایین برای جلوگیری از اختصاصی‌سازی بیش از حد انتخاب شده است.",
+"confidence": "low"
+},
+{
+"action": "set_match_weight",
+"caseId": "stroke",
+"symptomId": "confusion",
+"oldWeight": 2,
+"newWeight": 3,
+"reason": "گیجی جدید در کیس سکته هم در match و هم در فهرست نشانه‌های خطر بالینی کلی قرار دارد. وزن 2 نسبت به FAST اصلی کمتر است، اما افزایش به 3 آن را به‌عنوان نشانه عصبی مهم‌تر از یک ارتباط جانبی نشان می‌دهد.",
+"confidence": "medium"
+},
+{
+"action": "add_relation",
+"caseId": "stroke",
+"symptomId": "dizziness",
+"field": "match",
+"value": 2,
+"reason": "dizziness در riskQuestions سکته وجود دارد اما در match نیست. با توجه به اینکه فایل صراحتاً نشانه‌های عمومی را قابل اشتراک بین چند کیس می‌داند، وزن پایین برای حفظ ارتباط بدون غلبه بر FAST مناسب است.",
+"confidence": "medium"
+},
+{
+"action": "set_match_weight",
+"caseId": "stroke",
+"symptomId": "unequal_pupils",
+"oldWeight": 2,
+"newWeight": 3,
+"reason": "مردمک‌های نامساوی در stroke هم match، هم risk و هم redFlag هستند؛ وزن 2 در مقایسه با سایر نشانه‌های عصبی هشداردهنده کمی پایین است.",
+"confidence": "medium"
+},
+{
+"action": "set_match_weight",
+"caseId": "stroke",
+"symptomId": "ptosis",
+"oldWeight": 2,
+"newWeight": 3,
+"reason": "افتادگی پلک در stroke هم match، هم risk و هم redFlag است و در خود فایل به‌عنوان نشانه عصبی اضافی و اورژانسی ثبت شده است؛ افزایش محدود به 3 آن را مهم نگه می‌دارد بدون اینکه به سطح FAST برسد.",
+"confidence": "medium"
+},
+{
+"action": "set_match_weight",
+"caseId": "stroke",
+"symptomId": "severe_headache",
+"oldWeight": 2,
+"newWeight": 3,
+"reason": "سردرد شدید در stroke هم match و هم redFlag است. افزایش محدود به 3 باعث می‌شود این نشانه در رتبه‌بندی کمتر از سه نشانه FAST اما بالاتر از یک ارتباط جانبی قرار گیرد.",
+"confidence": "medium"
+},
+{
+"action": "set_match_weight",
+"caseId": "stroke",
+"symptomId": "neck_pain",
+"oldWeight": 2,
+"newWeight": 2,
+"reason": "وزن فعلی با توجه به اینکه neck_pain در match، risk و redFlag وجود دارد قابل قبول است؛ برای جلوگیری از افزایش false-positive تغییری پیشنهاد نمی‌شود.",
+"confidence": "high"
+},
+{
+"action": "add_relation",
+"caseId": "unresponsive-breathing",
+"symptomId": "head_impact",
+"field": "match",
+"value": 2,
+"reason": "ضربه سر در riskQuestions این کیس وجود دارد و می‌تواند زمینه مهم بی‌هوشی با تنفس طبیعی باشد؛ وزن پایین صرفاً برای ایجاد ارتباط ثانویه پیشنهاد می‌شود.",
+"confidence": "low"
+},
+{
+"action": "add_relation",
+"caseId": "unresponsive-breathing",
+"symptomId": "known_diabetic",
+"field": "match",
+"value": 2,
+"reason": "دیابت شناخته‌شده در riskQuestions این کیس وجود دارد و می‌تواند علت زمینه‌ای مهم برای بی‌هوشی باشد؛ وزن پایین از رقابت با diabetic-emergency جلوگیری می‌کند.",
+"confidence": "low"
+},
+{
+"action": "add_relation",
+"caseId": "unresponsive-breathing",
+"symptomId": "seizure_activity",
+"field": "match",
+"value": 2,
+"reason": "تشنج در riskQuestions این کیس وجود دارد و می‌تواند در افتراق بی‌هوشی با تنفس طبیعی نقش داشته باشد؛ ارتباط باید ضعیف باقی بماند زیرا seizure کیس مستقل دارد.",
+"confidence": "low"
+}
+],
+"notes": [
+"در بررسی کامل، شمارش match/risk/red/emergency کیس‌ها با جدول خلاصه سازگار بود و موردی که count اعلام‌شده با ساختار JSON همان کیس ناسازگار باشد پیدا نشد.",
+"قانون Schema مربوط به redFlags/emergencyCall و riskQuestions در داده فعلی رعایت شده است؛ هیچ موردی از red=true یا emergency=true بدون risk=true مشاهده نشد.",
+"caseId و symptomId های روابط موجود با فهرست شناسه‌های بخش ۲ سازگارند؛ شناسه ساختگی در روابط موجود دیده نشد.",
+"کیس‌های دارای emergencyCall.always=true لزوماً به redFlags جداگانه نیاز ندارند؛ بنابراین نبود redFlags در anaphylaxis، cardiac-arrest، cardiac-related emergency، drowning، electric-shock، open-chest-wound، opioid-overdose، shock و traumatic-amputation به‌خودی‌خود خطای Schema نیست.",
+"برای context-only symptom ها مانند child_victim، elderly_victim، pregnant، car_accident و fall_from_height از افزودن match گسترده خودداری شد، زیرا نقش فعلی آنها عمدتاً risk/context است و تبدیل آنها به match می‌تواند رتبه‌بندی را noisy کند.",
+"نشانه‌های اختصاصی مانند scorpion_seen، saw_snake، open_fracture، amputated_part، tick_attached و jellyfish_sting عمداً به کیس‌های دیگر متصل نشدند، مطابق قاعده نشانه‌های اختصاصی فایل.",
+"در stroke سه نشانه FAST یعنی facial_droop، arm_weakness و speech_difficulty با وزن 5 حفظ شدند و هیچ افزایش مصنوعی به 7 یا 8 پیشنهاد نشد.",
+"در مواردی که فقط نبود match مشاهده شد ولی نشانه عمدتاً یک trigger زمینه‌ای یا emergency عمومی بود، تغییر پیشنهاد نشد؛ هدف، افزایش کامل روابط بدون ایجاد رتبه‌بندی‌های کاذب است.",
+"تمام تغییرات پیشنهادی باید هم‌زمان روی kb فارسی و kb-en انگلیسی اعمال شوند."
+],
+"warnings": [
+"این فایل یک نگاشت منطقی/بالینی است و متن‌های نمایشی آن عمداً بررسی و تغییر داده نشده‌اند؛ اصلاح متن redFlags یا emergencyCall خارج از دامنه این review است.",
+"افزودن match برای difficulty_breathing، fainting، not_breathing و confusion ذاتاً می‌تواند بین چند کیس هم‌پوشانی ایجاد کند. وزن‌های پیشنهادی عمداً پایین نگه داشته شده‌اند تا کیس‌های اختصاصی‌تر غالب بمانند.",
+"موارد confidence=low بهتر است قبل از اعمال خودکار در production با تست سناریوهای واقعی رتبه‌بندی بررسی شوند.",
+"برای تغییرات stroke، افزایش وزن‌ها باید با تست ranking انجام شود تا stroke از کیس‌های اختصاصی‌تر مانند head-injury یا seizure در ورودی‌های مبهم جلو نزند.",
+"در داده فعلی، تفاوت بین symptom metadata مانند matchDegree و وزن case-specific در match باید حفظ شود؛ این review عمداً matchDegree را تغییر نمی‌دهد زیرا در فهرست فیلدهای مجاز برای تغییر نیست."
+]
+}

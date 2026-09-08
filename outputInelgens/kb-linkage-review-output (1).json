@@ -1,0 +1,761 @@
+{
+  "format": "linkage-review-output-v1",
+  "basis": {
+    "faKbVersion": 21,
+    "enKbVersion": 9,
+    "languageScope": "both"
+  },
+  "assumptions": [
+    "همه‌ی وزن‌های match پیشنهادی بین 1 تا 8 هستند و برای نشانه‌های عمومی/جانبی معمولاً 1-2 انتخاب شده تا با مقیاس فعلی داده (وزن بالا فقط برای نشانه‌های کلیدی/اختصاصی) هماهنگ بماند.",
+    "هیچ تغییری روی نشانه‌های اختصاصی رویداد (مثل scorpion_seen، saw_snake، amputated_part، jellyfish_sting، tick_attached، open_fracture، animal_bite، electrical_contact، tooth_knocked_out، open_chest_wound، two_punctures، stinger_visible، drowning_recent) پیشنهاد نشده چون این‌ها باید مختص همان کیس بمانند.",
+    "برای کیس‌هایی که emergencyCall.always=true دارند (بدون فیلد when)، هیچ تغییری در فیلد emergency پیشنهاد نشده، چون افزودن به when بی‌معنی است؛ در عوض فقط risk/match/red اصلاح شده است (مثال: shock).",
+    "پیشنهادها براساس الگوی داخلی موجود در پایگاه‌دانش (تقارن بین کیس‌های مشابه مثل نیش زنبور/آنافیلاکسی/نیش عروس دریایی، یا نیش مار/نیش عقرب) و اصول شناخته‌شده‌ی کمک‌های اولیه (FAST سکته، معیارهای سنی سر، علائم شوک، DKA/هیپوگلیسمی) استخراج شده‌اند.",
+    "هیچ propose_new_case ای پیشنهاد نشده؛ ساختار فعلی ۳۵ کیس برای پوشش‌دادن نشانه‌های موجود کافی به نظر می‌رسد."
+  ],
+  "changes": [
+    {
+      "action": "add_relation",
+      "caseId": "stroke",
+      "symptomId": "known_diabetic",
+      "field": "risk",
+      "value": true,
+      "reason": "دیابت کنترل‌نشده هم عامل خطر سکته و هم می‌تواند علائم شبه‌سکته (افت قند) ایجاد کند؛ باید در سؤال خطر سکته لحاظ شود.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "stroke",
+      "symptomId": "blood_thinner",
+      "field": "risk",
+      "value": true,
+      "reason": "مصرف رقیق‌کنندهٔ خون در ارزیابی سکته برای احتمال سکتهٔ خونریزی‌دهنده و تصمیم درمانی EMS اهمیت بالینی دارد؛ استاندارد FAST/EMS این سؤال را می‌پرسد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "fainting",
+      "symptomId": "known_diabetic",
+      "field": "risk",
+      "value": true,
+      "reason": "افت قند خون یکی از علل شایع غش/سنکوپ است؛ باید به‌عنوان سؤال خطر در کیس غش پرسیده شود.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "fainting",
+      "symptomId": "heart_known",
+      "field": "risk",
+      "value": true,
+      "reason": "سنکوپ قلبی (آریتمی) در افراد با سابقهٔ قلبی خطر بالاتری دارد و نیاز به ارزیابی فوری‌تر دارد.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "fainting",
+      "symptomId": "elderly_victim",
+      "field": "risk",
+      "value": true,
+      "reason": "غش در سالمندان بیشتر منشأ قلبی/عروقی یا دارویی دارد و خطر بالاتری برای علت جدی دارد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "head-injury",
+      "symptomId": "elderly_victim",
+      "field": "risk",
+      "value": true,
+      "reason": "طبق راهنماهای ضربهٔ سر (مثل NICE)، سن بالا (معمولاً ≥۶۵) به‌تنهایی عامل خطر خونریزی داخل‌جمجمه‌ای حتی با ضربهٔ خفیف است و باید در سؤالات خطر لحاظ شود.",
+      "confidence": "high",
+      "source": "NICE head injury guideline – age as risk factor"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "shock",
+      "symptomId": "heart_known",
+      "field": "risk",
+      "value": true,
+      "reason": "شوک قلبی‌منشأ (کاردیوژنیک) در افراد با سابقهٔ قلبی محتمل‌تر است؛ باید به‌عنوان سؤال خطر لحاظ شود.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "severe-bleeding",
+      "symptomId": "blood_thinner",
+      "field": "risk",
+      "value": true,
+      "reason": "مصرف رقیق‌کنندهٔ خون کنترل خونریزی شدید را دشوارتر می‌کند و باید در ارزیابی خطر لحاظ شود.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "laceration",
+      "symptomId": "blood_thinner",
+      "field": "risk",
+      "value": true,
+      "reason": "در بریدگی/زخم باز، مصرف رقیق‌کنندهٔ خون می‌تواند خونریزی را طولانی/شدیدتر کند.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "poisoning",
+      "symptomId": "pregnant",
+      "field": "risk",
+      "value": true,
+      "reason": "مسمومیت در بارداری خطر دوگانه برای مادر و جنین دارد و نیاز به ارزیابی فوری‌تر دارد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heat-illness",
+      "symptomId": "pregnant",
+      "field": "risk",
+      "value": true,
+      "reason": "گرمازدگی/خستگی حرارتی در بارداری خطر بیشتری برای مادر و جنین دارد و در راهنماهای بارداری توصیه به مراقبت زودتر می‌شود.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "severe-bleeding",
+      "symptomId": "pregnant",
+      "field": "risk",
+      "value": true,
+      "reason": "خونریزی شدید در فرد باردار می‌تواند نشانهٔ عارضهٔ مامایی خطرناک (مثل جفت سرراهی/کنده‌شدگی جفت) باشد و باید در سؤالات خطر لحاظ شود.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "shock",
+      "symptomId": "pregnant",
+      "field": "risk",
+      "value": true,
+      "reason": "شوک در بارداری می‌تواند ناشی از خونریزی مامایی باشد و نیازمند تماس فوری با اورژانس است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "drowning",
+      "symptomId": "child_victim",
+      "field": "risk",
+      "value": true,
+      "reason": "کودکان بخش بزرگی از قربانیان غرق‌آبی هستند و ارزیابی هایپوترمی/آسیب مغزی در آن‌ها با احتیاط بیشتری انجام می‌شود؛ افزودن به سؤالات خطر کمک می‌کند.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "poisoning",
+      "symptomId": "child_victim",
+      "field": "risk",
+      "value": true,
+      "reason": "بلع تصادفی دارو/سم در کودکان بسیار شایع است و باید به‌عنوان سؤال خطر در کیس مسمومیت لحاظ شود.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "thermal-burn",
+      "symptomId": "elderly_victim",
+      "field": "risk",
+      "value": true,
+      "reason": "سوختگی در سالمندان با عوارض شدیدتر و بهبود کندتر همراه است و در راهنماهای سوختگی به‌عنوان معیار ارجاع فوری شناخته می‌شود.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "thermal-burn",
+      "symptomId": "elderly_victim",
+      "field": "emergency",
+      "value": true,
+      "reason": "سوختگی در سالمندان با عوارض شدیدتر و بهبود کندتر همراه است و در راهنماهای سوختگی به‌عنوان معیار ارجاع فوری شناخته می‌شود.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "anaphylaxis",
+      "symptomId": "child_victim",
+      "field": "risk",
+      "value": true,
+      "reason": "دوز و نحوهٔ استفاده از اپی‌نفرین در کودکان متفاوت است و شناسایی کودک در سؤالات خطر آنافیلاکسی به تصمیم‌گیری کمک می‌کند.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "jellyfish-sting",
+      "symptomId": "throat_tightness",
+      "field": "match",
+      "value": 1,
+      "reason": "الگوی واکنش سیستمیک آلرژیک (کهیر، تورم لب/زبان، تنگی نفس) در این کیس موجود است اما «تنگی گلو» که یکی از نشانه‌های کلیدی آنافیلاکسی است جا افتاده؛ برای هم‌راستایی با نیش زنبور/آنافیلاکسی افزوده شود.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "jellyfish-sting",
+      "symptomId": "throat_tightness",
+      "field": "risk",
+      "value": true,
+      "reason": "الگوی واکنش سیستمیک آلرژیک (کهیر، تورم لب/زبان، تنگی نفس) در این کیس موجود است اما «تنگی گلو» که یکی از نشانه‌های کلیدی آنافیلاکسی است جا افتاده؛ برای هم‌راستایی با نیش زنبور/آنافیلاکسی افزوده شود.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "jellyfish-sting",
+      "symptomId": "throat_tightness",
+      "field": "emergency",
+      "value": true,
+      "reason": "الگوی واکنش سیستمیک آلرژیک (کهیر، تورم لب/زبان، تنگی نفس) در این کیس موجود است اما «تنگی گلو» که یکی از نشانه‌های کلیدی آنافیلاکسی است جا افتاده؛ برای هم‌راستایی با نیش زنبور/آنافیلاکسی افزوده شود.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "jellyfish-sting",
+      "symptomId": "wheezing",
+      "field": "match",
+      "value": 1,
+      "reason": "مشابه throat_tightness، خس‌خس سینه نشانهٔ دیگر واکنش سیستمیک است که در بی‌زنبور/آنافیلاکسی لحاظ شده اما در نیش عروس دریایی جا افتاده است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "jellyfish-sting",
+      "symptomId": "wheezing",
+      "field": "risk",
+      "value": true,
+      "reason": "مشابه throat_tightness، خس‌خس سینه نشانهٔ دیگر واکنش سیستمیک است که در بی‌زنبور/آنافیلاکسی لحاظ شده اما در نیش عروس دریایی جا افتاده است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "jellyfish-sting",
+      "symptomId": "wheezing",
+      "field": "emergency",
+      "value": true,
+      "reason": "مشابه throat_tightness، خس‌خس سینه نشانهٔ دیگر واکنش سیستمیک است که در بی‌زنبور/آنافیلاکسی لحاظ شده اما در نیش عروس دریایی جا افتاده است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "jellyfish-sting",
+      "symptomId": "fainting",
+      "field": "match",
+      "value": 1,
+      "reason": "غش پس از نیش عروس دریایی نشانهٔ واکنش سیستمیک/شوک است؛ الان فقط در ریسک/اورژانس است ولی برای رتبه‌بندی موضوعات مرتبط باید وزن match هم داشته باشد.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "jellyfish-sting",
+      "symptomId": "hives_widespread",
+      "field": "match",
+      "value": 1,
+      "reason": "کهیر گسترده هم اکنون ریسک/اورژانس این کیس است اما وزن match ندارد و در «موضوعات مرتبط» دیده نمی‌شود.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "jellyfish-sting",
+      "symptomId": "lip_tongue_swelling",
+      "field": "match",
+      "value": 1,
+      "reason": "تورم لب/زبان هم اکنون ریسک/اورژانس این کیس است اما وزن match ندارد.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "bee-wasp-sting",
+      "symptomId": "difficulty_breathing",
+      "field": "match",
+      "value": 1,
+      "reason": "تنگی نفس در حال حاضر ریسک/اورژانس نیش زنبور است اما وزن match ندارد؛ بدون آن، کاربری که فقط «تنگی نفس» را وارد کند این کیس را در «موضوعات مرتبط» نمی‌بیند در حالی‌که ممکن است واکنش به نیش باشد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "bee-wasp-sting",
+      "symptomId": "fainting",
+      "field": "match",
+      "value": 1,
+      "reason": "غش پس از نیش زنبور نشانهٔ واکنش سیستمیک است و باید وزن match کوچک هم داشته باشد تا در رتبه‌بندی دیده شود.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "bee-wasp-sting",
+      "symptomId": "hives_widespread",
+      "field": "match",
+      "value": 2,
+      "reason": "کهیر گسترده پس از نیش زنبور نشانهٔ کلیدی واکنش آلرژیک است؛ افزودن وزن match کمک می‌کند این کیس هم مثل آنافیلاکسی رتبه بگیرد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "bee-wasp-sting",
+      "symptomId": "lip_tongue_swelling",
+      "field": "match",
+      "value": 2,
+      "reason": "تورم لب/زبان نشانهٔ مهم واکنش سیستمیک پس از نیش است؛ باید وزن match هم داشته باشد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "bee-wasp-sting",
+      "symptomId": "throat_tightness",
+      "field": "match",
+      "value": 2,
+      "reason": "تنگی گلو نشانهٔ حیاتی آنافیلاکسی/واکنش شدید پس از نیش زنبور است؛ باید وزن match داشته باشد تا در رتبه‌بندی ظاهر شود.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "bee-wasp-sting",
+      "symptomId": "wheezing",
+      "field": "match",
+      "value": 1,
+      "reason": "خس‌خس سینه پس از نیش زنبور نشانهٔ واکنش تنفسی سیستمیک است؛ افزودن وزن match به رتبه‌بندی کمک می‌کند.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "breathing-difficulty",
+      "symptomId": "confusion",
+      "field": "match",
+      "value": 1,
+      "reason": "گیجی نشانهٔ حملهٔ شدید تنفسی و هیپوکسی است؛ اکنون فقط ریسک/قرمز/اورژانس دارد ولی برای دیده‌شدن در «موضوعات مرتبط» به وزن match نیاز دارد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "breathing-difficulty",
+      "symptomId": "drowsiness",
+      "field": "match",
+      "value": 1,
+      "reason": "خواب‌آلودگی در حملهٔ شدید تنفسی نشانهٔ هیپوکسی/هیپرکاپنی است و باید وزن match هم داشته باشد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "breathing-difficulty",
+      "symptomId": "speech_difficulty",
+      "field": "match",
+      "value": 1,
+      "reason": "ناتوانی در گفتن جملهٔ کامل از معیارهای شدت حملهٔ آسم/تنگی‌نفس است و باید وزن match هم داشته باشد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "snake-bite",
+      "symptomId": "confusion",
+      "field": "match",
+      "value": 1,
+      "reason": "در نیش‌گزیدگی‌های سیستمیک مار، گیجی می‌تواند نشانهٔ مسمومیت عصبی یا شوک باشد؛ مشابه سایر نشانه‌های سیستمیک (تهوع، سرگیجه، غش) که در این کیس ریسک/قرمز هستند، باید افزوده شود.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "snake-bite",
+      "symptomId": "confusion",
+      "field": "risk",
+      "value": true,
+      "reason": "در نیش‌گزیدگی‌های سیستمیک مار، گیجی می‌تواند نشانهٔ مسمومیت عصبی یا شوک باشد؛ مشابه سایر نشانه‌های سیستمیک (تهوع، سرگیجه، غش) که در این کیس ریسک/قرمز هستند، باید افزوده شود.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "snake-bite",
+      "symptomId": "confusion",
+      "field": "red",
+      "value": true,
+      "reason": "در نیش‌گزیدگی‌های سیستمیک مار، گیجی می‌تواند نشانهٔ مسمومیت عصبی یا شوک باشد؛ مشابه سایر نشانه‌های سیستمیک (تهوع، سرگیجه، غش) که در این کیس ریسک/قرمز هستند، باید افزوده شود.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "snake-bite",
+      "symptomId": "unresponsive",
+      "field": "match",
+      "value": 1,
+      "reason": "بی‌هوشی در نیش‌گزیدگی سیستمیک مار نشانهٔ خطرناک پیشرفت مسمومیت است و باید هم در ریسک/قرمز و هم (با وزن کم) در match لحاظ شود.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "snake-bite",
+      "symptomId": "unresponsive",
+      "field": "risk",
+      "value": true,
+      "reason": "بی‌هوشی در نیش‌گزیدگی سیستمیک مار نشانهٔ خطرناک پیشرفت مسمومیت است و باید هم در ریسک/قرمز و هم (با وزن کم) در match لحاظ شود.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "snake-bite",
+      "symptomId": "unresponsive",
+      "field": "red",
+      "value": true,
+      "reason": "بی‌هوشی در نیش‌گزیدگی سیستمیک مار نشانهٔ خطرناک پیشرفت مسمومیت است و باید هم در ریسک/قرمز و هم (با وزن کم) در match لحاظ شود.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "snake-bite",
+      "symptomId": "sweating_cold",
+      "field": "risk",
+      "value": true,
+      "reason": "عرق سرد نشانهٔ شوک ناشی از نیش‌گزیدگی سمی است؛ در نیش عقرب (کیس مشابه) همین نشانه ریسک/قرمز است اما در نیش مار جا افتاده است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "snake-bite",
+      "symptomId": "sweating_cold",
+      "field": "red",
+      "value": true,
+      "reason": "عرق سرد نشانهٔ شوک ناشی از نیش‌گزیدگی سمی است؛ در نیش عقرب (کیس مشابه) همین نشانه ریسک/قرمز است اما در نیش مار جا افتاده است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "snake-bite",
+      "symptomId": "numbness",
+      "field": "risk",
+      "value": true,
+      "reason": "بی‌حسی اندام گزیده‌شده یا انتشاریافته می‌تواند نشانهٔ اثر عصبی سم مار باشد.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "snake-bite",
+      "symptomId": "difficulty_breathing",
+      "field": "match",
+      "value": 1,
+      "reason": "تنگی نفس در نیش مار (به‌ویژه مارهای عصبی‌سم) نشانهٔ سیستمیک جدی است؛ اکنون فقط ریسک/قرمز دارد و برای دیده‌شدن در رتبه‌بندی به وزن match نیاز دارد.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "snake-bite",
+      "symptomId": "dizziness",
+      "field": "match",
+      "value": 1,
+      "reason": "سرگیجه نشانهٔ سیستمیک نیش مار (افت فشار/شوک) است؛ اکنون فقط ریسک/قرمز دارد.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "snake-bite",
+      "symptomId": "fainting",
+      "field": "match",
+      "value": 1,
+      "reason": "غش نشانهٔ سیستمیک نیش مار (شوک) است؛ اکنون فقط ریسک/قرمز دارد.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "snake-bite",
+      "symptomId": "nausea_vomiting",
+      "field": "match",
+      "value": 1,
+      "reason": "تهوع/استفراغ نشانهٔ سیستمیک نیش مار است؛ اکنون فقط ریسک/قرمز دارد.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "scorpion-sting",
+      "symptomId": "confusion",
+      "field": "match",
+      "value": 1,
+      "reason": "گیجی در نیش عقرب نشانهٔ مسمومیت عصبی سیستمیک است؛ اکنون فقط ریسک/قرمز دارد و برای رتبه‌بندی به وزن match نیاز دارد.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "scorpion-sting",
+      "symptomId": "difficulty_breathing",
+      "field": "match",
+      "value": 1,
+      "reason": "تنگی نفس در نیش عقرب نشانهٔ خطرناک سیستمیک (اثر روی عضلات تنفسی) است؛ اکنون فقط ریسک/قرمز دارد.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "scorpion-sting",
+      "symptomId": "fainting",
+      "field": "match",
+      "value": 1,
+      "reason": "غش در نیش عقرب نشانهٔ سیستمیک است؛ اکنون فقط ریسک/قرمز دارد.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "scorpion-sting",
+      "symptomId": "sweating_cold",
+      "field": "match",
+      "value": 1,
+      "reason": "عرق سرد نشانهٔ شوک ناشی از سم عقرب است؛ اکنون فقط ریسک/قرمز دارد.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "scorpion-sting",
+      "symptomId": "nausea_vomiting",
+      "field": "risk",
+      "value": true,
+      "reason": "تهوع/استفراغ در سمیت سیستمیک عقرب شایع است و در حال حاضر اصلاً به این کیس متصل نیست.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "diabetic-emergency",
+      "symptomId": "nausea_vomiting",
+      "field": "risk",
+      "value": true,
+      "reason": "تهوع/استفراغ در کتواسیدوز دیابتی (DKA) و افت شدید قند شایع است و در حال حاضر اصلاً به کیس اورژانس دیابتی متصل نیست.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "diabetic-emergency",
+      "symptomId": "dizziness",
+      "field": "risk",
+      "value": true,
+      "reason": "سرگیجه یکی از نشانه‌های شایع افت قند خون است و باید در سؤالات خطر اورژانس دیابتی لحاظ شود.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "shock",
+      "symptomId": "nausea_vomiting",
+      "field": "risk",
+      "value": true,
+      "reason": "تهوع/استفراغ از نشانه‌های شایع همراه شوک است و در حال حاضر به کیس شوک متصل نیست.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "poisoning",
+      "symptomId": "unresponsive",
+      "field": "match",
+      "value": 2,
+      "reason": "بی‌هوشی در مسمومیت نشانهٔ شدت بالا و نیازمند تماس فوری با اورژانس است؛ در حال حاضر این کیس فقط drowsiness/confusion دارد ولی «بی‌هوشی کامل» به‌طور مستقل ثبت نشده است.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "poisoning",
+      "symptomId": "unresponsive",
+      "field": "risk",
+      "value": true,
+      "reason": "بی‌هوشی در مسمومیت نشانهٔ شدت بالا و نیازمند تماس فوری با اورژانس است؛ در حال حاضر این کیس فقط drowsiness/confusion دارد ولی «بی‌هوشی کامل» به‌طور مستقل ثبت نشده است.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "poisoning",
+      "symptomId": "unresponsive",
+      "field": "emergency",
+      "value": true,
+      "reason": "بی‌هوشی در مسمومیت نشانهٔ شدت بالا و نیازمند تماس فوری با اورژانس است؛ در حال حاضر این کیس فقط drowsiness/confusion دارد ولی «بی‌هوشی کامل» به‌طور مستقل ثبت نشده است.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "hypothermia",
+      "symptomId": "unresponsive",
+      "field": "match",
+      "value": 2,
+      "reason": "در هایپوترمی شدید، فرد می‌تواند بی‌هوش و ظاهراً بدون علائم حیاتی مشخص باشد (\"apparent death\")؛ این وضعیت باید مستقل از not_breathing ثبت شود و تماس فوری با اورژانس داشته باشد.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "hypothermia",
+      "symptomId": "unresponsive",
+      "field": "risk",
+      "value": true,
+      "reason": "در هایپوترمی شدید، فرد می‌تواند بی‌هوش و ظاهراً بدون علائم حیاتی مشخص باشد (\"apparent death\")؛ این وضعیت باید مستقل از not_breathing ثبت شود و تماس فوری با اورژانس داشته باشد.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "hypothermia",
+      "symptomId": "unresponsive",
+      "field": "emergency",
+      "value": true,
+      "reason": "در هایپوترمی شدید، فرد می‌تواند بی‌هوش و ظاهراً بدون علائم حیاتی مشخص باشد (\"apparent death\")؛ این وضعیت باید مستقل از not_breathing ثبت شود و تماس فوری با اورژانس داشته باشد.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heat-illness",
+      "symptomId": "unresponsive",
+      "field": "match",
+      "value": 2,
+      "reason": "بی‌هوشی یکی از نشانه‌های اصلی گرمازدگی شدید (heatstroke) است و در حال حاضر در کیس گرمازدگی به‌طور مستقل لحاظ نشده است؛ باید مشابه confusion/drowsiness/fainting در ریسک، قرمز و اورژانس باشد.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heat-illness",
+      "symptomId": "unresponsive",
+      "field": "risk",
+      "value": true,
+      "reason": "بی‌هوشی یکی از نشانه‌های اصلی گرمازدگی شدید (heatstroke) است و در حال حاضر در کیس گرمازدگی به‌طور مستقل لحاظ نشده است؛ باید مشابه confusion/drowsiness/fainting در ریسک، قرمز و اورژانس باشد.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heat-illness",
+      "symptomId": "unresponsive",
+      "field": "red",
+      "value": true,
+      "reason": "بی‌هوشی یکی از نشانه‌های اصلی گرمازدگی شدید (heatstroke) است و در حال حاضر در کیس گرمازدگی به‌طور مستقل لحاظ نشده است؛ باید مشابه confusion/drowsiness/fainting در ریسک، قرمز و اورژانس باشد.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heat-illness",
+      "symptomId": "unresponsive",
+      "field": "emergency",
+      "value": true,
+      "reason": "بی‌هوشی یکی از نشانه‌های اصلی گرمازدگی شدید (heatstroke) است و در حال حاضر در کیس گرمازدگی به‌طور مستقل لحاظ نشده است؛ باید مشابه confusion/drowsiness/fainting در ریسک، قرمز و اورژانس باشد.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "anaphylaxis",
+      "symptomId": "unresponsive",
+      "field": "risk",
+      "value": true,
+      "reason": "پیشرفت آنافیلاکسی به بی‌هوشی نشانهٔ شوک آنافیلاکتیک است؛ اکنون فقط fainting به‌عنوان ریسک ثبت شده و «بی‌هوشی کامل» جدا نیست.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "animal-bite",
+      "symptomId": "bleeding_heavy",
+      "field": "match",
+      "value": 2,
+      "reason": "خونریزی شدید هم‌اکنون ریسک/اورژانس گزش حیوان است اما وزن match ندارد؛ بدون آن، کاربری که فقط «خونریزی شدید» وارد کند در «موضوعات مرتبط» گزش حیوان را نمی‌بیند.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "dental-avulsion",
+      "symptomId": "bleeding_heavy",
+      "field": "match",
+      "value": 1,
+      "reason": "خونریزی شدید هم‌اکنون ریسک/اورژانس کیس دندان کنده‌شده است اما وزن match ندارد.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "laceration",
+      "symptomId": "object_embedded",
+      "field": "match",
+      "value": 2,
+      "reason": "جسم فرورفته هم‌اکنون ریسک/اورژانس بریدگی است اما وزن match ندارد و در رتبه‌بندی «موضوعات مرتبط» ظاهر نمی‌شود.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "severe-bleeding",
+      "symptomId": "dizziness",
+      "field": "match",
+      "value": 1,
+      "reason": "سرگیجه هم‌اکنون به‌عنوان نشانهٔ قرمز خونریزی شدید ثبت شده اما وزن match ندارد.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "nosebleed",
+      "symptomId": "dizziness",
+      "field": "match",
+      "value": 1,
+      "reason": "سرگیجه هم‌اکنون ریسک/اورژانس خون‌دماغ است اما وزن match ندارد؛ سرگیجه همراه خون‌دماغ می‌تواند نشانهٔ افت فشار ناشی از خون‌ازدست‌رفته باشد.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "head-injury",
+      "symptomId": "drowsiness",
+      "field": "match",
+      "value": 2,
+      "reason": "خواب‌آلودگی/سختی بیدارشدن یکی از نشانه‌های کلیدی وخامت آسیب مغزی است؛ اکنون فقط ریسک/قرمز/اورژانس دارد و برای دیده‌شدن در «موضوعات مرتبط» به وزن match نیاز دارد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "head-injury",
+      "symptomId": "seizure_activity",
+      "field": "match",
+      "value": 1,
+      "reason": "تشنج پس از ضربهٔ سر نشانهٔ آسیب مغزی جدی است؛ اکنون فقط ریسک/قرمز/اورژانس دارد و به وزن match کوچک نیاز دارد تا در رتبه‌بندی دیده شود.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "dislocation-sprain",
+      "symptomId": "numbness",
+      "field": "match",
+      "value": 1,
+      "reason": "بی‌حسی انتهای اندام آسیب‌دیده نشانهٔ اختلال گردش خون/عصب در دررفتگی احتمالی است؛ هم‌اکنون فقط ریسک/اورژانس دارد و به وزن match کوچک نیاز دارد.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "suspected-fracture",
+      "symptomId": "numbness",
+      "field": "match",
+      "value": 1,
+      "reason": "بی‌حسی اندام شکسته‌شدهٔ احتمالی نشانهٔ آسیب عصبی/عروقی است؛ هم‌اکنون فقط ریسک/اورژانس دارد و به وزن match کوچک نیاز دارد.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "poisoning",
+      "symptomId": "difficulty_breathing",
+      "field": "match",
+      "value": 1,
+      "reason": "افسردگی تنفسی یکی از عوارض شناخته‌شدهٔ بسیاری از مسمومیت‌ها (اوپیوئید، گازها، حلال‌ها) است؛ هم‌اکنون فقط ریسک/اورژانس دارد.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "poisoning",
+      "symptomId": "seizure_activity",
+      "field": "match",
+      "value": 1,
+      "reason": "تشنج می‌تواند نشانهٔ مسمومیت با برخی داروها/سموم باشد؛ هم‌اکنون فقط ریسک/اورژانس دارد.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "hypothermia",
+      "symptomId": "not_breathing",
+      "field": "match",
+      "value": 1,
+      "reason": "توقف تنفس در هایپوترمی شدید یک نشانهٔ حیاتی است که هم‌اکنون فقط ریسک/اورژانس دارد و باید وزن match کوچک هم داشته باشد.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "electric-shock",
+      "symptomId": "burn_face_hands_feet",
+      "field": "risk",
+      "value": true,
+      "reason": "سوختگی نقاط ورود/خروج جریان برق در برق‌گرفتگی شایع است؛ افزودن این نشانه به سؤالات خطر کمک می‌کند کاربر برای ارزیابی سوختگی همزمان هدایت شود.",
+      "confidence": "low"
+    }
+  ],
+  "notes": [
+    "این مرور نشان می‌دهد چند نشانهٔ زمینه‌ای مهم (known_diabetic، heart_known، blood_thinner، elderly_victim، pregnant، child_victim) در برخی کیس‌های مرتبط اصلاً به‌کار نرفته بودند با اینکه طبق قانون بالینی بخش ۱.۵ باید در چند کیس ظاهر شوند؛ این‌ها به‌صورت ریسک (نه match) اضافه شدند چون معمولاً به‌عنوان زمینه پرسیده می‌شوند نه علامت اصلی.",
+    "الگوی نشانه‌های واکنش سیستمیک/آلرژیک (hives_widespread، lip_tongue_swelling، throat_tightness، wheezing، fainting) در سه کیس مشابه (anaphylaxis، bee-wasp-sting، jellyfish-sting) به‌طور کامل هم‌راستا نبود — برخی این نشانه‌ها را فقط در ریسک/قرمز/اورژانس داشتند اما وزن match نداشتند، به این معنی که اگر کاربر فقط این علامت را جستجو کند آن کیس در «موضوعات مرتبط» ظاهر نمی‌شود؛ این مورد با وزن match کوچک (1-2) اصلاح شد بدون تغییر منطق اورژانس.",
+    "الگوی مشابه در نشانه‌های سیستمیک نیش‌گزیدگی سمی (snake-bite و scorpion-sting) دیده شد — نشانه‌هایی مثل confusion، dizziness، fainting، nausea_vomiting، sweating_cold و unresponsive که در یکی از این دو کیس به‌عنوان ریسک/قرمز بودند در دیگری اصلاً وجود نداشتند یا وزن match نداشتند؛ این ناهماهنگی تا حد ممکن با احتیاط بالینی (وزن‌های کم 1، confidence=medium/low) اصلاح شد.",
+    "سه کیس (poisoning، hypothermia، heat-illness) امکان پیشرفت تا بی‌هوشی کامل (unresponsive) دارند اما این نشانه به‌طور مستقل در match/risk/red/emergency آن‌ها لحاظ نشده بود؛ چون بی‌هوشی در این زمینه‌ها نشانهٔ شدت بالا و اورژانس واقعی است، برای poisoning و hypothermia و heat-illness افزودن match+risk+emergency (و برای heat-illness همچنین red، چون این کیس ساختار redFlags فعال دارد) پیشنهاد شد؛ توجه شود که این افزودن‌ها احتمال هم‌پوشانی رتبه‌بندی با کیس unresponsive-breathing و cardiac-arrest را افزایش می‌دهد که طبیعی و مطلوب است (چند کیس درست می‌توانند هم‌زمان پیشنهاد شوند).",
+    "برای کیس‌های bee-wasp-sting، jellyfish-sting و breathing-difficulty چند نشانهٔ ریسک/قرمز/اورژانس بدون وزن match پیشنهاد وزن کوچک (1-2) گرفتند تا کاربری که مستقیماً آن نشانه را جستجو می‌کند در فهرست «موضوعات مرتبط» کیس درست را ببیند؛ این تغییرات وزن اورژانس/قرمز موجود را دست‌نخورده می‌گذارند.",
+    "هیچ حذف رابطه‌ای (remove_relation) پیشنهاد نشد؛ در بررسی داده هیچ رابطهٔ اشتباه یا غیرمنطقی بارز مشاهده نشد — همه‌ی نشانه‌های موجود در match هر کیس با آن کیس سازگاری بالینی داشتند.",
+    "پیشنهاد شوک/pregnant به فیلد emergency داده نشد چون کیس shock دارای emergencyCall.always=true (بدون آرایهٔ when) است؛ در عوض فقط risk=true برای این جفت پیشنهاد شد."
+  ],
+  "warnings": [
+    "افزودن وزن match برای نشانه‌های عمومی سیستمیک (مثل confusion، dizziness، fainting، nausea_vomiting، sweating_cold) به چند کیس بیشتر می‌تواند تعداد کیس‌های هم‌رتبه در «موضوعات مرتبط» را افزایش دهد؛ توصیه می‌شود وزن‌های پیشنهادی (اغلب 1) با وزن‌های اصلی هر کیس (که در محدودهٔ 4-8 هستند) مقایسه و در صورت نیاز کالیبره شوند تا کیس‌های نامرتبط بیش‌ازحد بالا نیایند.",
+    "افزودن سؤالات خطر جدید (risk) به کیس‌هایی مثل fainting، stroke، severe-bleeding و laceration باعث افزایش تعداد سؤالات صفحه‌ی کیس می‌شود؛ اگر محدودیت تعداد سؤال در UI وجود دارد، این افزوده‌ها باید از نظر تجربه‌ی کاربری هم بازبینی شوند.",
+    "برای shock، chest_pain و difficulty_breathing در حال حاضر فقط risk=true دارند ولی confidence بالای بالینی برای افزودن match هم وجود دارد؛ این مورد به‌عمد در این نسخه دست‌نخورده ماند تا از تغییر بیش‌ازحد در یک کیس (که ریسک تناقض با نسخه‌های دیگر مدل‌ها را بالا می‌برد) پرهیز شود — می‌تواند در نسخهٔ بعدی بازبینی شود."
+  ]
+}

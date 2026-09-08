@@ -1,0 +1,401 @@
+﻿{
+  "format": "linkage-review-output-v1",
+  "basis": {
+    "faKbVersion": 21,
+    "enKbVersion": 9,
+    "languageScope": "both"
+  },
+  "assumptions": [
+    "بازبینی صرفاً بر اساس جدول روابط بخش ۲.۴ و ساختار JSON کیس‌های بخش ۲.۵ انجام شد؛ هیچ شناسه‌ی جدیدی اختراع نشد.",
+    "نشانه‌های عمومی/غیراختصاصی (مثل دیزینس، تهوع، بی‌هوشی) طبق قاعده‌ی ۱.۵ در چند کیس بررسی شدند تا پوشش ناقص اصلاح شود.",
+    "نشانه‌های اختصاصی رویداد (scorpion_seen, saw_snake, open_fracture, amputated_part, tick_attached, jellyfish_sting, animal_bite, drowning_recent, electrical_contact) دست‌نخورده باقی ماندند."
+  ],
+  "changes": [
+    {
+      "action": "add_relation",
+      "caseId": "anaphylaxis",
+      "symptomId": "shock_signs",
+      "field": "match",
+      "value": 3,
+      "reason": "شوک آنافیلاکتیک یکی از عوارض شدید و شناخته‌شده‌ی آنافیلاکسی است اما نشانه‌ی shock_signs اکنون اصلاً در این کیس ثبت نشده.",
+      "confidence": "high",
+      "source": "ILCOR/AHA anaphylaxis guidance"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "anaphylaxis",
+      "symptomId": "shock_signs",
+      "field": "risk",
+      "value": true,
+      "reason": "برای پرسش خطر شوک در صفحه‌ی آنافیلاکسی.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "anaphylaxis",
+      "symptomId": "dizziness",
+      "field": "risk",
+      "value": true,
+      "reason": "سرگیجه نشانه‌ی عمومی است (طبق قاعده‌ی ۱.۵) و در آنافیلاکسی ناشی از افت فشار خون شایع است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "anaphylaxis",
+      "symptomId": "nausea_vomiting",
+      "field": "risk",
+      "value": true,
+      "reason": "علائم گوارشی (تهوع/استفراغ) در واکنش‌های آنافیلاکتیک شایع‌اند و اکنون ثبت نشده‌اند.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "anaphylaxis",
+      "symptomId": "not_breathing",
+      "field": "risk",
+      "value": true,
+      "reason": "در آنافیلاکسی شدید، انسداد راه هوایی می‌تواند به توقف کامل تنفس برسد؛ سؤال خطر لازم است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heat-illness",
+      "symptomId": "dizziness",
+      "field": "match",
+      "value": 2,
+      "reason": "سرگیجه یکی از شایع‌ترین و اولیه‌ترین نشانه‌های خستگی حرارتی است و اکنون در این کیس ثبت نشده.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heat-illness",
+      "symptomId": "dizziness",
+      "field": "risk",
+      "value": true,
+      "reason": "برای پرسش خطر در صفحه‌ی گرمازدگی/خستگی حرارتی.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heat-illness",
+      "symptomId": "sweating_cold",
+      "field": "match",
+      "value": 2,
+      "reason": "خستگی حرارتی کلاسیک با پوست سرد و عرق‌کرده (برخلاف پوست داغ/خشکِ گرمازدگی شدید) مشخص می‌شود؛ این افتراق بالینی مهم اکنون در کیس دیده نمی‌شود.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heat-illness",
+      "symptomId": "sweating_cold",
+      "field": "risk",
+      "value": true,
+      "reason": "برای پرسش خطر در صفحه‌ی گرمازدگی/خستگی حرارتی.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heat-illness",
+      "symptomId": "shock_signs",
+      "field": "risk",
+      "value": true,
+      "reason": "در گرمازدگی شدید امکان نارسایی گردش خون/شوک وجود دارد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heat-illness",
+      "symptomId": "unresponsive",
+      "field": "match",
+      "value": 2,
+      "reason": "کاهش سطح هوشیاری تا بی‌هوشی از نشانه‌های اورژانسی گرمازدگی شدید (heatstroke) است و اکنون در کیس ثبت نشده.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heat-illness",
+      "symptomId": "unresponsive",
+      "field": "risk",
+      "value": true,
+      "reason": "پیش‌نیاز Schema برای حضور در redFlags/emergencyCall.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heat-illness",
+      "symptomId": "unresponsive",
+      "field": "red",
+      "value": true,
+      "reason": "بی‌هوشی در زمینه‌ی گرمازدگی یک نشانه‌ی هشدار اورژانسی است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heat-illness",
+      "symptomId": "unresponsive",
+      "field": "emergency",
+      "value": true,
+      "reason": "بی‌هوشی همراه با گرمازدگی نیازمند تماس فوری با اورژانس است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "hypothermia",
+      "symptomId": "unresponsive",
+      "field": "match",
+      "value": 3,
+      "reason": "در هایپوترمی شدید سطح هوشیاری به‌تدریج کاهش می‌یابد تا بی‌هوشی؛ این نشانه اکنون در کیس ثبت نشده در حالی‌که confusion و drowsiness هست.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "hypothermia",
+      "symptomId": "unresponsive",
+      "field": "risk",
+      "value": true,
+      "reason": "برای پرسش خطر در صفحه‌ی هایپوترمی.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "hypothermia",
+      "symptomId": "dizziness",
+      "field": "risk",
+      "value": true,
+      "reason": "سرگیجه نشانه‌ی عمومی است که در هایپوترمی نیز می‌تواند رخ دهد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "diabetic-emergency",
+      "symptomId": "dizziness",
+      "field": "risk",
+      "value": true,
+      "reason": "افت قند خون یکی از شایع‌ترین علل سرگیجه‌ی ناگهانی است و اکنون در کیس ثبت نشده.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "diabetic-emergency",
+      "symptomId": "unresponsive",
+      "field": "match",
+      "value": 2,
+      "reason": "هیپوگلیسمی شدید یا کتواسیدوز می‌تواند به بی‌هوشی برسد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "diabetic-emergency",
+      "symptomId": "unresponsive",
+      "field": "risk",
+      "value": true,
+      "reason": "برای پرسش خطر در صفحه‌ی اورژانس دیابتی.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "poisoning",
+      "symptomId": "dizziness",
+      "field": "risk",
+      "value": true,
+      "reason": "سرگیجه در بسیاری از مسمومیت‌ها شایع است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "poisoning",
+      "symptomId": "unresponsive",
+      "field": "match",
+      "value": 2,
+      "reason": "مسمومیت شدید می‌تواند به کاهش سطح هوشیاری برسد؛ این نشانه اکنون در کیس عمومی مسمومیت ثبت نشده (فقط در opioid-overdose هست).",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "poisoning",
+      "symptomId": "unresponsive",
+      "field": "risk",
+      "value": true,
+      "reason": "برای پرسش خطر در صفحه‌ی مسمومیت.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "poisoning",
+      "symptomId": "child_victim",
+      "field": "risk",
+      "value": true,
+      "reason": "کودکان بیشتر در معرض مسمومیت تصادفی هستند و دوز خطرناک برایشان کمتر است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "severe-bleeding",
+      "symptomId": "child_victim",
+      "field": "risk",
+      "value": true,
+      "reason": "حجم خون کودکان کمتر است، بنابراین همان میزان خونریزی برایشان خطرناک‌تر است.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "severe-bleeding",
+      "symptomId": "blood_thinner",
+      "field": "risk",
+      "value": true,
+      "reason": "مصرف داروی رقیق‌کننده‌ی خون شدت و تداوم خونریزی را افزایش می‌دهد.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "shock",
+      "symptomId": "heart_known",
+      "field": "risk",
+      "value": true,
+      "reason": "شوک کاردیوژنیک در بیماران با سابقه‌ی قلبی شناخته‌شده محتمل‌تر است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "fainting",
+      "symptomId": "known_diabetic",
+      "field": "risk",
+      "value": true,
+      "reason": "افت قند خون یکی از علل شایع غش است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "fainting",
+      "symptomId": "heart_known",
+      "field": "risk",
+      "value": true,
+      "reason": "سنکوپ با منشأ قلبی در بیماران با سابقه‌ی قلبی شناخته‌شده مهم‌تر و پرخطرتر است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "fainting",
+      "symptomId": "elderly_victim",
+      "field": "risk",
+      "value": true,
+      "reason": "غش در سالمندان شایع‌تر و از نظر عوارض (افتادن، آسیب سر) پرخطرتر است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "stroke",
+      "symptomId": "numbness",
+      "field": "match",
+      "value": 1,
+      "reason": "بی‌حسی یک‌طرفه‌ی اندام یکی از نشانه‌های عصبی شناخته‌شده‌ی سکته است؛ arm_weakness فقط ضعف حرکتی را پوشش می‌دهد نه بی‌حسی حسی.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "stroke",
+      "symptomId": "numbness",
+      "field": "risk",
+      "value": true,
+      "reason": "برای پرسش خطر در صفحه‌ی سکته.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "stroke",
+      "symptomId": "elderly_victim",
+      "field": "risk",
+      "value": true,
+      "reason": "سن بالا یکی از عوامل خطر شناخته‌شده‌ی سکته‌ی مغزی است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "snake-bite",
+      "symptomId": "shock_signs",
+      "field": "match",
+      "value": 2,
+      "reason": "شوک ناشی از زهر (به‌ویژه در گزش‌های شدید) یکی از عوارض جدی نیش مار است و اکنون در کیس ثبت نشده.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "snake-bite",
+      "symptomId": "shock_signs",
+      "field": "risk",
+      "value": true,
+      "reason": "پیش‌نیاز Schema برای حضور در redFlags.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "snake-bite",
+      "symptomId": "shock_signs",
+      "field": "red",
+      "value": true,
+      "reason": "همسو با سایر نشانه‌های سیستمیک این کیس (bruising, muscle_tremor, ptosis) که همگی red flag هستند.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "scorpion-sting",
+      "symptomId": "nausea_vomiting",
+      "field": "risk",
+      "value": true,
+      "reason": "تهوع و استفراغ از نشانه‌های سیستمیک شناخته‌شده‌ی نیش عقرب (بهم‌ریختگی اتونومیک) است و اکنون ثبت نشده.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "scorpion-sting",
+      "symptomId": "nausea_vomiting",
+      "field": "red",
+      "value": true,
+      "reason": "همسو با الگوی این کیس که علائم سیستمیک (confusion, difficulty_breathing, fainting) را red flag می‌داند.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "scorpion-sting",
+      "symptomId": "shock_signs",
+      "field": "risk",
+      "value": true,
+      "reason": "در نیش شدید عقرب امکان نارسایی گردش خون وجود دارد؛ sweating_cold فعلی فقط بخشی از این تصویر را پوشش می‌دهد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "laceration",
+      "symptomId": "bleeding_persistent",
+      "field": "match",
+      "value": 2,
+      "reason": "خونریزی که با فشار پیوسته متوقف نمی‌شود نشانه‌ی نیاز به مراقبت جدی‌تر برای یک بریدگی است و اکنون در این کیس ثبت نشده (wound_deep به‌تنهایی این را پوشش نمی‌دهد).",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "laceration",
+      "symptomId": "bleeding_persistent",
+      "field": "risk",
+      "value": true,
+      "reason": "برای پرسش خطر در صفحه‌ی بریدگی/زخم باز.",
+      "confidence": "medium"
+    },
+    {
+      "action": "propose_new_case",
+      "caseId": "spinal-injury",
+      "symptomIds": ["neck_pain", "numbness", "pain_on_movement"],
+      "reason": "نشانه‌ی neck_pain (و تا حدی numbness) هم‌اکنون به‌صورت پراکنده در چند کیس مختلف (stroke, head-injury, suspected-fracture, unresponsive-breathing) به‌عنوان red flag/emergency ظاهر می‌شود، اما هیچ کیس مستقلی برای مدیریت اختصاصی مشکوک به آسیب نخاعی (بی‌حرکت‌سازی گردن، ممنوعیت جابه‌جایی) تعریف نشده؛ این فقط یک پیشنهاد ساختاری برای بررسی انسانی است.",
+      "confidence": "low"
+    }
+  ],
+  "notes": [
+    "سرگیجه (dizziness) طبق قاعده‌ی ۱.۵ نباید فقط به یک یا دو کیس محدود باشد؛ در این نسخه به heat-illness، hypothermia، diabetic-emergency، poisoning و anaphylaxis اضافه شد اما در سایر کیس‌های مرتبط نیز قابل بازبینی است.",
+    "نشانه‌ی shock_signs در چند کیس سیستمیک (anaphylaxis، snake-bite، scorpion-sting، heat-illness) کم‌دیده بود و در همه به‌صورت حداقلی (risk و در موارد پرخطرتر match) اضافه شد.",
+    "افزودن unresponsive به heat-illness، hypothermia، diabetic-emergency و poisoning عمداً با وزن match پایین (۲ یا ۳) انجام شد تا این نشانه‌ی بسیار عمومی، رتبه‌بندی کیس‌های تخصصی‌تر (مثل cardiac-arrest، drowning، electric-shock) را کم‌رنگ نکند."
+  ],
+  "warnings": [
+    "افزودن field=\"emergency\" برای unresponsive در heat-illness، ماهیت اورژانسی این کیس را از «مشروط» به یک شرط جدید گسترش می‌دهد؛ پیشنهاد می‌شود قبل از اعمال، توسط بازبین انسانی تأیید شود.",
+    "propose_new_case برای spinal-injury صرفاً یک پیشنهاد ساختاری بزرگ است و نیازمند بررسی کامل بالینی/UX پیش از هرگونه اجراست؛ به‌خودی‌خود نباید بدون تأیید انسانی اعمال شود."
+  ]
+}

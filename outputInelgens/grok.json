@@ -1,0 +1,242 @@
+﻿{
+  "format": "linkage-review-output-v1",
+  "basis": {
+    "faKbVersion": 21,
+    "enKbVersion": 9,
+    "languageScope": "both"
+  },
+  "assumptions": [
+    "Clinical decisions based on standard first-aid priorities (ILCOR/AHA/ERC style): airway/breathing/circulation threats, neurological red flags (FAST+), systemic envenomation signs, and mechanism-of-injury markers take precedence for ranking and escalation.",
+    "General symptoms (dizziness, nausea, confusion, sweating_cold) are multi-case by nature; only added to match where they meaningfully improve ranking without diluting specificity.",
+    "Specific scene markers (saw_snake, scorpion_seen, amputated_part, open_fracture, electrical_contact, etc.) left untouched.",
+    "Schema rule enforced: any new red or emergency implies risk=true."
+  ],
+  "changes": [
+    {
+      "action": "add_relation",
+      "caseId": "anaphylaxis",
+      "symptomId": "difficulty_breathing",
+      "field": "match",
+      "value": 4,
+      "reason": "Difficulty breathing is a core systemic feature of anaphylaxis and should contribute to ranking this case; currently only in riskQuestions.",
+      "confidence": "high",
+      "source": "ILCOR anaphylaxis recognition criteria"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "anaphylaxis",
+      "symptomId": "fainting",
+      "field": "match",
+      "value": 2,
+      "reason": "Syncope/fainting is a recognised systemic sign of anaphylactic shock and improves ranking when present with other allergic markers.",
+      "confidence": "high",
+      "source": "AHA/ILCOR anaphylaxis"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "stroke",
+      "symptomId": "dizziness",
+      "field": "match",
+      "value": 2,
+      "reason": "Dizziness/vertigo is a common presenting feature of posterior-circulation stroke and should contribute a modest match weight; currently only risk.",
+      "confidence": "high",
+      "source": "AHA stroke recognition / BE-FAST extensions"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heart-attack",
+      "symptomId": "dizziness",
+      "field": "match",
+      "value": 2,
+      "reason": "Dizziness or light-headedness frequently accompanies acute coronary syndromes and aids ranking alongside chest pain and autonomic signs.",
+      "confidence": "medium",
+      "source": "AHA ACS symptoms"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "choking",
+      "symptomId": "cyanosis",
+      "field": "risk",
+      "value": true,
+      "reason": "Cyanosis during choking indicates severe hypoxia and must appear in riskQuestions so the user is prompted; currently only match.",
+      "confidence": "high",
+      "source": "Basic life support airway obstruction"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "choking",
+      "symptomId": "cyanosis",
+      "field": "emergency",
+      "value": true,
+      "reason": "Cyanosis in the context of choking warrants immediate emergency activation in addition to the existing choking_signs trigger.",
+      "confidence": "high",
+      "source": "BLS foreign-body airway obstruction"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "bee-wasp-sting",
+      "symptomId": "multiple_stings",
+      "field": "red",
+      "value": true,
+      "reason": "Multiple stings already trigger emergencyCall; adding to redFlags makes the escalation path consistent and surfaces the systemic risk flag.",
+      "confidence": "medium",
+      "source": "Clinical consistency with existing emergency.when"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "breathing-difficulty",
+      "symptomId": "cyanosis",
+      "field": "match",
+      "value": 4,
+      "reason": "Cyanosis is already a high-stakes red/emergency marker; raising its match weight from 3 to 4 better reflects its ranking importance for severe respiratory distress.",
+      "confidence": "medium"
+    },
+    {
+      "action": "set_match_weight",
+      "caseId": "breathing-difficulty",
+      "symptomId": "cyanosis",
+      "oldWeight": 3,
+      "newWeight": 4,
+      "reason": "Aligns weight with clinical severity already encoded in redFlags and emergencyCall.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "diabetic-emergency",
+      "symptomId": "confusion",
+      "field": "match",
+      "value": 3,
+      "reason": "Confusion is a key differentiator for both hypo- and hyperglycaemia and deserves a slightly higher match weight than the current 2.",
+      "confidence": "medium"
+    },
+    {
+      "action": "set_match_weight",
+      "caseId": "diabetic-emergency",
+      "symptomId": "confusion",
+      "oldWeight": 2,
+      "newWeight": 3,
+      "reason": "Improves ranking priority for altered mental status in known diabetics.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "shock",
+      "symptomId": "cold_skin",
+      "field": "match",
+      "value": 2,
+      "reason": "Cold/pale skin is part of the classic shock picture and complements the existing shock_signs and sweating_cold matches.",
+      "confidence": "medium",
+      "source": "Shock recognition (compensated/decompensated)"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "opioid-overdose",
+      "symptomId": "cyanosis",
+      "field": "match",
+      "value": 2,
+      "reason": "Cyanosis is a common observation in opioid-induced respiratory depression and should help rank this case.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "opioid-overdose",
+      "symptomId": "cyanosis",
+      "field": "risk",
+      "value": true,
+      "reason": "Cyanosis should prompt the risk question list for opioid overdose.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "poisoning",
+      "symptomId": "seizure_activity",
+      "field": "match",
+      "value": 2,
+      "reason": "Seizure is already an emergency trigger; giving it a modest match weight improves ranking when present with substance exposure.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "head-injury",
+      "symptomId": "dizziness",
+      "field": "match",
+      "value": 2,
+      "reason": "Post-traumatic dizziness is a frequent and clinically relevant symptom that should contribute to ranking head-injury.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "head-injury",
+      "symptomId": "dizziness",
+      "field": "risk",
+      "value": true,
+      "reason": "Dizziness after head impact belongs in the risk question set.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "snake-bite",
+      "symptomId": "difficulty_breathing",
+      "field": "match",
+      "value": 2,
+      "reason": "Respiratory involvement is a critical systemic sign of envenomation; currently only risk/red; modest match weight improves ranking.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "scorpion-sting",
+      "symptomId": "difficulty_breathing",
+      "field": "match",
+      "value": 2,
+      "reason": "Same rationale as snake-bite: respiratory distress is a key systemic marker and should influence ranking.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "thermal-burn",
+      "symptomId": "difficulty_breathing",
+      "field": "risk",
+      "value": true,
+      "reason": "Inhalation injury (already flagged via soot_nose) can present with difficulty breathing; adding the symptom itself to riskQuestions covers cases without visible soot.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "thermal-burn",
+      "symptomId": "difficulty_breathing",
+      "field": "emergency",
+      "value": true,
+      "reason": "Difficulty breathing after a burn (especially with facial/soot involvement) is an emergency trigger.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "fainting",
+      "symptomId": "chest_pain",
+      "field": "match",
+      "value": 2,
+      "reason": "Chest pain accompanying syncope markedly raises the possibility of cardiac cause and should influence ranking.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "unresponsive-breathing",
+      "symptomId": "gasping",
+      "field": "risk",
+      "value": true,
+      "reason": "Occasional gasps in an unresponsive but 'breathing' patient may indicate agonal respiration; should appear in riskQuestions.",
+      "confidence": "medium"
+    }
+  ],
+  "notes": [
+    "No propose_new_case suggestions; the existing case set already covers the major first-aid domains.",
+    "Specific markers (amputated_part, open_fracture, saw_snake, scorpion_seen, electrical_contact, drowning_recent, tooth_knocked_out, tick_attached, etc.) deliberately left unchanged.",
+    "Weights kept conservative (mostly 2–4) to avoid over-ranking common symptoms.",
+    "All new red/emergency additions are paired with risk=true to satisfy schema.",
+    "If human review prefers stricter specificity, the dizziness and cold_skin additions can be dropped without harming core safety pathways."
+  ],
+  "warnings": [
+    "Adding cyanosis to choking emergencyCall and difficulty_breathing to thermal-burn emergencyCall slightly expands the always-call surface; clinically justified but worth human confirmation against local protocol.",
+    "Match-weight increases for cyanosis (breathing-difficulty) and confusion (diabetic-emergency) are modest; if ranking behaviour is already satisfactory they can be left at current values."
+  ]
+}

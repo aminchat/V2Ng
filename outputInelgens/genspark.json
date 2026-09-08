@@ -1,0 +1,219 @@
+{
+  "format": "linkage-review-output-v1",
+  "basis": {
+    "faKbVersion": 21,
+    "enKbVersion": 9,
+    "languageScope": "both"
+  },
+  "assumptions": [
+    "languageScope=both: همه‌ی تغییرات به‌صورت هماهنگ در kb و kb-en اعمال می‌شوند (شناسه‌ها مشترک‌اند).",
+    "برای افزودن match، وزن‌ها طبق راهنمای بخش ۱.۴ انتخاب شدند: ۱ = ارتباط ضعیف، ۲ = ارتباط محتمل، ۳ = ارتباط مهم‌تر.",
+    "هیچ کیس یا نشانه‌ی جدیدی اختراع نشده و هیچ relation موجودی حذف نشده است؛ همه‌ی روابط فعلی از نظر بالینی موجه بودند.",
+    "بررسی Schema انجام شد: هیچ موردی از (red=true یا emergency=true بدون risk=true) یافت نشد."
+  ],
+  "changes": [
+    {
+      "action": "add_relation",
+      "caseId": "anaphylaxis",
+      "symptomId": "difficulty_breathing",
+      "field": "match",
+      "value": 3,
+      "reason": "درگیری تنفسی (تنگی نفس) یکی از اجزای اصلی معیارهای آنافیلاکسی است؛ نشانه هم‌اکنون در riskQuestions هست اما در رتبه‌بندی «موضوعات مرتبط» نقشی ندارد.",
+      "confidence": "high",
+      "source": "WAO/EAACI anaphylaxis criteria; ILCOR 2020 CoSTR"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "anaphylaxis",
+      "symptomId": "fainting",
+      "field": "match",
+      "value": 2,
+      "reason": "سنکوپ/غش در آنافیلاکسی نشانه‌ی افت فشار خون و شوک آنافیلاکتیک است؛ هم‌اکنون فقط در riskQuestions است.",
+      "confidence": "medium",
+      "source": "ILCOR 2020 CoSTR — anaphylaxis"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "bee-wasp-sting",
+      "symptomId": "known_allergen_exposure",
+      "field": "match",
+      "value": 1,
+      "reason": "سابقه‌ی آلرژی، خطر آنافیلاکسی پس از نیش را افزایش می‌دهد؛ نشانه در riskQuestions هست اما در match نیست.",
+      "confidence": "medium",
+      "source": "WAO anaphylaxis guidance"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "dislocation-sprain",
+      "symptomId": "local_pain",
+      "field": "match",
+      "value": 2,
+      "reason": "درد در محل آسیب مفصل، تظاهر اولیه‌ی دررفتگی/کوفتگی است؛ این نشانه‌ی عمومی (matchDegree=8) در این کیس غایب بود.",
+      "confidence": "high",
+      "source": "ARC Guideline 9.1 — dislocation/sprain"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "suspected-fracture",
+      "symptomId": "local_pain",
+      "field": "match",
+      "value": 2,
+      "reason": "درد موضعی در محل شکستگی یک تظاهر اصلی است و در match یا riskQuestions این کیس وجود ندارد.",
+      "confidence": "high",
+      "source": "ARC Guideline 9.1 — fractures"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "shock",
+      "symptomId": "cold_skin",
+      "field": "match",
+      "value": 2,
+      "reason": "پوست سرد و رنگ‌پریده یکی از نشانه‌های کلاسیک شوک است و هم‌اکنون فقط به سرمازدگی/هیپوترمی وصل شده است.",
+      "confidence": "high",
+      "source": "ILCOR 2020 CoSTR — shock recognition"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "severe-bleeding",
+      "symptomId": "bleeding_persistent",
+      "field": "match",
+      "value": 2,
+      "reason": "خونریزی که با فشار پیوسته قطع نشود، شاخص شدت خونریزی و نیاز به مراقبت فوری است؛ این نشانه فقط در nosebleed و dental-avulsion وزن دارد.",
+      "confidence": "high",
+      "source": "ARC Guideline 9.2 — severe bleeding"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heat-illness",
+      "symptomId": "sweating_cold",
+      "field": "match",
+      "value": 1,
+      "reason": "پوست رنگ‌پریده/مرطوب و تعریق شدید از نشانه‌های خستگی حرارتی است؛ در حرارت بالا تشخیص گرما از سایر علل تعریق را تقویت می‌کند.",
+      "confidence": "medium",
+      "source": "heat-illness recognition (ILCOR/ARC)"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heat-illness",
+      "symptomId": "dizziness",
+      "field": "match",
+      "value": 1,
+      "reason": "سرگیجه/سبکی‌سر از علائم شایع خستگی حرارتی است؛ وزن پایین به‌دلیل عمومی‌بودن نشانه.",
+      "confidence": "medium",
+      "source": "heat-illness recognition"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "seizure",
+      "symptomId": "confusion",
+      "field": "match",
+      "value": 2,
+      "reason": "گیجی پس از تشنج (post-ictal) بسیار شایع است و به تشخیص تشنج از سنکوپ کمک می‌کند؛ هم‌اکنون این نشانه‌ی بااهمیت (matchDegree=7) به کیس تشنج وصل نیست.",
+      "confidence": "high",
+      "source": "ILCOR 2020 CoSTR — seizure first aid"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "seizure",
+      "symptomId": "confusion",
+      "field": "risk",
+      "value": true,
+      "reason": "پرسش از گیجی پس از تشنج در صفحه‌ی کیس، ارزیابی بهبودی و افتراق از سنکوپ را ممکن می‌کند.",
+      "confidence": "medium",
+      "source": "ILCOR 2020 CoSTR — seizure first aid"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "seizure",
+      "symptomId": "drowsiness",
+      "field": "match",
+      "value": 1,
+      "reason": "خواب‌آلودگی پس از تشنج (post-ictal lethargy) شایع است؛ وزن پایین به‌دلیل عمومی‌بودن نشانه.",
+      "confidence": "medium",
+      "source": "ILCOR 2020 CoSTR — seizure first aid"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "fainting",
+      "symptomId": "heart_known",
+      "field": "risk",
+      "value": true,
+      "reason": "غش در فرد با سابقه‌ی بیماری قلبی باید سنکوپ قلبی (آریتمی) را مطرح کند و پرسیده شود.",
+      "confidence": "medium",
+      "source": "syncope evaluation (ESC/ARC)"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "fainting",
+      "symptomId": "heart_known",
+      "field": "emergency",
+      "value": true,
+      "reason": "سنکوپ در بیمار قلبی، اورژانسی تلقی می‌شود (احتمال علت آریتمیک)؛ با emergency=true باعث تماس فوری می‌شود و risk متناظر اضافه شد.",
+      "confidence": "medium",
+      "source": "syncope evaluation (ESC/ARC)"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "jellyfish-sting",
+      "symptomId": "local_swelling",
+      "field": "match",
+      "value": 1,
+      "reason": "تورم/برجستگی (wheal) در محل نیش عروس‌دریایی تظاهر شایع است؛ هم‌اکنون فقط local_redness وزن دارد.",
+      "confidence": "medium",
+      "source": "ARC Guideline 9.4 — jellyfish sting"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "drowning",
+      "symptomId": "gasping",
+      "field": "match",
+      "value": 2,
+      "reason": "تنفس بریده/گاه‌به‌گاه در قربانی نجات‌یافته از آب شایع است؛ نشانه هم‌اکنون فقط در riskQuestions است.",
+      "confidence": "medium",
+      "source": "ILCOR/RCUK drowning first aid"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "stroke",
+      "symptomId": "dizziness",
+      "field": "match",
+      "value": 1,
+      "reason": "سرگیجه/ورتیگوی ناگهانی می‌تواند نشانه‌ی سکته‌ی گردش خون خلفی باشد؛ وزن عمداً ۱ است تا نشانه‌های اصلی FAST کمرنگ نشوند.",
+      "confidence": "low",
+      "source": "AHA/ASA stroke guidelines"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "unresponsive-breathing",
+      "symptomId": "substance_access",
+      "field": "risk",
+      "value": true,
+      "reason": "مسمومیت/اوردوز از علل شایع بی‌هوشی با تنفس طبیعی است؛ پرسیدن آن در صفحه‌ی کیس ارزش تشخیصی دارد.",
+      "confidence": "medium",
+      "source": "poisoning/overdose recognition"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "severe-bleeding",
+      "symptomId": "blood_thinner",
+      "field": "risk",
+      "value": true,
+      "reason": "مصرف رقیق‌کننده‌ی خون یا اختلال خونریزی، شدت و فوریت هر خونریزی را افزایش می‌دهد و باید در صفحه‌ی کیس پرسیده شود (هم‌اکنون فقط در nosebleed و head-injury است).",
+      "confidence": "medium",
+      "source": "ARC Guideline 9.2 — bleeding in anticoagulated patients"
+    }
+  ],
+  "notes": [
+    "هیچ relation موجودی برای حذف یافت نشد؛ همه‌ی روابط فعلی از نظر بالینی موجه‌اند.",
+    "ارزش افزودن nausea_vomiting به anaphylaxis (علائم گوارشی ~۳۰٪ موارد) بررسی شد؛ به‌دلیل اولویت پایین در این نسخه اعمال نشد — در صورت تمایل با وزن ۱ قابل افزودن است.",
+    "برای diabetic-emergency، افزودن arm_weakness به riskQuestions (شبه‌سکته در هیپوگلیسمی) ارزش بررسی دارد اما برای جلوگیری از هم‌پوشانی با نشانه‌های FAST در این نسخه اضافه نشد.",
+    "برای head-injury، ارتباط nosebleed (احتمال شکستگی قاعده‌ی جمجمه پس از ضربه) بررسی شد؛ به‌دلیل هم‌پوشانی با کیس nosebleed اضافه نشد.",
+    "بررسی سازگاری: همه‌ی آیتم‌های emergencyCall.when و redFlags دارای risk متناظر هستند (تخلف Schema صفر) و همه‌ی وزن‌ها در بازه‌ی ۱..۸ قرار دارند.",
+    "اگر فهرست بخواهد کوچک‌تر شود، تغییرات با confidence=low/medium آخر (stroke::dizziness، unresponsive-breathing::substance_access، severe-bleeding::blood_thinner و …) را می‌توان حذف کرد."
+  ],
+  "warnings": [
+    "افزایش وزن برای نشانه‌های عمومی (dizziness، local_pain، sweating_cold) می‌تواند در رتبه‌بندی «موضوعات مرتبط» نویز ایجاد کند؛ وزن‌ها عمداً پایین (۱-۲) انتخاب شده‌اند.",
+    "وزن ۱ برای stroke::dizziness عمدی است؛ بالا بردن آن به‌طور قابل توجهی دقت FAST را کاهش می‌دهد.",
+    "تغییرات فقط ساختاری‌اند؛ هیچ متن نمایشی (title/summary/actions/prohibitions/sources/icon/category) تغییر نکرده است."
+  ]
+}

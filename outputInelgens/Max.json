@@ -1,0 +1,811 @@
+﻿{
+  "format": "linkage-review-output-v1",
+  "basis": {
+    "faKbVersion": 21,
+    "enKbVersion": 9,
+    "languageScope": "both"
+  },
+  "assumptions": [
+    "بازه وزن match طبق دستورالعمل 1..8 است؛ هیچ وزن 0 پیشنهاد نشده.",
+    "حضور در redFlags یا emergency مستلزم حضور در riskQuestions است؛ هر افزودن red/emergency با افزودن risk هماهنگ شده.",
+    "برای نشانه‌های عمومی (سرگیجه، تهوع، گیجی، بی‌حسی، ضعف، تنگی‌نفس) پوشش‌های مفقود در کیس‌های حساس پیشنهاد افزودن شده.",
+    "نشانه‌های اختصاصی (scorpion_seen, saw_snake, amputated_part, jellyfish_sting, tick_attached, tooth_knocked_out, electrical_contact, drowning_recent, open_chest_wound, open_fracture) به کیس‌های دیگر متصل نشده‌اند."
+  ],
+  "changes": [
+    {
+      "action": "add_relation",
+      "caseId": "stroke",
+      "symptomId": "nausea_vomiting",
+      "field": "match",
+      "value": 2,
+      "reason": "تهوع/استفراغ در سکته‌های خلفی (سربلر/برین‌استم) شایع است و می‌تواند نشانه‌ی هشدار سکته باشد.",
+      "confidence": "medium",
+      "source": "AHA/ASA Stroke posterior circulation signs"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "stroke",
+      "symptomId": "nausea_vomiting",
+      "field": "risk",
+      "value": true,
+      "reason": "پرسش خطر برای علائم خلفی سکته.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "stroke",
+      "symptomId": "vomiting_repeated",
+      "field": "match",
+      "value": 2,
+      "reason": "استفراغ مکرر می‌تواند نشانهٔ افزایش فشار داخل جمجمه در سکته هموراژیک باشد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "stroke",
+      "symptomId": "vomiting_repeated",
+      "field": "risk",
+      "value": true,
+      "reason": "مکمل ارزیابی خطر سکته هموراژیک.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "stroke",
+      "symptomId": "numbness",
+      "field": "match",
+      "value": 3,
+      "reason": "بی‌حسی یک‌طرفه یکی از علائم شایع سکته است ولی الان در stroke وجود ندارد.",
+      "confidence": "high",
+      "source": "AHA Stroke Warning Signs (BE-FAST)"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "stroke",
+      "symptomId": "numbness",
+      "field": "risk",
+      "value": true,
+      "reason": "پرسش خطر ضروری برای غربالگری سکته.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "stroke",
+      "symptomId": "fainting",
+      "field": "risk",
+      "value": true,
+      "reason": "از دست دادن هوشیاری می‌تواند در سکته‌های بزرگ رخ دهد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "stroke",
+      "symptomId": "blood_thinner",
+      "field": "risk",
+      "value": true,
+      "reason": "مصرف رقیق‌کننده خون هم عامل خطر سکته ایسکمیک و هم خطر خون‌ریزی داخل جمجمه است؛ در تصمیم بالینی مهم.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heart-attack",
+      "symptomId": "dizziness",
+      "field": "match",
+      "value": 1,
+      "reason": "سرگیجه می‌تواند علامت همراه انفارکتوس، به‌ویژه در زنان و سالمندان باشد.",
+      "confidence": "medium",
+      "source": "AHA atypical MI symptoms"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heart-attack",
+      "symptomId": "dizziness",
+      "field": "risk",
+      "value": true,
+      "reason": "پرسش خطر برای علائم غیرکلاسیک انفارکتوس.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heart-attack",
+      "symptomId": "fainting",
+      "field": "risk",
+      "value": true,
+      "reason": "سنکوپ می‌تواند نشانه آریتمی/انفارکتوس تحتانی باشد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heart-attack",
+      "symptomId": "elderly_victim",
+      "field": "risk",
+      "value": true,
+      "reason": "سالمندان اغلب علائم آتیپیک انفارکتوس دارند؛ ثبت پس‌زمینه مهم است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heart-attack",
+      "symptomId": "pregnant",
+      "field": "risk",
+      "value": true,
+      "reason": "بارداری خطر تشخیص افتراقی و درمان MI را تغییر می‌دهد.",
+      "confidence": "low"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "cardiac-arrest",
+      "symptomId": "drowning_recent",
+      "field": "risk",
+      "value": true,
+      "reason": "ایست قلبی ناشی از غرق‌آبی پروتکل احیای کمی متفاوت (5 نفس اولیه) دارد؛ ثبت زمینه مهم است.",
+      "confidence": "medium",
+      "source": "ILCOR drowning resuscitation"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "cardiac-arrest",
+      "symptomId": "electrical_contact",
+      "field": "risk",
+      "value": true,
+      "reason": "برق‌گرفتگی از علل شایع ایست قلبی است؛ ثبت زمینه برای ایمنی صحنه.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "cardiac-arrest",
+      "symptomId": "heart_known",
+      "field": "match",
+      "value": 1,
+      "reason": "سابقه بیماری قلبی احتمال ایست قلبی را بالا می‌برد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "cardiac-arrest",
+      "symptomId": "heart_known",
+      "field": "risk",
+      "value": true,
+      "reason": "زمینه‌ی مهم برای علت ایست.",
+      "confidence": "medium"
+    },
+    {
+      "action": "set_match_weight",
+      "caseId": "animal-bite",
+      "symptomId": "animal_bite",
+      "oldWeight": 6,
+      "newWeight": 6,
+      "reason": "وزن فعلی مناسب است؛ اختصاصی و کلیدی. فقط برای مرور ثبت شد.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "animal-bite",
+      "symptomId": "local_swelling",
+      "field": "match",
+      "value": 2,
+      "reason": "تورم موضعی نشانه شایع و مهم گزش پستاندار (عفونت) است؛ اکنون فقط در riskQuestions حضور دارد.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "animal-bite",
+      "symptomId": "bleeding_heavy",
+      "field": "match",
+      "value": 2,
+      "reason": "خونریزی شدید یکی از نشانه‌های اصلی گزش شدید و در emergencyCall نیز آمده؛ باید در match هم باشد تا کیس در نتایج rank شود.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "choking",
+      "symptomId": "unresponsive",
+      "field": "risk",
+      "value": true,
+      "reason": "بی‌هوش شدن مصدوم دچار خفگی مسیر پروتکل احیا را تغییر می‌دهد؛ باید پرسیده شود.",
+      "confidence": "high",
+      "source": "AHA BLS choking to CPR transition"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "breathing-difficulty",
+      "symptomId": "known_allergen_exposure",
+      "field": "risk",
+      "value": true,
+      "reason": "تنگی نفس با مواجهه با آلرژن ممکن است آنافیلاکسی باشد؛ سؤال غربالگری مهم.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "breathing-difficulty",
+      "symptomId": "chest_pain",
+      "field": "risk",
+      "value": true,
+      "reason": "درد سینه همراه تنگی نفس می‌تواند نشانه MI/PE باشد؛ باید پرسیده شود.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "breathing-difficulty",
+      "symptomId": "throat_tightness",
+      "field": "risk",
+      "value": true,
+      "reason": "تنگی گلو در آنافیلاکسی یا انسداد راه هوایی فوقانی مهم است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "shock",
+      "symptomId": "cold_skin",
+      "field": "risk",
+      "value": true,
+      "reason": "پوست سرد از نشانه‌های کلیدی شوک است.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "shock",
+      "symptomId": "nausea_vomiting",
+      "field": "risk",
+      "value": true,
+      "reason": "تهوع همراه شوک شایع است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "shock",
+      "symptomId": "pregnant",
+      "field": "risk",
+      "value": true,
+      "reason": "شوک در بارداری (خونریزی داخل شکمی، حاملگی خارج رحمی) خطرناک است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "seizure",
+      "symptomId": "substance_access",
+      "field": "risk",
+      "value": true,
+      "reason": "تشنج ناشی از مسمومیت/محرومیت الکل نیازمند اقدام متفاوت است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "seizure",
+      "symptomId": "fainting",
+      "field": "risk",
+      "value": true,
+      "reason": "افتراق سنکوپ کانوالسیو از تشنج مهم است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "fainting",
+      "symptomId": "bleeding_heavy",
+      "field": "risk",
+      "value": true,
+      "reason": "غش می‌تواند اولین علامت خونریزی داخلی/شوک هایپوولمیک باشد.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "fainting",
+      "symptomId": "difficulty_breathing",
+      "field": "risk",
+      "value": true,
+      "reason": "سنکوپ همراه تنگی نفس ممکن است PE یا مشکل قلبی-ریوی باشد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "fainting",
+      "symptomId": "elderly_victim",
+      "field": "risk",
+      "value": true,
+      "reason": "غش در سالمندان خطر آریتمی و علت قلبی بالاتری دارد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "head-injury",
+      "symptomId": "numbness",
+      "field": "risk",
+      "value": true,
+      "reason": "بی‌حسی اندام‌ها پس از ضربهٔ سر ممکن است نشانهٔ آسیب طناب نخاعی همراه باشد.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "head-injury",
+      "symptomId": "pain_on_movement",
+      "field": "risk",
+      "value": true,
+      "reason": "درد با حرکت گردن پس از ضربه سر می‌تواند نشانهٔ آسیب گردنی باشد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "suspected-fracture",
+      "symptomId": "bleeding_heavy",
+      "field": "risk",
+      "value": true,
+      "reason": "شکستگی باز یا شکستگی لگن/فمور می‌تواند با خونریزی شدید همراه باشد.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "suspected-fracture",
+      "symptomId": "shock_signs",
+      "field": "risk",
+      "value": true,
+      "reason": "شوک همراه شکستگی نشانه‌ی خونریزی داخلی است؛ باید پرسیده شود.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "dislocation-sprain",
+      "symptomId": "cold_skin",
+      "field": "risk",
+      "value": true,
+      "reason": "پوست سرد/رنگ‌پریده اندام دیستال نشانه اختلال گردش خون در دررفتگی است.",
+      "confidence": "medium",
+      "source": "Neurovascular check for dislocation"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "traumatic-amputation",
+      "symptomId": "car_accident",
+      "field": "risk",
+      "value": true,
+      "reason": "مکانیسم آسیب برای ارزیابی همراه (پلی‌تروما) مهم است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "open-chest-wound",
+      "symptomId": "car_accident",
+      "field": "risk",
+      "value": true,
+      "reason": "مکانیسم پرانرژی برای زخم نافذ سینه رایج است؛ ثبت زمینه ضروری.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "open-chest-wound",
+      "symptomId": "shock_signs",
+      "field": "risk",
+      "value": true,
+      "reason": "زخم باز سینه با پنوموتوراکس فشاری/همورراژیک منجر به شوک می‌شود.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "diabetic-emergency",
+      "symptomId": "nausea_vomiting",
+      "field": "match",
+      "value": 1,
+      "reason": "تهوع/استفراغ از علائم شایع DKA است.",
+      "confidence": "high",
+      "source": "ADA DKA presentation"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "diabetic-emergency",
+      "symptomId": "nausea_vomiting",
+      "field": "risk",
+      "value": true,
+      "reason": "پرسش خطر برای DKA.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "diabetic-emergency",
+      "symptomId": "dizziness",
+      "field": "risk",
+      "value": true,
+      "reason": "سرگیجه در هیپوگلیسمی شایع است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "diabetic-emergency",
+      "symptomId": "fainting",
+      "field": "risk",
+      "value": true,
+      "reason": "غش می‌تواند نشانه هیپوگلیسمی شدید باشد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "diabetic-emergency",
+      "symptomId": "seizure_activity",
+      "field": "risk",
+      "value": true,
+      "reason": "تشنج ناشی از هیپوگلیسمی شدید یا هیپرگلیسمی رخ می‌دهد.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heat-illness",
+      "symptomId": "seizure_activity",
+      "field": "risk",
+      "value": true,
+      "reason": "تشنج در گرمازدگی شدید (heatstroke) رخ می‌دهد.",
+      "confidence": "high",
+      "source": "WMS heatstroke guidelines"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "heat-illness",
+      "symptomId": "muscle_tremor",
+      "field": "risk",
+      "value": true,
+      "reason": "کرامپ/اسپاسم عضلانی از علائم شایع گرمازدگی و خستگی حرارتی است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "hypothermia",
+      "symptomId": "unresponsive",
+      "field": "risk",
+      "value": true,
+      "reason": "بی‌هوشی در هایپوترمی شدید رخ می‌دهد و پروتکل CPR طولانی‌تر است.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "poisoning",
+      "symptomId": "vomiting_repeated",
+      "field": "match",
+      "value": 2,
+      "reason": "استفراغ مکرر پس از مصرف/تماس با ماده بسیار قوی نشانه‌ی مسمومیت است.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "poisoning",
+      "symptomId": "vomiting_repeated",
+      "field": "risk",
+      "value": true,
+      "reason": "پرسش خطر برای مسمومیت.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "poisoning",
+      "symptomId": "unresponsive",
+      "field": "risk",
+      "value": true,
+      "reason": "بی‌هوشی در مسمومیت شدید (اوردوز، سیانید، CO) شایع است.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "poisoning",
+      "symptomId": "child_victim",
+      "field": "risk",
+      "value": true,
+      "reason": "مسمومیت اتفاقی در کودکان شایع است و دُز آستانه پایین‌تر است.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "opioid-overdose",
+      "symptomId": "unresponsive",
+      "field": "risk",
+      "value": true,
+      "reason": "بی‌هوشی هسته‌ی سه‌گانه اوردوز اوپیوئید (تریاد) است؛ باید پرسیده شود.",
+      "confidence": "high",
+      "source": "SAMHSA opioid overdose triad"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "opioid-overdose",
+      "symptomId": "cyanosis",
+      "field": "match",
+      "value": 2,
+      "reason": "سیانوز از علائم برجستهٔ سرکوب تنفسی اوپیوئیدی است.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "opioid-overdose",
+      "symptomId": "cyanosis",
+      "field": "risk",
+      "value": true,
+      "reason": "پرسش خطر مهم در اوردوز.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "opioid-overdose",
+      "symptomId": "gasping",
+      "field": "match",
+      "value": 2,
+      "reason": "نفس‌های بریده در اوردوز پیشرفته پیش از ایست تنفسی رخ می‌دهد.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "opioid-overdose",
+      "symptomId": "gasping",
+      "field": "risk",
+      "value": true,
+      "reason": "پرسش خطر گازپینگ برای شروع تنفس نجات‌بخش/نالوکسون.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "unresponsive-breathing",
+      "symptomId": "substance_access",
+      "field": "risk",
+      "value": true,
+      "reason": "بی‌هوشی با دسترسی به مواد ممکن است اوردوز باشد و نیازمند نالوکسون.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "unresponsive-breathing",
+      "symptomId": "drowsiness",
+      "field": "risk",
+      "value": true,
+      "reason": "سطح هوشیاری روبه‌کاهش خطر ایست تنفسی را افزایش می‌دهد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "drowning",
+      "symptomId": "cold_skin",
+      "field": "risk",
+      "value": true,
+      "reason": "هایپوترمی همراه در غرق‌آبی شایع و مهم است.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "drowning",
+      "symptomId": "child_victim",
+      "field": "risk",
+      "value": true,
+      "reason": "کودکان گروه پرخطر غرق‌آبی هستند.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "electric-shock",
+      "symptomId": "burn_face_hands_feet",
+      "field": "risk",
+      "value": true,
+      "reason": "سوختگی نقطه ورود/خروج جریان در برق‌گرفتگی مهم است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "electric-shock",
+      "symptomId": "seizure_activity",
+      "field": "risk",
+      "value": true,
+      "reason": "برق‌گرفتگی می‌تواند تشنج ایجاد کند.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "electric-shock",
+      "symptomId": "chest_pain",
+      "field": "risk",
+      "value": true,
+      "reason": "آریتمی و آسیب میوکارد پس از برق‌گرفتگی شایع است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "thermal-burn",
+      "symptomId": "chemical_contact",
+      "field": "risk",
+      "value": true,
+      "reason": "سوختگی شیمیایی برخورد اولیه متفاوت (شست‌وشو) دارد؛ باید افتراق داده شود.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "thermal-burn",
+      "symptomId": "electrical_contact",
+      "field": "risk",
+      "value": true,
+      "reason": "سوختگی الکتریکی نیاز به ارزیابی داخلی متفاوت دارد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "thermal-burn",
+      "symptomId": "difficulty_breathing",
+      "field": "risk",
+      "value": true,
+      "reason": "استنشاق دود و آسیب راه هوایی خطر تهدیدکنندهٔ حیات است.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "snake-bite",
+      "symptomId": "child_victim",
+      "field": "risk",
+      "value": true,
+      "reason": "کودک گروه پرخطر برای زهرگیری سیستمیک است.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "snake-bite",
+      "symptomId": "pregnant",
+      "field": "risk",
+      "value": true,
+      "reason": "بارداری خطر و ملاحظات درمانی سرم ضدسم را تغییر می‌دهد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "scorpion-sting",
+      "symptomId": "vomiting_repeated",
+      "field": "risk",
+      "value": true,
+      "reason": "استفراغ مکرر از نشانه‌های عمومی/سیستمیک زهر عقرب است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "scorpion-sting",
+      "symptomId": "seizure_activity",
+      "field": "risk",
+      "value": true,
+      "reason": "زهر برخی عقرب‌ها (بوتوس) می‌تواند تشنج ایجاد کند، به‌ویژه در کودکان.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "bee-wasp-sting",
+      "symptomId": "dizziness",
+      "field": "risk",
+      "value": true,
+      "reason": "سرگیجه نشانه اولیه آنافیلاکسی است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "anaphylaxis",
+      "symptomId": "dizziness",
+      "field": "risk",
+      "value": true,
+      "reason": "سرگیجه/افت فشار نشانه شوک آنافیلاکتیک است.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "anaphylaxis",
+      "symptomId": "nausea_vomiting",
+      "field": "risk",
+      "value": true,
+      "reason": "علائم گوارشی جزو معیارهای تشخیص آنافیلاکسی هستند.",
+      "confidence": "high",
+      "source": "WAO Anaphylaxis criteria"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "anaphylaxis",
+      "symptomId": "cyanosis",
+      "field": "risk",
+      "value": true,
+      "reason": "سیانوز نشانه انسداد راه هوایی/برونکواسپاسم شدید در آنافیلاکسی است.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "anaphylaxis",
+      "symptomId": "unresponsive",
+      "field": "risk",
+      "value": true,
+      "reason": "بی‌هوشی در آنافیلاکسی شدید رخ می‌دهد و نشانگر شوک شدید است.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "nosebleed",
+      "symptomId": "bleeding_heavy",
+      "field": "risk",
+      "value": true,
+      "reason": "خونریزی بینی خلفی می‌تواند حجم زیادی خون از دست بدهد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "laceration",
+      "symptomId": "bleeding_heavy",
+      "field": "risk",
+      "value": true,
+      "reason": "زخم عمیق ممکن است به خونریزی شدید منجر شود؛ افتراق مسیر با severe-bleeding مهم است.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "laceration",
+      "symptomId": "bleeding_persistent",
+      "field": "risk",
+      "value": true,
+      "reason": "خونریزی که با فشار بند نمی‌آید نیاز به ارزیابی/بخیه دارد.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "laceration",
+      "symptomId": "blood_thinner",
+      "field": "risk",
+      "value": true,
+      "reason": "مصرف ضدانعقاد خطر خونریزی طولانی را افزایش می‌دهد.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "dental-avulsion",
+      "symptomId": "neck_pain",
+      "field": "risk",
+      "value": true,
+      "reason": "ضربه به دهان/فک می‌تواند با آسیب گردنی همراه باشد.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "eye-foreign",
+      "symptomId": "head_impact",
+      "field": "risk",
+      "value": true,
+      "reason": "آسیب چشم اغلب همراه ضربه سر است؛ ارزیابی همراه مهم است.",
+      "confidence": "medium"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "severe-bleeding",
+      "symptomId": "shock_signs",
+      "field": "risk",
+      "value": true,
+      "reason": "شوک همراه خونریزی شدید معیار کلیدی وخامت است.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "severe-bleeding",
+      "symptomId": "amputated_part",
+      "field": "risk",
+      "value": true,
+      "reason": "قطع عضو منبع مهم خونریزی شدید است؛ اتصال متقابل با traumatic-amputation.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "hypothermia",
+      "symptomId": "frostbitten_skin",
+      "field": "risk",
+      "value": true,
+      "reason": "یخ‌زدگی موضعی اغلب با هایپوترمی سیستمیک همراه است؛ ارزیابی هر دو ضروری.",
+      "confidence": "high"
+    },
+    {
+      "action": "add_relation",
+      "caseId": "frostbite",
+      "symptomId": "shivering",
+      "field": "risk",
+      "value": true,
+      "reason": "لرز نشانه هایپوترمی همراه است و باید در ارزیابی frostbite پرسیده شود.",
+      "confidence": "medium"
+    }
+  ],
+  "notes": [
+    "نشانه‌های اختصاصی (scorpion_seen, saw_snake, jellyfish_sting, tick_attached, amputated_part, tooth_knocked_out, drowning_recent, open_chest_wound, open_fracture, electrical_contact) عمداً به کیس‌های دیگر افزوده نشدند مطابق قاعده 1.5.",
+    "احتمال ایجاد کیس‌های جدید (مثل spinal-injury برای neck_pain/numbness/back-injury یا carbon-monoxide-poisoning) در آینده قابل بررسی است؛ فعلاً فقط پیشنهاد آگاهی: neck_pain و numbness در کیس‌های ضربه‌ای پراکنده‌اند و پوشش مستقل ندارند.",
+    "برخی وزن‌های match فعلی (مثل wound_deep=1 در animal-bite، chest_pain=1 در cardiac-arrest، bleeding_persistent=1 در dental-avulsion) پایین به‌نظر می‌رسند ولی چون رتبه‌بندی relative است و ممکن است تعمدی باشد، تغییر داده نشد؛ برای مرور انسانی گزارش شد.",
+    "پیشنهاد بررسی: افزودن کیس مستقل 'spinal-injury' با نشانه‌های neck_pain, numbness, fall_from_height, car_accident، چون فعلاً فقط ضمنی در head-injury و suspected-fracture پوشش داده می‌شود."
+  ],
+  "warnings": [
+    "برای cardiac-arrest افزودن heart_known به match باعث بالا آمدن کیس در سوابق قلبی بدون علائم حاد می‌شود؛ وزن پایین (1) پیشنهاد شد تا اثر آن کنترل شود.",
+    "افزودن numbness به match در stroke با وزن 3 ممکن است باعث بالا رفتن رتبه سکته در ارزیابی‌های عمومی numbness (که در دررفتگی/شکستگی هم مطرح است) شود؛ در صورت نیاز به وزن 2 کاهش داده شود.",
+    "چند change متعلق به diabetic-emergency (افزودن nausea_vomiting به match) در کنار وجود این نشانه در چند کیس گوارشی/قلبی می‌تواند رتبه‌بندی را کمی مبهم کند؛ وزن 1 عمدی است."
+  ]
+}
