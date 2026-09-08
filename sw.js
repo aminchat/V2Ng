@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'emdadgar-';
-const SHELL_CACHE = `${CACHE_PREFIX}shell-v15`;
+const SHELL_CACHE = `${CACHE_PREFIX}shell-v16`;
 const RECOVERY_WORKER_VERSIONS = new Set([null, '5', '6', '7', '8', '9']);
 const RECOVERY_SHELL_CACHES = new Set([
   `${CACHE_PREFIX}shell-v5`,
@@ -11,16 +11,16 @@ const RECOVERY_SHELL_CACHES = new Set([
 const SHELL_FILES = [
   './',
   './index.html',
-  './css/app.css?v=15',
-  './js/app.js?v=15',
-  './js/engine.js?v=15',
-  './js/kb.js?v=15',
-  './js/schema.js?v=15',
-  './js/i18n.js?v=15',
-  './js/preferences.js?v=15',
-  './locales/fa.js?v=15',
-  './data/countries.json?v=15',
-  './manifest.webmanifest?v=15',
+  './css/app.css?v=16',
+  './js/app.js?v=16',
+  './js/engine.js?v=16',
+  './js/kb.js?v=16',
+  './js/schema.js?v=16',
+  './js/i18n.js?v=16',
+  './js/preferences.js?v=16',
+  './locales/fa.js?v=16',
+  './data/countries.json?v=16',
+  './manifest.webmanifest?v=16',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/maskable-192.png',

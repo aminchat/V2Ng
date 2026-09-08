@@ -1,6 +1,6 @@
-import { KnowledgeBase } from './kb.js?v=15';
-import { countryName, formatDateTime, formatNumber, localeCode, localizeField, setLocale, t } from './i18n.js?v=15';
-import { emergencyContact, loadCountryData, readPreferences, savePreferences, telephoneHref } from './preferences.js?v=15';
+import { KnowledgeBase } from './kb.js?v=16';
+import { countryName, formatDateTime, formatNumber, localeCode, localizeField, setLocale, t } from './i18n.js?v=16';
+import { emergencyContact, loadCountryData, readPreferences, savePreferences, telephoneHref } from './preferences.js?v=16';
 import {
   setEngineLocale,
   hasCriticalSymptoms,
@@ -17,7 +17,7 @@ import {
   triggeredFlags,
   triageRoute,
   triageSymptoms,
-} from './engine.js?v=15';
+} from './engine.js?v=16';
 
 let kb = null;
 let countryData = null;
@@ -188,12 +188,28 @@ function navigate(hash) {
   else location.hash = hash;
 }
 
+/* The home chip starts a clean home entry that severs the flow history, so pressing
+   the phone back button on home never resurrects a step the user left. Home is the
+   edge of the app: back from home always asks before exiting. */
+function goCleanHome() {
+  state.assessmentStep = 'scene';
+  state.assessmentPreserve = false;
+  state.triageAnswers = {};
+  state.triageAsked = [];
+  state.triageSeedCount = 0;
+  state.triagePreserveFinder = false;
+  state.responseMode = null;
+  try { history.pushState({ emdExitGuard: true, emdHome: true, emdIndex: ++historyIndex }, '', '#/'); } catch { /* history access unavailable */ }
+  render({ focus: true });
+}
+
 /* Flow screens keep one history entry per step so the phone/browser back button
    walks the flow step by step. Each entry stores a snapshot of the flow state. */
 function flowSnapshot(flowKey) {
   return {
     emdExitGuard: true,
     emdFlow: flowKey,
+    emdIndex: ++historyIndex,
     triageAnswers: { ...state.triageAnswers },
     triageAsked: [...state.triageAsked],
     triageSeedCount: state.triageSeedCount,
@@ -211,6 +227,7 @@ function pushFlow(flowKey, hash) {
 
 function restoreFlow(snapshot) {
   if (!snapshot) return;
+  historyIndex = Number.isInteger(snapshot.emdIndex) ? snapshot.emdIndex : historyIndex;
   state.triageAnswers = { ...(snapshot.triageAnswers || {}) };
   state.triageAsked = [...(snapshot.triageAsked || [])];
   state.triageSeedCount = Number.isInteger(snapshot.triageSeedCount) ? snapshot.triageSeedCount : 0;
@@ -429,7 +446,7 @@ function renderMore() {
       <div class="more-status">${statusPill()}<span>${e(t('kbFooter', { version: kb.metadata?.kbVersion ?? '—', date: kb.metadata?.updatedAt ?? '—' }))}</span></div>
     </main>`;
 
-  document.getElementById('back-home').addEventListener('click', () => navigate('#/'));
+  document.getElementById('back-home').addEventListener('click', () => goCleanHome());
   document.getElementById('open-kb').addEventListener('click', () => navigate('#/kb'));
   document.getElementById('open-settings').addEventListener('click', () => navigate('#/settings'));
   setupInstallCard();
@@ -479,16 +496,7 @@ function renderAssessment() {
       `}
     </main>`;
 
-  document.getElementById('back-home').addEventListener('click', () => {
-    state.assessmentStep = 'scene';
-    state.assessmentPreserve = false;
-    state.triageAnswers = {};
-    state.triageAsked = [];
-    state.triageSeedCount = 0;
-    state.triagePreserveFinder = false;
-    state.responseMode = null;
-    navigate('#/');
-  });
+  document.getElementById('back-home').addEventListener('click', () => goCleanHome());
   document.getElementById('recheck-scene')?.addEventListener('click', () => {
     state.assessmentStep = 'scene';
     pushFlow('a-scene', '#/assessment');
@@ -532,14 +540,7 @@ function renderTriage() {
           ${miniEmergencyButton()}
         </header>
         <main class="body assessment-body">${unsafeSceneMarkup()}</main>`;
-      document.getElementById('back-home').addEventListener('click', () => {
-        state.triageAnswers = {};
-        state.triageAsked = [];
-        state.triageSeedCount = 0;
-        state.triagePreserveFinder = false;
-        state.responseMode = null;
-        navigate('#/');
-      });
+      document.getElementById('back-home').addEventListener('click', () => goCleanHome());
       document.getElementById('recheck-scene').addEventListener('click', () => {
         state.triageAnswers = {};
         state.triageAsked = [];
@@ -616,14 +617,7 @@ function renderTriage() {
       ${emergencyButton('btn emergency full card-spaced')}
     </main>`;
 
-  document.getElementById('back-home').addEventListener('click', () => {
-    state.triageAnswers = {};
-    state.triageAsked = [];
-    state.triageSeedCount = 0;
-    state.triagePreserveFinder = false;
-    state.responseMode = null;
-    navigate('#/');
-  });
+  document.getElementById('back-home').addEventListener('click', () => goCleanHome());
   document.querySelectorAll('[data-answer]').forEach((button) => button.addEventListener('click', () => {
     state.triageAsked.push(questionId);
     state.triageAnswers[questionId] = button.dataset.answer;
@@ -920,7 +914,7 @@ function renderSymptoms() {
       </div>
     </main>`;
 
-  document.getElementById('back-home').addEventListener('click', () => navigate('#/'));
+  document.getElementById('back-home').addEventListener('click', () => goCleanHome());
   document.getElementById('restart-urgent').addEventListener('click', () => {
     state.assessmentStep = 'scene';
     state.assessmentPreserve = false;
@@ -1039,7 +1033,7 @@ function renderCaseQuestions(item) {
       <button class="btn text full" id="case-none" type="button">${e(t('caseNone'))}</button>
     </main>`;
 
-  document.getElementById('case-back').addEventListener('click', () => history.length > 1 ? history.back() : navigate('#/'));
+  document.getElementById('case-back').addEventListener('click', () => history.length > 1 ? history.back() : goCleanHome());
   document.querySelectorAll('[data-sym]').forEach((button) => button.addEventListener('click', () => {
     const symptomId = button.dataset.sym;
     state.caseAnswers = state.caseAnswers.includes(symptomId)
@@ -1085,7 +1079,7 @@ function renderCaseResult(item) {
       ${emergencyButton('btn emergency full card-spaced')}
     </main>`;
 
-  document.getElementById('case-back').addEventListener('click', () => history.length > 1 ? history.back() : navigate('#/'));
+  document.getElementById('case-back').addEventListener('click', () => history.length > 1 ? history.back() : goCleanHome());
   document.getElementById('review-risks')?.addEventListener('click', () => {
     state.caseStage = 'questions';
     render({ focus: true });
@@ -1116,7 +1110,7 @@ function renderKb() {
       ${casesByCategory.map(({ category, cases }) => `<section class="kb-category"><h2>${e(category.icon)} ${e(category.title)}</h2><div class="kb-grid">${cases.map((item) => `<a class="kb-card" href="${e(caseHref(item.id))}"><span aria-hidden="true">${e(item.icon)}</span><div><strong>${e(item.title)}</strong><small>${em(item.summary)}</small></div></a>`).join('')}</div></section>`).join('')}
     </main>`;
 
-  document.getElementById('back-home').addEventListener('click', () => navigate('#/'));
+  document.getElementById('back-home').addEventListener('click', () => goCleanHome());
   document.getElementById('sync-now').addEventListener('click', async (event) => {
     const button = event.currentTarget;
     const status = document.getElementById('sync-status');
@@ -1162,7 +1156,7 @@ function renderSettings() {
       <div id="settings-contacts">${contactsMarkup(preferences.country, { showSources: true })}</div>
     </main>`;
   state.settingsMessage = '';
-  document.getElementById('back-home').addEventListener('click', () => navigate('#/'));
+  document.getElementById('back-home').addEventListener('click', () => goCleanHome());
   const countrySelect = document.getElementById('settings-country');
   countrySelect.addEventListener('change', () => {
     document.getElementById('settings-contacts').innerHTML = contactsMarkup(countrySelect.value, { showSources: true });
@@ -1195,7 +1189,7 @@ function renderSettings() {
 }
 function renderNotFound() {
   app.innerHTML = `<main class="body centered"><div class="big-icon" aria-hidden="true">?</div><h1 id="view-heading" tabindex="-1">${e(t('notFoundTitle'))}</h1><p>${e(t('notFoundText'))}</p><button class="btn primary" id="go-home" type="button">${e(t('backHome'))}</button></main>`;
-  document.getElementById('go-home').addEventListener('click', () => navigate('#/'));
+  document.getElementById('go-home').addEventListener('click', () => goCleanHome());
   return t('notFoundTitle');
 }
 
@@ -1254,7 +1248,7 @@ async function checkForAppUpdate({ force = false } = {}) {
 async function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return;
   try {
-    const registration = await navigator.serviceWorker.register('./sw.js?v=15', {
+    const registration = await navigator.serviceWorker.register('./sw.js?v=16', {
       scope: './',
       updateViaCache: 'none',
     });
@@ -1343,7 +1337,7 @@ async function activatePreferences(next, { persist = false, route = null } = {})
       if (route === '#/assessment') {
         try { history.pushState(flowSnapshot('a-scene'), '', route); } catch { /* ignore */ }
       } else {
-        try { history.replaceState({ emdExitGuard: true }, '', route); } catch { /* ignore */ }
+        try { history.replaceState({ emdExitGuard: true, emdIndex: ++historyIndex }, '', route); } catch { /* ignore */ }
       }
     }
     render({ focus: true });
@@ -1458,38 +1452,64 @@ function renderFatal(error) {
 }
 
 // The phone/browser back button walks the in-app screens (hash history). Flow screens
-// keep one history entry per step, so back moves one step at a time. Pressing back on
-// the first screen asks before exiting. Chrome also fires popstate for ordinary in-app
-// hash navigations, so the boundary check runs against the entry's stored state.
+// keep one history entry per step, so back moves one step at a time. Home is the edge
+// of the app: pressing back on home asks before exiting and never resurrects a flow
+// step the user already left. Chrome also fires popstate for ordinary in-app hash
+// navigations, so the boundary check runs against the entry's stored state.
 let exitGuardSupported = false;
+let historyIndex = 0;
 try {
-  if (history.state === null) history.pushState({ emdExitGuard: true }, '', location.href);
+  if (history.state === null) history.pushState({ emdExitGuard: true, emdIndex: 0 }, '', location.href);
   exitGuardSupported = true;
 } catch { /* history access unavailable (e.g. sandboxed frame); confirmation is disabled */ }
 
 let popHandled = false;
+let exitDialogOpen = false;
+let stayInProgress = false;
 window.addEventListener('popstate', (event) => {
   if (!exitGuardSupported) return;
-  const target = event.state;
-  if (target && !target.emdFlow && target.emdExitGuard) {
-    showExitConfirm();
+  // "Stay" re-forwards to the home entry after the dialog; just render it.
+  if (stayInProgress) {
+    stayInProgress = false;
+    popHandled = true;
+    queueMicrotask(() => { popHandled = false; });
+    render({ focus: true });
     return;
   }
+  // The user confirmed exit: let the remaining back traversal leave the app
+  // without reopening the dialog.
+  if (exitDialogOpen) { exitDialogOpen = false; historyIndex = 0; return; }
+  const target = event.state;
+  const targetIndex = Number.isInteger(target?.emdIndex) ? target.emdIndex : -1;
+  const backward = targetIndex < historyIndex;
+  historyIndex = Math.max(0, targetIndex);
+  const fromHome = state.lastRouteName === 'home';
   if (target && target.emdFlow) {
+    // Home is the edge of the app: back from home must never resurrect a flow
+    // step the user already left.
+    if (fromHome && backward) { showExitConfirm(); return; }
     restoreFlow(target);
     popHandled = true;
     queueMicrotask(() => { popHandled = false; });
     render({ focus: true });
     return;
   }
+  if (target && target.emdExitGuard && !target.emdFlow) {
+    // Guard/home entries: reaching them from inside the app just renders that
+    // screen (e.g. back from the first step returns to home). Only back pressed
+    // ON home asks before exiting.
+    if (fromHome && backward) showExitConfirm();
+    return;
+  }
+  if (fromHome && backward) { showExitConfirm(); return; }
   // Legacy entries without flow state: degrade gracefully by route.
   const route = currentRoute();
-  if (route.name === 'assessment' && state.assessmentStep !== 'scene') {
+  if (backward && route.name === 'assessment' && state.assessmentStep !== 'scene') {
     state.assessmentStep = 'scene';
     popHandled = true;
     queueMicrotask(() => { popHandled = false; });
     render({ focus: true });
-  } else if (route.name === 'triage' && state.triageAsked.length) {
+  } else if (backward && route.name === 'triage' && state.triageAsked.length) {
     const lastQuestion = state.triageAsked.pop();
     delete state.triageAnswers[lastQuestion];
     popHandled = true;
@@ -1518,12 +1538,17 @@ function showExitConfirm() {
   const stay = () => {
     overlay.remove();
     document.removeEventListener('keydown', onEscape);
-    try { history.pushState({ emdExitGuard: true }, '', location.href); } catch { /* ignore */ }
+    // The back traversal already moved the history; re-forward to the home
+    // entry so the screen under the dialog is home again.
+    stayInProgress = true;
+    try { history.forward(); } catch { stayInProgress = false; render({ focus: true }); }
   };
   const leave = () => {
     overlay.remove();
     document.removeEventListener('keydown', onEscape);
-    history.back();
+    exitDialogOpen = true;
+    if (history.length > 1) history.go(-(history.length - 1));
+    else { try { window.close(); } catch { /* ignore */ } }
   };
   const onEscape = (event) => {
     if (event.key === 'Escape') stay();
@@ -1540,7 +1565,7 @@ window.addEventListener('hashchange', () => {
     return;
   }
   try {
-    if (!history.state) history.replaceState({ emdApp: true }, '', location.href);
+    if (!history.state) history.replaceState({ emdApp: true, emdIndex: ++historyIndex }, '', location.href);
   } catch { /* ignore */ }
   render({ focus: true });
 });

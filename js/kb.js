@@ -1,4 +1,4 @@
-import { validateKnowledgeBase, validateManifest } from './schema.js?v=15';
+import { validateKnowledgeBase, validateManifest } from './schema.js?v=16';
 
 const FA_DB_NAME = 'emdadgar-kb';
 const EN_DB_NAME = 'emdadgar-kb-en-v1';
